@@ -1,0 +1,38 @@
+{
+   "name": "starseed",
+   "version": "0.1.0",
+   "description": "A simple WhatsApp bot built on Baileys",
+   "main": "index.js",
+   "type": "module",
+   "scripts": {
+      "start": "NODE_ENV=production node --max-old-space-size=512 index.js"
+   },
+   "engines": {
+      "node": ">=22.0.0"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/itsliaaa/starseed.git"
+   },
+   "keywords": [
+      "base",
+      "bot",
+      "whatsapp",
+      "whatsapp-bot",
+      "automation"
+   ],
+   "homepage": "https://github.com/itsliaaa/starseed#readme",
+   "author": "Lia Wynn",
+   "license": "MIT",
+   "dependencies": {
+      "@itsliaaa/baileys": "github:itsliaaa/baileys",
+      "awesome-phonenumber": "~2.59.0",
+      "cfonts": "~3.3.1",
+      "cheerio": "~1.2.0",
+      "file-type": "^21.3.0",
+      "jimp": "~1.6.0",
+      "node-cron": "^3.0.0",
+      "qrcode": "~1.5.4"
+   },
+   "packageManager": "yarn@1.22.22"
+}

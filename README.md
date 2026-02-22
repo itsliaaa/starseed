@@ -1,0 +1,146 @@
+# ✴️ @itsliaaa/starseed
+
+![Logo](https://files.catbox.moe/75q4r7.jpg)
+
+Starseed is a simple WhatsApp bot designed for quick setup and efficient use. It offers essential features such as sticker creation, social media content downloading, basic group management tools, and various general-purpose utilities, all accessible directly through WhatsApp.
+
+> [!CAUTION]
+This project directly implements [`@itsliaaa/baileys`](https://github.com/itsliaaa/baileys#readme). It is not compatible with other Baileys forks, including the original Baileys package.
+
+### ⚙️ Architecture Overview
+
+| Principle | Implementation |
+|------------|----------------|
+| ⚡ Native ESM Architecture | Fully structured using modern ECMAScript Modules (`type: module`) and designed for Node.js >=22 environments. |
+| 🪶 Lean Dependency Strategy | Only feature-driven packages are included (image processing, scraping, scheduling) to avoid unnecessary overhead. |
+| 🧩 Runtime Minimalism | No obfuscation, or bundling layers are used, ensuring predictable execution and optimal performance. |
+
+### 📄 System Requirements
+
+| 🔹 Minimum | ✨ Recommended |
+|------------|------------|
+| 1 vCPU | 2 vCPU |
+| 1 GB RAM | 1 GB RAM |
+| 1 GB Free Space | 2 GB Free Space |
+| FFmpeg v6.x | FFmpeg v6.x |
+| Node.js v22 LTS | Node.js v24 LTS |
+| Yarn v1.x | Yarn v1.22.22 |
+
+> [!NOTE]
+1 GB RAM is sufficient for most use cases. Higher RAM is recommended only for media processing workloads.
+
+### 🗄️ Server
+
+To run the bot, I highly recommend the following services. They are not only affordable, but also ensure that user data stored in the database remains secure:
+- [x] NAT VPS [Hostdata](https://hostdata.id/nat-vps-usa/) (Highly Recommended)
+- [x] Hosting Panel [The Hoster](https://thehoster.net/bot-hosting/)
+- [x] VPS [OVH Hosting](https://www.ovhcloud.com/asia/vps/)
+
+### 📥 Installation & Run
+
+> [!IMPORTANT]
+Check this repository regularly for updates. The project is still under development. If you encounter any issues, please open an issue. Thank you!
+
+> [!NOTE]
+I’m not familiar with Windows because I primarily use Linux, so no Windows installation files are provided.
+
+Ensure that your configuration and server meet the requirements to avoid errors during installation or while running the bot. Then execute the following command on your Linux console:
+```bash
+$ bash install.sh
+
+# And, run the bot
+
+$ pm2 start app.config.cjs && pm2 logs bot
+```
+
+### 🔧 Configuration
+
+Edit [config.json](https://github.com/itsliaaa/starseed/blob/main/config.js) to customize your bot:
+```javascript
+Object.assign(global, {
+   // Owner name
+   ownerName: 'Lia Wynn',
+
+   // Owner phone number
+   ownerNumber: '6281111111111',
+
+   // Bot name
+   botName: 'Starseed',
+
+   // Bot phone number (IMPORTANT for pairing code)
+   botNumber: '6281111111111',
+
+   // Footer text
+   footer: '✦ Starseed',
+
+   // User default limit (used for reset too)
+   defaultLimit: 15,
+
+   // Pairing using code method (set to false to use QR)
+   pairingCode: false,
+
+   // Sticker pack name
+   stickerPackName: '📦 Starseed Sticker',
+
+   // Sticker pack publisher
+   stickerPackPublisher: 'GitHub: itsliaaa'
+
+   // ...
+})
+```
+
+### 📁 Plugins
+
+You can follow this format to add your own plugins:
+```javascript
+export default {
+   command: 'your_command',
+   hidden: 'your_hidden_command',
+   category: 'your_category_name',
+   async run(m, {
+      sock,
+      // ...other values from handler.js
+   }) {
+      /* YOUR LOGIC HERE */
+   },
+   group: false, // is this command only for group chats?
+   private: false, // is this command only for private chats?
+   owner: false, // is this command only for the owner?
+   partner: false, // is this command only for partners?
+   admin: false, // is this command only for group admins?
+   botAdmin: false, // does this command require the bot to be a group admin?
+   limit: 1 // command usage cost
+}
+```
+
+See the documentation in [`@itsliaaa/baileys`](https://github.com/itsliaaa/baileys#readme) for details about sending interactive messages.
+
+### 👤 Credits
+
+Starseed is an independent project built and maintained by:
+
+- [itsliaaa](https://github.com/itsliaaa) — Project Maintainer & Creator
+
+#### 🌐 Third-Party Services
+
+Starseed utilizes the following external APIs:
+
+- [rynn-k](https://github.com/rynn-k) — Nekolabs API  
+- [elrayyxml](https://github.com/elrayyxml) — Nexray API  
+- [Deline Clarissa](https://whatsapp.com/channel/0029VbB8WYS4CrfhJCelw33j) — Deline API  
+
+These services are used as external integrations and are not directly affiliated with the development of Starseed.
+
+#### 🧪 Testers & Community
+
+Special thanks to:
+- Starseed Group Members  
+- And of course… **You** ✨
+
+Your feedback and support help this project continue to grow 🌱
+
+#### 💰 Donate
+
+Support this project:
+
+- [Saweria](https://saweria.co/itsliaaa)
