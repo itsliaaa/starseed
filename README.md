@@ -34,6 +34,14 @@ To run the bot, I highly recommend the following services. They are not only aff
 - [x] Hosting Panel [The Hoster](https://thehoster.net/bot-hosting/)
 - [x] VPS [OVH Hosting](https://www.ovhcloud.com/asia/vps/)
 
+### ⬇️ How to download
+
+![DownloadStepImage](https://files.catbox.moe/4dz3ip.jpg)
+
+1. Click the **Code** button.
+2. Select **Download ZIP**.
+3. Extract the downloaded file.
+
 ### 📥 Installation & Run
 
 > [!IMPORTANT]

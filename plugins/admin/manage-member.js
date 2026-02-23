@@ -1,15 +1,7 @@
-import { isPnUser, S_WHATSAPP_NET } from '@itsliaaa/baileys'
+import { isLidUser } from '@itsliaaa/baileys'
 
 import { INACTIVE_THRESHOLD, SCHEMA } from '../../lib/Constants.js'
 import { frame } from '../../lib/Utilities.js'
-
-const polishId = (id) => {
-   if (isPnUser(id))
-      return id
-   if (id.includes('@'))
-      id = id.split('@')[0]
-   return id + S_WHATSAPP_NET
-}
 
 export default {
    command: ['+warn', '-warn', 'add', 'kick', 'promote', 'demote', 'sider'],
@@ -54,10 +46,11 @@ export default {
                printParticipants)
          }
       }
-      const rawId = m.quoted?.sender || args[0]
-      if (!rawId)
-         return m.reply('💭 Reply user message or input it manually starts with country code.')
-      const userId = polishId(rawId)
+      const userId = m.quoted?.sender || m.mentionedJid[0]
+      if (!userId)
+         return m.reply('💭 Reply user message.')
+      if (isLidUser(userId))
+         return m.reply('❌ Invalid user.')
       const participants = group.participants
       if (command === '+warn') {
          if (!participants[userId])

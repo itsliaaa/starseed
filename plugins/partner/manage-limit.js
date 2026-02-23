@@ -1,3 +1,5 @@
+import { isLidUser } from '@itsliaaa/baileys'
+
 export default {
    command: ['+limit', '-limit'],
    category: 'partner',
@@ -6,12 +8,15 @@ export default {
       command,
       args
    }) {
-      let userId = m.quoted?.sender
+      let userId = m.quoted?.sender || m.mentionedJid[0]
       if (!userId)
          return m.reply('💭 Reply user message.')
-      if (m.quoted?.isMe ||
+      if (
+         m.quoted?.isMe ||
          userId === m.sender ||
-         userId.startsWith(ownerNumber))
+         userId.startsWith(ownerNumber) ||
+         isLidUser(userId)
+      )
          return m.reply('❌ Invalid user.')
       const user = db.getUser(userId)
       if (!user)

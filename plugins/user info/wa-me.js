@@ -4,13 +4,14 @@ export default {
    async run(m, {
       text
    }) {
-      const number = m.quoted ? m.quoted.sender : m.sender
+      const number = m.quoted ?
+         m.quoted.sender :
+         m.mentionedJid[0] ||
+            m.sender
       text = text || 'Hello!'
       const url = 'https://wa.me/' +
          number.split('@')[0] + '?' +
-         new URLSearchParams({
-            text
-         })
+         encodeURIComponent(text)
       m.reply(url)
    }
 }

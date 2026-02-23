@@ -227,7 +227,9 @@ const Connect = async () => {
          }
          if (action === 'add') {
             metadata.participants.push(participant)
-            group.participants[userId] = { ...SCHEMA.Participant }
+            group.participants[userId] = {
+               ...SCHEMA.Participant
+            }
 
             if (group.welcome && !isMuted) {
                const profilePicture = await sock.profilePicture(userId)
@@ -323,9 +325,8 @@ const Connect = async () => {
 
    sock.ev.on('messages.upsert', async ({ messages }) => {
       for (const message of messages) {
-         if (!message.message) continue
-
          Serialize(sock, message)
+         if (!message.message || !message.type) continue
 
          let groupMetadata = store.getGroup(message.chat)
 

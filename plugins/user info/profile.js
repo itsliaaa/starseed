@@ -10,7 +10,10 @@ export default {
       setting,
       isPartner
    }) {
-      const userId = m.quoted ? m.quoted.sender : m.sender
+      const userId = m.quoted ?
+         m.quoted.sender :
+         m.mentionedJid[0] ||
+            m.sender
       const userData = db.getUser(userId)
       if (!userData)
          return m.reply('❌ User not found.')
