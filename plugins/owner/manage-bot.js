@@ -95,7 +95,7 @@ const atomicWrite = async (db, store) =>
    ])
 
 export default {
-   command: ['backup', 'backupsc', 'disable', 'enable', 'gconly', 'resetlimit', 'restart', 'restore', 'setmenu', 'setname', 'setbio', 'setpp', 'setcover', 'setchid', 'public', 'self', '+prefix', '-prefix'],
+   command: ['backup', 'backupsc', 'disable', 'enable', 'gconly', 'resetlimit', 'restart', 'restore', 'setbroadcastcd', 'setmenu', 'setname', 'setbio', 'setpp', 'setcover', 'setchid', 'public', 'self', '+prefix', '-prefix'],
    category: 'owner',
    async run (m, {
       sock,
@@ -182,6 +182,13 @@ export default {
          await db.readFromFile(filePath)
          await atomicWrite(db, store)
          m.reply('✅ Database was successfully restored.')
+      }
+      else if (command === 'setbroadcastcd') {
+         const value = Number(args[0])
+         if (!value)
+            return m.reply(`👉🏻 *Example*: ${isPrefix + command} 10000`)
+         setting.broadcastCooldown = value
+         m.reply(`✅ Successfully set broadcast cooldown to *${value}* ms.`)
       }
       else if (command === 'setmenu') {
          if (!args.length)

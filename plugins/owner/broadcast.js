@@ -10,6 +10,7 @@ export default {
    async run(m, {
       db,
       store,
+      setting,
       sock,
       command,
       text
@@ -59,7 +60,7 @@ export default {
                      largeThumbnail: true
                   }
                })
-            await delay(10000)
+            await delay(setting.broadcastCooldown)
          }
          m.reply(`✅ Successfully sent broadcast to ${ids.length} chats.`)
       }

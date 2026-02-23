@@ -78,7 +78,8 @@ process.on('warning', (warning) => {
 process.on('uncaughtException', (error) => {
    if (error?.code === 'ENOMEM') {
       console.error('❌ Out of memory')
-   } else {
+   }
+   else {
       console.error('❌ Uncaught Exception', ':', error)
    }
 

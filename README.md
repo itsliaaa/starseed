@@ -19,19 +19,17 @@ This project directly implements [`@itsliaaa/baileys`](https://github.com/itslia
 
 | 🔹 Minimum | ✨ Recommended |
 |------------|------------|
-| 1 vCPU | 2 vCPU |
+| 1 vCPU | 1 vCPU |
 | 1 GB RAM | 1 GB RAM |
 | 1 GB Free Space | 2 GB Free Space |
 | FFmpeg v6.x | FFmpeg v6.x |
 | Node.js v22 LTS | Node.js v24 LTS |
 | Yarn v1.x | Yarn v1.22.22 |
 
-> [!NOTE]
-1 GB RAM is sufficient for most use cases. Higher RAM is recommended only for media processing workloads.
-
 ### 🗄️ Server
 
 To run the bot, I highly recommend the following services. They are not only affordable, but also ensure that user data stored in the database remains secure:
+
 - [x] NAT VPS [Hostdata](https://hostdata.id/nat-vps-usa/) (Highly Recommended)
 - [x] Hosting Panel [The Hoster](https://thehoster.net/bot-hosting/)
 - [x] VPS [OVH Hosting](https://www.ovhcloud.com/asia/vps/)
@@ -56,6 +54,7 @@ $ pm2 start app.config.cjs && pm2 logs bot
 ### 🔧 Configuration
 
 Edit [config.json](https://github.com/itsliaaa/starseed/blob/main/config.js) to customize your bot:
+
 ```javascript
 Object.assign(global, {
    // Owner name
@@ -92,6 +91,7 @@ Object.assign(global, {
 ### 📁 Plugins
 
 You can follow this format to add your own plugins:
+
 ```javascript
 export default {
    command: 'your_command',
