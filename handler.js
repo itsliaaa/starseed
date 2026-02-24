@@ -15,7 +15,8 @@ import './error.js'
 
 import { Boom } from '@hapi/boom'
 import { areJidsSameUser, delay, DisconnectReason, isLidUser, isJidGroup, isJidMetaAI, jidNormalizedUser, makeCacheableSignalKeyStore, makeWASocket, useMultiFileAuthState } from '@itsliaaa/baileys'
-import { existsSync, mkdirSync, unlinkSync, readdirSync } from 'fs'
+import { existsSync } from 'fs'
+import { mkdir, unlink, readdir } from 'fs/promises'
 import { join } from 'path'
 import pino from 'pino'
 import phoneNumber from 'awesome-phonenumber'
@@ -23,8 +24,8 @@ import qrCode from 'qrcode'
 
 import { SCHEMA } from './lib/Constants.js'
 import { Database, Store } from './lib/Database.js'
-import { readMessage, Serialize, shouldUpdatePresence, StickerCommand } from './lib/Serialize.js'
-import { applySchema, cleanUpFolder, fetchAsBuffer, findTopSuggestions, frame, getNextMidnight, greeting, isEmptyObject, messageLogger, Sender, toTime } from './lib/Utilities.js'
+import { Serialize, shouldUpdatePresence, StickerCommand } from './lib/Serialize.js'
+import { applySchema, cleanUpFolder, fetchAsBuffer, findTopSuggestions, frame, getNextMidnight, greeting, isEmptyObject, messageLogger, randomInteger, Sender, toTime } from './lib/Utilities.js'
 import { CommandIndex, EventIndex, ModuleCache, ScanDirectory } from './lib/Watcher.js'
 import AntiSpam from './lib/AntiSpam.js'
 
@@ -50,7 +51,7 @@ const Connect = async () => {
       await store.readFromFile()
 
    if (!existsSync(temporaryFolder))
-      mkdirSync(temporaryFolderPath, { recursive: true })
+      await mkdir(temporaryFolderPath, { recursive: true })
 
    const sock = makeWASocket({
       logger,
@@ -368,13 +369,13 @@ const Connect = async () => {
                group = {
                   ...SCHEMA.Group,
                   id: message.chat,
-                  name: store.getGroup(message.chat).subject
+                  name: groupMetadata.subject
                }
 
                db.updateGroup(message.chat, group)
             }
             else {
-               group.name = store.getGroup(message.chat).subject
+               group.name = groupMetadata.subject
                applySchema(group, SCHEMA.Group)
             }
          }
@@ -401,13 +402,16 @@ const Connect = async () => {
          }
 
          if (onlineStatus && shouldUpdatePresence(message))
-            await readMessage(sock, message)
+            await sock.readMessages([message.key])
+
+         if (slowMode)
+            await delay(randomInteger(100, 3000))
 
          const isOwner = message.fromMe || message.sender.startsWith(ownerNumber)
          const isPartner = isOwner || setting.partner.includes(message.sender)
          const isBanned = user.banned
          const isAdmin = message.isGroup &&
-            groupMetadata.participants.some(p =>
+            groupMetadata.participants?.some(p =>
                (
                   p.phoneNumber === message.sender ||
                   p.id === message.sender ||
@@ -415,7 +419,7 @@ const Connect = async () => {
                ) && p.admin
             )
          const isBotAdmin = message.isGroup &&
-            groupMetadata.participants.some(p =>
+            groupMetadata.participants?.some(p =>
                p.id === sock.user.decodedLid && p.admin
             )
 
@@ -426,7 +430,7 @@ const Connect = async () => {
                !isPartner &&
                !isAdmin &&
                isBotAdmin &&
-               !message.type?.startsWith('react') &&
+               !message.type.startsWith('react') &&
                Spam.detect(message.sender)
 
             group.lastActivity = user.lastSeen
@@ -441,6 +445,17 @@ const Connect = async () => {
                   messages: 1,
                   lastSeen: user.lastSeen
                }
+
+            if (!isEmptyObject(user.afkContext)) {
+               const print = frame('HELLO', [
+                  `💭 System detects activity from @${user.jid.split('@')[0]} after being offline for: ${toTime(user.lastSeen - user.afkTimestamp)}`,
+                  `🏷️ *Reason*: ${user.afkReason || '-'}`
+               ], '👀')
+               await sock.sendText(message.chat, print, user.afkContext)
+               user.afkReason = ''
+               user.afkContext = {}
+               user.afkTimestamp = -1
+            }
 
             if (isSpam) {
                await message.reply('⚠️ You should be removed for spamming.')
@@ -597,13 +612,13 @@ const Connect = async () => {
       }
    }, dataInterval)
 
-   setInterval(() => {
+   setInterval(async () => {
       try {
-         const temporaryFiles = readdirSync(temporaryFolderPath)
+         const temporaryFiles = await readdir(temporaryFolderPath)
          if (temporaryFiles.length)
             for (const file of temporaryFiles) {
                const filePath = join(temporaryFolderPath, file)
-               unlinkSync(filePath)
+               await unlink(filePath)
             }
       }
       catch { }

@@ -29,8 +29,7 @@ const patchConsole = (method, { ignore = [], transform } = {}) => {
       const first = args?.[0]
       const message = String(first?.message || first || '')
 
-      if (ignore.some(pattern => message.includes(pattern)))
-         return
+      if (ignore.some(pattern => message.includes(pattern))) return
 
       if (typeof transform === 'function') {
          const result = transform(message, args)
@@ -89,8 +88,7 @@ process.on('uncaughtException', (error) => {
 process.on('unhandledRejection', (reason) => {
    const message = String(reason?.message || reason || '')
 
-   if (rejectionIgnore.some(p => message.includes(p)))
-      return
+   if (rejectionIgnore.some(p => message.includes(p))) return
 
    console.error('❌ Unhandled Rejection', ':', reason)
    process.exit(1)

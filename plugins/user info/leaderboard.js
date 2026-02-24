@@ -1,9 +1,12 @@
+import { areJidsSameUser } from '@itsliaaa/baileys'
+
 import { frame, medal } from '../../lib/Utilities.js'
 
 export default {
    command: ['limit', 'leaderboard'],
    category: 'user info',
    async run(m, {
+      sock,
       db,
       user: senderData,
       setting,
@@ -11,7 +14,9 @@ export default {
    }) {
       const users = [...new Set(db.database.users.values())]
       const isPartnerOrOwner = user =>
-         setting.partner.includes(user.jid)
+         setting.partner.includes(user.jid) ||
+         user.jid.startsWith(ownerNumber) ||
+         areJidsSameUser(sock.user.decodedId, user.jid)
       const sorted = users.sort((a, b) => {
          const aIsPartner = isPartnerOrOwner(a)
          const bIsPartner = isPartnerOrOwner(b)
