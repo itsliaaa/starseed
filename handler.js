@@ -82,7 +82,7 @@ const Connect = async () => {
 
       if (update.connection === 'close') {
          sock.end()
-console.log(update)
+
          const reason = new Boom(update.lastDisconnect?.error)?.output?.statusCode
          switch (reason) {
             case DisconnectReason.connectionLost:
