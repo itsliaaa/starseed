@@ -1,9 +1,7 @@
 import { nexray } from '../../lib/Request.js'
-import { uguu } from '../../lib/Scraper.js'
-import { fetchAsBuffer } from '../../lib/Utilities.js'
 
 export default {
-   command: 'fakeml',
+   command: 'fakeff',
    category: 'tools',
    async run(m, {
       sock,
@@ -15,12 +13,7 @@ export default {
          if (!args[0])
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} itsliaaa`)
          m.react('🕒')
-         const profilePicture = await sock.profilePicture(m.sender)
-         const upload = await uguu(
-            await fetchAsBuffer(profilePicture)
-         )
-         const data = await nexray('maker/fakelobyml', {
-            avatar: upload,
+         const data = await nexray('maker/fakelobyff', {
             nickname: args[0]
          })
          sock.sendMedia(m.chat, data, '', m)

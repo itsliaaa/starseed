@@ -234,11 +234,11 @@ const Connect = async () => {
             if (group.welcome && !isMuted) {
                const profilePicture = await sock.profilePicture(userId)
 
-               const message = (group.welcomeMessage || `👋🏻 Welcome +tag`)
+               const printWelcome = (group.welcomeMessage || `👋🏻 Welcome +tag`)
                   .replace('+group', metadata.subject)
                   .replace('+tag', '@' + userId.split('@')[0])
 
-               sock.sendText(id, message, null, {
+               sock.sendText(id, printWelcome, null, {
                   externalAdReply: {
                      title: botName,
                      body: greeting(),
@@ -267,11 +267,11 @@ const Connect = async () => {
             if (group.left && !isMuted) {
                const profilePicture = await sock.profilePicture(userId)
 
-               const message = (group.leftMessage || `👋🏻 Good bye! +tag`)
+               const printLeft = (group.leftMessage || `👋🏻 Good bye! +tag`)
                   .replace('+group', metadata.subject)
                   .replace('+tag', '@' + userId.split('@')[0])
 
-               sock.sendText(id, message, null, {
+               sock.sendText(id, printLeft, null, {
                   externalAdReply: {
                      title: botName,
                      body: greeting(),
@@ -322,7 +322,7 @@ const Connect = async () => {
 
    sock.ev.on('messages.upsert', async ({ messages }) => {
       for (const message of messages) {
-         if (!message.message) continue
+         if (!message.message || !sock.user?.id) continue
 
          Serialize(sock, message)
 

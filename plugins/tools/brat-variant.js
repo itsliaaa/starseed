@@ -1,7 +1,7 @@
-import { nexray } from '../../lib/Request.js'
+import { deline, nexray } from '../../lib/Request.js'
 
 export default {
-   command: 'bratnime',
+   command: ['bratanime', 'bratgirl'],
    category: 'tools',
    async run(m, {
       sock,
@@ -13,7 +13,13 @@ export default {
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} hello`)
          m.react('🕒')
-         const data = await nexray('maker/bratanime', {
+         const endpoint = command === 'bratgirl' ?
+            deline :
+            nexray
+         const path = command === 'bratgirl' ?
+            'cewekbrat' :
+            command
+         const data = await endpoint('maker/' + path, {
             text
          })
          sock.sendMedia(m.chat, data, '', m, { sticker: true })

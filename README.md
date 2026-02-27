@@ -77,7 +77,7 @@ Object.assign(global, {
    // Footer text
    footer: '✦ Starseed',
 
-   // Bot phone number (IMPORTANT for pairing code)
+   // [IMPORTANT] Bot phone number for pairing code
    botNumber: '6281111111111',
 
    // Pairing using code method (set to false to use QR)

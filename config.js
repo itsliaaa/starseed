@@ -81,9 +81,6 @@ setGlobalDispatcher(
       keepAliveMaxTimeout: 30_000,
       connectTimeout: 5_000,
       bodyTimeout: 45_000,
-      maxRedirections: 2,
-      connect: {
-         family: 4
-      }
+      maxRedirections: 2
    })
 )

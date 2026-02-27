@@ -22,7 +22,7 @@ export default {
             votes: Object.keys(grouped)
                .sort()
                .map(category => ({
-                  name: CATEGORY_EMOJIS[category] + ' ' + toTitleCase(category),
+                  name: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
                   voteCount: grouped[category].length
                }))
          }

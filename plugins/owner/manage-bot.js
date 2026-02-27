@@ -238,7 +238,7 @@ export default {
       }
       else if (command === 'setbio') {
          if (!text)
-            return m.reply(`??🏻 *Example*: ${isPrefix + command} WhatsApp Automation`)
+            return m.reply(`👉🏻 *Example*: ${isPrefix + command} WhatsApp Automation`)
          if (text.length > 50)
             return m.reply('❌ Max characters for profile bio is 50.')
          await sock.updateProfileStatus(text)
