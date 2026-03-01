@@ -1,8 +1,8 @@
 import { nexray } from '../../lib/Request.js'
 
 export default {
-   command: 'balogo',
-   category: 'tools',
+   command: 'iqc',
+   category: 'maker',
    async run(m, {
       sock,
       isPrefix,
@@ -13,9 +13,11 @@ export default {
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} hello`)
          m.react('🕒')
-         const data = await nexray('maker/balogo', {
+         const data = await nexray('maker/iqc', {
             text
          })
+         if (!Buffer.isBuffer(data))
+            return m.reply('❌ Failed to get data.')
          sock.sendMedia(m.chat, data, '', m)
       }
       catch (error) {

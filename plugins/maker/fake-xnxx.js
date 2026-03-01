@@ -3,7 +3,7 @@ import { randomInteger } from '../../lib/Utilities.js'
 
 export default {
    command: 'fakexnxx',
-   category: 'tools',
+   category: 'maker',
    async run(m, {
       sock,
       isPrefix,
@@ -21,6 +21,8 @@ export default {
             likes: randomInteger(100, 1000),
             dislikes: randomInteger(1, 10)
          })
+         if (!Buffer.isBuffer(data))
+            return m.reply('❌ Failed to get data.')
          sock.sendMedia(m.chat, data, '', m)
       }
       catch (error) {

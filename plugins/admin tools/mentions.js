@@ -2,7 +2,7 @@ import { isMimeAudio, isMimeWebP, frame } from '../../lib/Utilities.js'
 
 export default {
    command: ['everyone', 'hidetag', 'tagall', 'totag'],
-   category: 'admin',
+   category: 'admin tools',
    async run(m, {
       sock,
       command,

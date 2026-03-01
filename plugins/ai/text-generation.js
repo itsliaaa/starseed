@@ -1,7 +1,7 @@
 import { nexray } from '../../lib/Request.js'
 
 export default {
-   command: ['ai', 'copilot', 'deepsearch', 'dgaf', 'dolphin', 'dreamanalyze', 'gita', 'glm', 'nexray', 'perplexity'],
+   command: ['ai', 'copilot', 'deepsearch', 'dgaf', 'dolphin', 'dreamanalyze', 'gita', 'glm', 'hammer', 'nexray', 'perplexity'],
    category: 'ai',
    async run(m, {
       sock,
@@ -23,6 +23,8 @@ export default {
             params.template = 'logical'
          if (command === 'glm')
             params.model = 'glm-4.6'
+         if (command === 'hammer')
+            params.model = 'Sleepy'
          const data = await nexray('ai/' + path, params)
          if (!data.status)
             return m.reply('❌ Failed to get data.')

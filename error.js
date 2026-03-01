@@ -10,7 +10,7 @@
  * - This file may ONLY be used within the Starseed project.
  */
 
-const rejectionIgnore = [
+const REJECTION_IGNORE = [
    'Timed',
    'Error',
    'TypeError',
@@ -88,7 +88,7 @@ process.on('uncaughtException', (error) => {
 process.on('unhandledRejection', (reason) => {
    const message = String(reason?.message || reason || '')
 
-   if (rejectionIgnore.some(p => message.includes(p))) return
+   if (REJECTION_IGNORE.some(p => message.includes(p))) return
 
    console.error('❌ Unhandled Rejection', ':', reason)
    process.exit(1)

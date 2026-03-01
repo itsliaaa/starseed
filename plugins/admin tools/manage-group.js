@@ -2,7 +2,7 @@ import { isMimeAudio, isMimeImage } from '../../lib/Utilities.js'
 
 export default {
    command: ['closegc', 'opengc', 'delete', 'setgcdesc', 'setgcname', 'setgcpp', 'setleft', 'setwelcome', 'upgcsw'],
-   category: 'admin',
+   category: 'admin tools',
    async run(m, {
       sock,
       group,

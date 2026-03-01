@@ -1,20 +1,20 @@
-import { faa } from '../../lib/Request.js'
+import { nexray } from '../../lib/Request.js'
 
 export default {
-   command: 'text2qr',
-   category: 'tools',
+   command: 'carbonify',
+   category: 'maker',
    async run(m, {
       sock,
       isPrefix,
       command,
-      text
+      text: code
    }) {
       try {
-         if (!text)
-            return m.reply(`👉🏻 *Example*: ${isPrefix + command} I love you, big brother.`)
+         if (!code)
+            return m.reply(`👉🏻 *Example*: ${isPrefix + command} console.log('Starseed')`)
          m.react('🕒')
-         const data = await faa('qr-create', {
-            text
+         const data = await nexray('maker/codesnap', {
+            code
          })
          if (!Buffer.isBuffer(data))
             return m.reply('❌ Failed to get data.')

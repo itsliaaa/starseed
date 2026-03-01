@@ -3,27 +3,31 @@ import { uguu } from '../../lib/Scraper.js'
 import { fetchAsBuffer } from '../../lib/Utilities.js'
 
 export default {
-   command: 'fakeml',
-   category: 'tools',
+   command: 'qc',
+   category: 'maker',
    async run(m, {
       sock,
       isPrefix,
       command,
-      args
+      text
    }) {
       try {
-         if (!args[0])
-            return m.reply(`👉🏻 *Example*: ${isPrefix + command} itsliaaa`)
+         if (!text)
+            return m.reply(`👉🏻 *Example*: ${isPrefix + command} hello`)
          m.react('🕒')
          const profilePicture = await sock.profilePicture(m.sender)
          const upload = await uguu(
             await fetchAsBuffer(profilePicture)
          )
-         const data = await nexray('maker/fakelobyml', {
+         const data = await nexray('maker/qc', {
+            text,
+            name: m.pushName,
             avatar: upload,
-            nickname: args[0]
+            color: 'Putih'
          })
-         sock.sendMedia(m.chat, data, '', m)
+         if (!Buffer.isBuffer(data))
+            return m.reply('❌ Failed to get data.')
+         sock.sendMedia(m.chat, data, '', m, { sticker: true })
       }
       catch (error) {
          console.error(error)

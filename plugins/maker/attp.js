@@ -1,8 +1,8 @@
-import { deline, nexray } from '../../lib/Request.js'
+import { nexray } from '../../lib/Request.js'
 
 export default {
-   command: ['bratanime', 'bratgirl'],
-   category: 'tools',
+   command: ['attp', 'ttp'],
+   category: 'maker',
    async run(m, {
       sock,
       isPrefix,
@@ -13,15 +13,11 @@ export default {
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} hello`)
          m.react('🕒')
-         const endpoint = command === 'bratgirl' ?
-            deline :
-            nexray
-         const path = command === 'bratgirl' ?
-            'cewekbrat' :
-            command
-         const data = await endpoint('maker/' + path, {
+         const data = await nexray('maker/' + command, {
             text
          })
+         if (!Buffer.isBuffer(data))
+            return m.reply('❌ Failed to get data.')
          sock.sendMedia(m.chat, data, '', m, { sticker: true })
       }
       catch (error) {

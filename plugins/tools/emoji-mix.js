@@ -19,6 +19,8 @@ export default {
             emoji1,
             emoji2
          })
+         if (!Buffer.isBuffer(data))
+            return m.reply('❌ Failed to get data.')
          sock.sendMedia(m.chat, data, '', m, { sticker: true })
       }
       catch (error) {

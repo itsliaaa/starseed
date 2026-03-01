@@ -20,7 +20,7 @@ This project directly implements [`@itsliaaa/baileys`](https://github.com/itslia
 | 🔹 Minimum | ✨ Recommended |
 |------------|------------|
 | 1 vCPU | 1 vCPU |
-| 1 GB RAM | 1 GB RAM |
+| 512 MB RAM | 1 GB RAM |
 | 1 GB Free Space | 2 GB Free Space |
 | FFmpeg v6.x | FFmpeg v6.x |
 | Node.js v22 LTS | Node.js v24 LTS |

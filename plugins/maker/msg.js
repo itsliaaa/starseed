@@ -2,7 +2,7 @@ import { nexray } from '../../lib/Request.js'
 
 export default {
    command: 'msg',
-   category: 'tools',
+   category: 'maker',
    async run(m, {
       sock,
       isPrefix,
@@ -19,6 +19,8 @@ export default {
             title,
             icon
          })
+         if (!Buffer.isBuffer(data))
+            return m.reply('❌ Failed to get data.')
          sock.sendMedia(m.chat, data, '', m)
       }
       catch (error) {

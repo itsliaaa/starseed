@@ -4,7 +4,7 @@ import { fetchAsBuffer } from '../../lib/Utilities.js'
 
 export default {
    command: 'fakestory',
-   category: 'tools',
+   category: 'maker',
    async run(m, {
       sock,
       isPrefix,
@@ -25,6 +25,8 @@ export default {
             caption,
             avatar: upload
          })
+         if (!Buffer.isBuffer(data))
+            return m.reply('❌ Failed to get data.')
          sock.sendMedia(m.chat, data, '', m)
       }
       catch (error) {

@@ -14,7 +14,10 @@ export default {
          m.msg?.type == 0 &&
          !m.fromMe
       ) {
-         const message = store.getMessage(m.msg.key)
+         const message = store.getMessage({
+            chat: m.msg.key.remoteJid,
+            id: m.msg.key.id
+         })
          if (message?.message) {
             const context = await sock.sendMessage(m.chat, {
                forward: message,

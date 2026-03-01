@@ -1,21 +1,23 @@
 import { nexray } from '../../lib/Request.js'
 
 export default {
-   command: 'iqc',
-   category: 'tools',
+   command: 'fakeff',
+   category: 'maker',
    async run(m, {
       sock,
       isPrefix,
       command,
-      text
+      args
    }) {
       try {
-         if (!text)
-            return m.reply(`👉🏻 *Example*: ${isPrefix + command} hello`)
+         if (!args[0])
+            return m.reply(`👉🏻 *Example*: ${isPrefix + command} itsliaaa`)
          m.react('🕒')
-         const data = await nexray('maker/iqc', {
-            text
+         const data = await nexray('maker/fakelobyff', {
+            nickname: args[0]
          })
+         if (!Buffer.isBuffer(data))
+            return m.reply('❌ Failed to get data.')
          sock.sendMedia(m.chat, data, '', m)
       }
       catch (error) {

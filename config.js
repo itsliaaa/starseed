@@ -67,7 +67,7 @@ Object.assign(global, {
    ffmpegTimeout: 30_000,
 
    // RSS limit (mb)
-   rssLimit: 500 * 1024 * 1024,
+   rssLimit: 400 * 1024 * 1024,
 
    // FFmpeg stream max concurrent processes (min: 1)
    ffmpegConcurrency: Math.max(1, cpuCount - 1)

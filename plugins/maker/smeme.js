@@ -4,7 +4,7 @@ import { isMimeImage } from '../../lib/Utilities.js'
 
 export default {
    command: 'smeme',
-   category: 'tools',
+   category: 'maker',
    async run(m, {
       sock,
       isPrefix,
@@ -28,6 +28,8 @@ export default {
             text_bawah: bottom,
             background: upload
          })
+         if (!Buffer.isBuffer(data))
+            return m.reply('❌ Failed to get data.')
          sock.sendMedia(m.chat, data, '', m, { sticker: true })
       }
       catch (error) {

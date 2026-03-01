@@ -5,7 +5,7 @@ import { frame } from '../../lib/Utilities.js'
 
 export default {
    command: ['+warn', '-warn', 'add', 'kick', 'promote', 'demote', 'sider'],
-   category: 'admin',
+   category: 'admin tools',
    async run(m, {
       sock,
       db,

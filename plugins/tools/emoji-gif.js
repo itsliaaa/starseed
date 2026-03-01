@@ -17,6 +17,8 @@ export default {
          const data = await nexray('tools/emojigif', {
             emoji: args[0]
          })
+         if (!Buffer.isBuffer(data))
+            return m.reply('❌ Failed to get data.')
          sock.sendMedia(m.chat, data, '', m, { sticker: true })
       }
       catch (error) {

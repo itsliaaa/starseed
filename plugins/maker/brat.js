@@ -2,7 +2,7 @@ import { bratSticker, bratVideoSticker } from '../../lib/Utilities.js'
 
 export default {
    command: ['brat', 'bratvid'],
-   category: 'tools',
+   category: 'maker',
    async run (m, {
       sock,
       isPrefix,

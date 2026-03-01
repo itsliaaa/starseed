@@ -33,6 +33,7 @@ export default {
          `*Anti Tag Status*: ${group.antiTagStatus ? '✅' : '❌'}`,
          `*Anti Toxic*: ${group.antiToxic ? '✅' : '❌'}`,
          `*Anti WhatsApp Link*: ${group.antiWALink ? '✅' : '❌'}`,
+         `*Sholat Reminder*: ${group.sholatReminder ? '✅' : '❌'}`,
          `*Left Message*: ${group.left ? '✅' : '❌'}`,
          `*Welcome Message*: ${group.welcome ? '✅' : '❌'}`
       ], '🔧')

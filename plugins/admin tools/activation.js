@@ -1,6 +1,6 @@
 export default {
    command: ['mute', 'unmute'],
-   category: 'admin',
+   category: 'admin tools',
    async run(m, {
       group,
       command
