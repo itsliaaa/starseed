@@ -29,7 +29,7 @@ export default {
          `*Hit Command*: ${userData.commandUsage}x`,
          `*Warning*: ${warningPoint ?? '-'} point`,
          `*Partner*: ${setting.partner.includes(userData.jid) ? '✅' : '❌'}`,
-         `*Premium*: ${userData.premium ? '✅' : '❌'}`,
+         `*Premium*: ${userData.premiumExpiry > 0 ? '✅' : '❌'}`,
          `*Banned*: ${userData.banned ? '✅' : '❌'}`
       ], '📊')
       m.reply(printUserInfo + '\n\n' +

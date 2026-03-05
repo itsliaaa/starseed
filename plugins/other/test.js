@@ -1,7 +1,7 @@
 import { hostname, cpus, totalmem, freemem, platform, arch, release, uptime } from 'os'
 
 import { SECOND } from '../../lib/Constants.js'
-import { fetchThumbnail, formatNumber, formatSize, frame, getDiskStats, greeting, toTime } from '../../lib/Utilities.js'
+import { fetchThumbnail, formatNumber, formatSize, formatTime, frame, getDiskStats, greeting, toTime } from '../../lib/Utilities.js'
 
 const getPingEmojis = (ms) => {
    if (ms < 30) return '🚀'
@@ -84,7 +84,8 @@ export default {
             `*Online Status*: ${setting.onlineStatus ? '✅' : '❌'}`,
             `*Reject Call*: ${setting.rejectCall ? '✅' : '❌'}`,
             `*Slow Mode*: ${setting.slowMode ? '✅' : '❌'}`,
-            `*Prefixes*: [${setting.prefixes}]`
+            `*Prefixes*: [${setting.prefixes}]`,
+            `*Last Reset*: ${formatTime('YYYY/MM/DD HH:mm:ss', setting.lastReset)}`
          ], '⚙️')
          m.reply(
             printStatistic +

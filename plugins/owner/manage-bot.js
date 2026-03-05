@@ -124,7 +124,33 @@ export default {
       args,
       text
    }) {
-      if (command === 'backup') {
+      if (
+         command === 'autodownload' ||
+         command === 'gconly' ||
+         command === 'onlinestatus' ||
+         command === 'rejectcall' ||
+         command === 'slowmode'
+      ) {
+         const [option] = args
+         if (!option)
+            return m.reply(`👉🏻 *Example*: ${isPrefix + command} on`)
+         if (option !== 'on' && option !== 'off')
+            return m.reply(`👉🏻 *Example*: ${isPrefix + command} on`)
+         const isActivating = option === 'on'
+         const keySetting = SETTING_MAPS[command] || command
+         const prettyKeyName = PRETTY_SETTING_MAPS[command]
+         let print = isActivating ?
+            `❌ ${prettyKeyName} already activated.` :
+            `❌ ${prettyKeyName} already deactivated.`
+         if (setting[keySetting] === isActivating)
+            return m.reply(print)
+         setting[keySetting] = isActivating
+         print = isActivating ?
+            `✅ Successfully activating ${prettyKeyName}.` :
+            `✅ Successfully deactivating ${prettyKeyName}.`
+         m.reply(print)
+      }
+      else if (command === 'backup') {
          m.react('🕒')
          await atomicWrite(db, store)
          sock.sendMedia(m.chat, resolve(databaseFilename), '✅ Backup completed.', m, {
@@ -168,32 +194,6 @@ export default {
                setting.disabledCommand.splice(index, 1)
          })
          m.reply(`✅ Successfully enabling *"${cmd}"*.`)
-      }
-      else if (
-         command === 'gconly' ||
-         command === 'autodownload' ||
-         command === 'onlinestatus' ||
-         command === 'rejectcall' ||
-         command === 'slowmode'
-      ) {
-         const [option] = args
-         if (!option)
-            return m.reply(`👉🏻 *Example*: ${isPrefix + command} on`)
-         if (option !== 'on' && option !== 'off')
-            return m.reply(`👉🏻 *Example*: ${isPrefix + command} on`)
-         const isActivating = option === 'on'
-         const keySetting = SETTING_MAPS[command] || command
-         const prettyKeyName = PRETTY_SETTING_MAPS[command]
-         let print = isActivating ?
-            `❌ ${prettyKeyName} already activated.` :
-            `❌ ${prettyKeyName} already deactivated.`
-         if (setting[keySetting] === isActivating)
-            return m.reply(print)
-         setting[keySetting] = isActivating
-         print = isActivating ?
-            `✅ Successfully activating ${prettyKeyName}.` :
-            `✅ Successfully deactivating ${prettyKeyName}.`
-         m.reply(print)
       }
       else if (command === 'resetlimit') {
          for (const user of db.users.values())

@@ -13,10 +13,12 @@ export default {
       body
    }) {
       if (!setting.autoDownload || !isURL(body)) return
-      if (user.limit > 0 && !isPartner)
-         user.limit -= 1
-      else
-         return m.reply(`⚠️ Your limit is not enough to use auto download, try \`${setting.prefixes[0]}claim\` command to claim limit.`)
+      if (!isPartner) {
+         if (user.limit > 0)
+            user.limit -= 1
+         else
+            return m.reply(`⚠️ Your limit is not enough to use auto download, try \`${setting.prefixes[0]}claim\` command to claim limit.`)
+      }
       URL_REGEX.lastIndex = 0
       const match = URL_REGEX.exec(body)
       if (!match?.[0]) return
@@ -138,8 +140,6 @@ export default {
                return m.reply('❌ Failed to get data.')
             sock.sendMedia(m.chat, data.result.url, data.result.title, m)
          }
-         else
-            m.reply('❌ Unsupported URL.')
       }
       catch (error) {
          console.error(error)

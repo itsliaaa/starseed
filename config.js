@@ -8,7 +8,7 @@ Object.assign(global, {
    ownerName: 'Lia Wynn',
 
    // Owner phone number
-   ownerNumber: '6281111111111',
+   ownerNumber: '628111111',
 
    // Bot name
    botName: 'Starseed',
@@ -17,7 +17,7 @@ Object.assign(global, {
    footer: '✦ Starseed',
 
    // [IMPORTANT] Bot phone number for pairing code
-   botNumber: '6281111111111',
+   botNumber: '628111111',
 
    // Pairing using code method (set to false to use QR)
    pairingCode: false,
@@ -32,6 +32,9 @@ Object.assign(global, {
    stickerPackPublisher: 'GitHub: itsliaaa',
 
    // ********** ADVANCED SETTINGS ********** //
+
+   // Local timezone
+   localTimezone: 'Asia/Jakarta',
 
    // Auth state folder name (optional)
    authFolder: 'session',
@@ -51,14 +54,11 @@ Object.assign(global, {
    // Bot thumbnail (optional, you can change it with setcover command)
    botThumbnail: './lib/Media/thumbnail.jpg',
 
-   // Local timezone
-   localTimezone: 'Asia/Jakarta',
-
    // Interval to clean temporary files (ms)
    temporaryFileInterval: 1_800_000,
 
    // Persist database to file interval (ms)
-   dataInterval: 300_000,
+   dataInterval: 600_000,
 
    // API request timeout
    requestTimeout: 60_000,
@@ -75,12 +75,12 @@ Object.assign(global, {
 
 setGlobalDispatcher(
    new Agent({
-      connections: 3,
+      connections: 2,
       pipelining: 1,
-      keepAliveTimeout: 2_000,
+      keepAliveTimeout: 1_000,
       keepAliveMaxTimeout: 30_000,
       connectTimeout: 5_000,
-      bodyTimeout: 45_000,
+      bodyTimeout: 30_000,
       maxRedirections: 2
    })
 )

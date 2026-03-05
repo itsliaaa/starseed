@@ -90,7 +90,7 @@ Object.assign(global, {
    ownerName: 'Lia Wynn',
 
    // Owner phone number
-   ownerNumber: '6281111111111',
+   ownerNumber: '628111111',
 
    // Bot name
    botName: 'Starseed',
@@ -99,7 +99,7 @@ Object.assign(global, {
    footer: '✦ Starseed',
 
    // [IMPORTANT] Bot phone number for pairing code
-   botNumber: '6281111111111',
+   botNumber: '628111111',
 
    // Pairing using code method (set to false to use QR)
    pairingCode: false,

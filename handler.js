@@ -19,7 +19,7 @@ import { mkdir, unlink, readdir } from 'fs/promises'
 import { join } from 'path'
 import pino from 'pino'
 
-import { SCHEMA } from './lib/Constants.js'
+import { INACTIVE_THRESHOLD, SCHEMA } from './lib/Constants.js'
 import { Database, Store } from './lib/Database.js'
 import { Serialize, shouldUpdatePresence, StickerCommand } from './lib/Serialize.js'
 import { cleanUpFolder, fetchAsBuffer, findTopSuggestions, frame, getNextMidnight, greeting, isEmptyObject, isFileExists, messageLogger, randomInteger, Sender, toTime } from './lib/Utilities.js'
@@ -71,9 +71,23 @@ const Connect = async (db, store) => {
       if (update.connection === 'connecting' && pairingCode && !sock.authState.creds.registered) {
          const { default: PhoneNumber } = await import('awesome-phonenumber')
 
+         const phoneNumber = PhoneNumber(
+            '+' + (botNumber?.toString() || '')
+               .replace(/\D/g, '')
+         )
+
+         if (!phoneNumber.isValid()) {
+            console.error('❌ Invalid phone number for pairing. Please re-check the number in config.js')
+
+            process.exit(0)
+         }
+
          await delay(1500)
 
-         const code = await sock.requestPairingCode(PhoneNumber('+' + (botNumber?.toString() || '').replace(/\D/g, '')).getNumber('e164').replace(/\D/g, ''))
+         const code = await sock.requestPairingCode(
+            phoneNumber.getNumber('e164')
+               .replace(/\D/g, '')
+         )
 
          const prettyCode = code.substring(0, 4) + '-' + code.substring(4)
          console.log('🔗 Pairing code', ':', prettyCode, '\n')
@@ -87,6 +101,7 @@ const Connect = async (db, store) => {
       }
 
       if (update.connection === 'close' && !isRestarting) {
+         ++restartScore
          isRestarting = true
 
          const reason = new Boom(update.lastDisconnect?.error)?.output?.statusCode
@@ -120,6 +135,7 @@ const Connect = async (db, store) => {
                console.error('❌ Please re-pair')
                break
             case DisconnectReason.restartRequired:
+               --restartScore
                console.log('✅ Successfully connected to WhatsApp')
                break
             default:
@@ -127,8 +143,7 @@ const Connect = async (db, store) => {
                console.error('❌ Connection lost with unknown reason', ':', reason)
          }
 
-         ++restartScore
-         if (restartScore > 4) {
+         if (restartScore >= 3) {
             console.log('❌ The socket had to be stopped due to an unstable connection.')
 
             process.exit(0)
@@ -215,15 +230,14 @@ const Connect = async (db, store) => {
 
             if (call.status === 'offer') {
                const userData = db.getUser(callFrom)
-               ++userData.callAttempt
 
                await sock.rejectCall(call.id, call.from)
 
                if (callFrom.startsWith(ownerNumber)) continue
 
+               ++userData.callAttempt
                if (userData.callAttempt >= 3) {
                   await sock.sendText(callFrom, '⚠️ You have called multiple times. Your account will now be blocked.')
-
                   await sock.updateBlockStatus(callFrom, 'block')
                   continue
                }
@@ -414,14 +428,14 @@ const Connect = async (db, store) => {
          if (message.isMe) {
             setting.messageEgress++
             setting.byteEgress += fileSize
-            return
+            continue
          }
          else {
             setting.messageIngress++
             setting.byteIngress += fileSize
          }
 
-         if (setting.onlineStatus && shouldUpdatePresence(message))
+         if (setting.onlineStatus && !message.fromMe && shouldUpdatePresence(message.message))
             sock.readMessages([message.key])
 
          if (setting.slowMode)
@@ -448,7 +462,8 @@ const Connect = async (db, store) => {
          user.lastSeen = timestampMs
 
          if (message.isGroup) {
-            const isSpam = group.antiSpam &&
+            const isSpam =
+               group.antiSpam &&
                !isPartner &&
                !isAdmin &&
                isBotAdmin &&
@@ -481,58 +496,76 @@ const Connect = async (db, store) => {
 
             if (isSpam) {
                await message.reply('⚠️ You should be removed for spamming.')
-               return sock.groupParticipantsUpdate(message.chat, [message.sender], 'remove')
+               sock.groupParticipantsUpdate(message.chat, [message.sender], 'remove')
+               continue
             }
          }
 
-         if (setting.self && !isPartner) return
+         if (setting.self && !isPartner) continue
 
-         if (setting.groupOnly && message.isPrivate && !isPartner) return
+         if (setting.groupOnly && message.isPrivate && !isPartner) continue
 
-         if (message.isGroup && group.mute && command !== 'unmute') return
+         if (message.isGroup && group.mute && command !== 'unmute') continue
 
-         if (message.isGroup && group.adminOnly && !isAdmin) return
-
-         const plugin = CommandIndex.get(command)
+         if (message.isGroup && group.adminOnly && !isAdmin) continue
 
          if (setting.prefixes.includes(isPrefix)) {
+            const plugin = CommandIndex.get(command)
+
             if (!plugin?.run) {
                const suggestions = findTopSuggestions(command)
                if (suggestions.length) {
                   const print = frame('DID YOU MEAN', suggestions.map(suggestion => `${isPrefix + suggestion.command} (${suggestion.similarity.toFixed(0)}%)`), '🔍')
-
                   message.reply(print)
                }
-               return
+               continue
             }
 
-            if (isBanned)
-               return message.reply('⚠️ You are being banned by BOT staff.')
+            if (isBanned) {
+               message.reply('⚠️ You are being banned by BOT staff.')
+               continue
+            }
 
-            if (setting.disabledCommand.includes(command))
-               return message.reply('❌ This feature is currently disabled.')
+            if (setting.disabledCommand.includes(command)) {
+               message.reply('❌ This feature is currently disabled.')
+               continue
+            }
 
-            if (plugin.owner && !isOwner)
-               return message.reply('⚠️ This command only for owner.')
+            if (plugin.owner && !isOwner) {
+               message.reply('⚠️ This command only for owner.')
+               continue
+            }
 
-            if (plugin.partner && !isPartner)
-               return message.reply('⚠️ This command only for partner.')
+            if (plugin.partner && !isPartner) {
+               message.reply('⚠️ This command only for partner.')
+               continue
+            }
 
-            if (plugin.group && !message.isGroup)
-               return message.reply('⚠️ This command will only work in group.')
+            if (plugin.group && !message.isGroup) {
+               message.reply('⚠️ This command will only work in group.')
+               continue
+            }
 
-            if (plugin.private && !message.isPrivate)
-               return message.reply('⚠️ This command will only work in private chat.')
+            if (plugin.private && !message.isPrivate) {
+               message.reply('⚠️ This command will only work in private chat.')
+               continue
+            }
 
-            if (plugin.admin && !isAdmin)
-               return message.reply('⚠️ This command only for group admin.')
+            if (plugin.admin && !isAdmin) {
+               message.reply('⚠️ This command only for group admin.')
+               continue
+            }
 
-            if (plugin.botAdmin && !isBotAdmin)
-               return message.reply('⚠️ This command will work when bot become an admin.')
+            if (plugin.botAdmin && !isBotAdmin) {
+               message.reply('⚠️ This command will work when bot become an admin.')
+               continue
+            }
 
             if (plugin.limit && !isPartner) {
-               if (user.limit < 1)
-                  return message.reply(`⚠️ You reached the limit and will be reset at 00.00 or try \`${isPrefix}claim\` command to claim limit.`)
+               if (user.limit < 1) {
+                  message.reply(`⚠️ You reached the limit and will be reset at 00.00 or try \`${isPrefix}claim\` command to claim limit.`)
+                  continue
+               }
 
                const limitCost =
                   plugin.limit === true ?
@@ -543,8 +576,10 @@ const Connect = async (db, store) => {
 
                if (user.limit >= limitCost)
                   user.limit -= limitCost
-               else
-                  return message.reply(`⚠️ Your limit is not enough to use this feature, try \`${isPrefix}claim\` command to claim limit.`)
+               else {
+                  message.reply(`⚠️ Your limit is not enough to use this feature, try \`${isPrefix}claim\` command to claim limit.`)
+                  continue
+               }
             }
 
             user.commandUsage++
@@ -629,24 +664,37 @@ const Setup = async () => {
 
    Connect(db, store)
 
-   const scheduleDailyReset = () => {
+   const scheduleDailyTasks = () => {
       const resetTimeout = getNextMidnight()
 
       setTimeout(() => {
+         const now = Date.now()
+         const threshold = now - INACTIVE_THRESHOLD
+
          const setting = db.getSetting()
+
+         for (const [id, user] of db.users) {
+            const isProtected = user.banned || user.limit >= 512
+            if (!isProtected && user.lastSeen < threshold)
+               db.users.delete(id)
+         }
+
+         for (const [id, group] of db.groups)
+            if (group.lastActivity < threshold)
+               db.groups.delete(id)
 
          for (const user of db.users.values())
             if (user.limit < defaultLimit)
                user.limit = defaultLimit
 
-         setting.lastReset = Date.now()
+         setting.lastReset = now
          db.writeToFile()
 
-         scheduleDailyReset()
+         scheduleDailyTasks()
       }, resetTimeout)
    }
 
-   scheduleDailyReset()
+   scheduleDailyTasks()
 
    const check = setInterval(async () => {
       await db.writeToFile()
