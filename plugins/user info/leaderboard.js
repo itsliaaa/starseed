@@ -15,7 +15,7 @@ export default {
       const users = [...new Set(db.users.values())]
       const isPartnerOrOwner = user =>
          setting.partner.includes(user.jid) ||
-         user.jid.startsWith(ownerNumber) ||
+         user.jid?.startsWith(ownerNumber) ||
          areJidsSameUser(sock.user.decodedId, user.jid)
       const sorted = users.sort((a, b) => {
          const aIsPartner = isPartnerOrOwner(a)

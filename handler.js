@@ -241,7 +241,7 @@ const Connect = async (db, store) => {
                   return sock.updateBlockStatus(callFrom, 'block')
                }
 
-               await sock.sendText(callFrom, '⚠️ Do not call again, or you will be blocked.')
+               sock.sendText(callFrom, '⚠️ Do not call again, or you will be blocked.')
             }
          })
    })
@@ -583,7 +583,10 @@ const Connect = async (db, store) => {
             })
          }
          else {
-            const suggestions = findTopSuggestions(command)
+            let suggestions = []
+            if (hasPrefix)
+               suggestions = findTopSuggestions(command)
+
             if (suggestions.length) {
                const printSuggestions = frame('DID YOU MEAN', suggestions.map(suggestion =>
                   `${isPrefix + suggestion.command} (${suggestion.similarity.toFixed(0)}%)`
