@@ -1,6 +1,6 @@
 {
    "name": "@itsliaaa/starseed",
-   "version": "0.2.0-beta.7",
+   "version": "0.2.0-beta.8",
    "description": "A simple WhatsApp bot built on Baileys",
    "main": "index.js",
    "type": "module",

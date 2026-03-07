@@ -506,16 +506,17 @@ const Connect = async (db, store) => {
 
          if (message.isGroup && group.adminOnly && !isAdmin) return
 
+         const noPrefix = setting.noPrefix
          const hasPrefix = setting.prefixes.includes(isPrefix)
-         if (!hasPrefix) {
-            command = isPrefix + command
+         if (!hasPrefix && noPrefix) {
+            command = isPrefix.toLowerCase() + command
             isPrefix = ''
          }
 
          if (message.isGroup && group.mute && command !== 'unmute') return
 
          let plugin = null
-         if (hasPrefix || setting.noPrefix)
+         if (hasPrefix || noPrefix)
             plugin = CommandIndex.get(command)
 
          if (plugin) {
@@ -666,7 +667,7 @@ const Setup = async () => {
          const setting = db.getSetting()
 
          for (const [id, user] of db.users) {
-            const isProtected = user.banned || user.limit >= 512
+            const isProtected = user.banned || user.premiumExpiry > 0 || user.limit >= 512
             if (!isProtected && user.lastSeen < threshold)
                db.users.delete(id)
          }
