@@ -158,6 +158,7 @@ Starseed utilizes the following external APIs:
 - [elrayyxml](https://github.com/elrayyxml) — Nexray API
 - [faa](https://whatsapp.com/channel/0029Vb7APG9InlqWTBGDnN3d) — Faa API 
 - [Deline Clarissa](https://whatsapp.com/channel/0029VbB8WYS4CrfhJCelw33j) — Deline API
+- [ZenzzXD](https://github.com/ZenzzXD) — Zennz API
 
 These services are used as external integrations and are not directly affiliated with the development of Starseed.
 

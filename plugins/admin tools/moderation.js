@@ -28,6 +28,15 @@ const PRETTY_MODERATION_MAPS = {
    left: 'Left Message'
 }
 
+const BOT_ADMIN_COMMANDS = [
+  'antigroupstatus',
+  'antilink',
+  'antispam',
+  'antitagstatus',
+  'antiwalink',
+  'antitoxic'
+]
+
 export default {
    command: ['adminonly', 'antidelete', 'antigroupstatus', 'antilink', 'antispam', 'antitagstatus', 'antitoxic', 'antiwalink', 'autosticker', 'sholatreminder', 'left', 'welcome'],
    category: 'admin tools',
@@ -42,6 +51,8 @@ export default {
          return m.reply(`👉🏻 *Example*: ${isPrefix + command} on`)
       if (option !== 'on' && option !== 'off')
          return m.reply(`👉🏻 *Example*: ${isPrefix + command} on`)
+      if (BOT_ADMIN_COMMANDS.includes(command))
+         return m.reply('⚠️ This command will work when bot become an admin.')
       const isActivating = option === 'on'
       const keySetting = MODERATION_MAPS[command] || command
       const prettyKeyName = PRETTY_MODERATION_MAPS[command]
@@ -57,6 +68,5 @@ export default {
       m.reply(print)
    },
    group: true,
-   admin: true,
-   botAdmin: true
+   admin: true
 }

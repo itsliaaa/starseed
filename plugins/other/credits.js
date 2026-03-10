@@ -26,12 +26,9 @@ export default {
          'rynn-k — Nekolabs API',
          'elrayyxml — Nexray API',
          'faa — Faa API',
-         'Deline Clarissa — Deline API'
+         'Deline Clarissa — Deline API',
+         'ZenzzXD — Zennz API'
       ], '🌐')
-      const printTesters = frame('TESTERS & COMMUNITY', [
-         'Starseed Group Members',
-         'And of course… *You* ✨'
-      ], '🧪')
       const printSourceCode = frame('SOURCE CODE', [
          'https://github.com/itsliaaa/starseed#readme'
       ], '🧩')
@@ -40,7 +37,6 @@ export default {
       ], '💰')
       m.reply(printCredits + '\n\n' +
          printAPIs + '\n\n' +
-         printTesters + '\n\n' +
          printSourceCode + '\n\n' +
          printDonateUrl, {
          externalAdReply: {

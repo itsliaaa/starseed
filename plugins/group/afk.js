@@ -11,7 +11,7 @@ export default {
          return m.reply('❌ You can\'t set a link as your AFK reason.')
       user.afkReason = text
       user.afkContext = m
-      user.afkTimestamp = Date.now()
+      user.afkTimestamp = user.lastSeen
       m.reply(`🏷️ @${m.sender.split('@')[0]} is now AFK.`)
    },
    group: true

@@ -14,7 +14,7 @@ import './config.js'
 import './error.js'
 
 import { Boom } from '@hapi/boom'
-import { areJidsSameUser, delay, DisconnectReason, isLidUser, isJidGroup, isJidMetaAI, jidNormalizedUser, makeCacheableSignalKeyStore, makeWASocket } from '@itsliaaa/baileys'
+import { areJidsSameUser, delay, DisconnectReason, isLidUser, isJidGroup, isJidMetaAI, jidNormalizedUser, makeWASocket } from '@itsliaaa/baileys'
 import { mkdir, unlink, readdir } from 'fs/promises'
 import { join } from 'path'
 import pino from 'pino'
@@ -46,20 +46,27 @@ const Connect = async (db, store) => {
 
    const sock = makeWASocket({
       logger,
-      cachedGroupMetadata: (jid) =>
-         store.getGroup(jid),
-      shouldIgnoreJid: (jid) =>
-         jid &&
-            isJidMetaAI(jid),
+      auth: state,
+      cachedGroupMetadata: async (jid) => {
+         let metadata = store.getGroup(jid)
+         if (metadata)
+            return metadata
+         try {
+            metadata = await sock.groupMetadata(jid)
+            store.setGroup(jid, metadata)
+            return metadata
+         }
+         catch {
+            return undefined
+         }
+      },
       getMessage: (key) =>
          store.getMessage({
             chat: key.remoteJid,
             id: key.id
          }),
-      auth: {
-         creds: state.creds,
-         keys: makeCacheableSignalKeyStore(state.keys)
-      }
+      shouldIgnoreJid: (jid) =>
+         jid && isJidMetaAI(jid)
    })
 
    let setting = db.getSetting()
@@ -152,11 +159,10 @@ const Connect = async (db, store) => {
 
          try {
             sock.ev.removeAllListeners()
+            sock.ws.removeAllListeners()
             sock.ws.close()
          }
          catch { }
-
-         await delay(500)
 
          isRestarting = false
          return Connect(db, store)
@@ -520,7 +526,7 @@ const Connect = async (db, store) => {
             plugin = CommandIndex.get(command)
 
          if (plugin) {
-            if (isBanned)
+            if (isBanned && command !== 'profile')
                return message.reply('🚫 You are being banned by BOT staff.')
 
             if (setting.disabledCommand.includes(command))
@@ -585,7 +591,7 @@ const Connect = async (db, store) => {
          }
          else {
             let suggestions = []
-            if (hasPrefix)
+            if (setting.commandSuggestions && hasPrefix)
                suggestions = findTopSuggestions(command)
 
             if (suggestions.length) {
@@ -685,6 +691,8 @@ const Setup = async () => {
 
          scheduleDailyTasks()
       }, resetTimeout)
+
+      console.log('🔃 Daily tasks scheduled in', ':', toTime(resetTimeout))
    }
 
    scheduleDailyTasks()
@@ -697,19 +705,25 @@ const Setup = async () => {
          clearInterval(check)
          process.send('reset')
       }
+
+      console.log('📦 Database autosaved successfully')
    }, dataInterval)
 
    setInterval(async () => {
       try {
          const temporaryFiles = await readdir(temporaryFolderPath)
-         if (temporaryFiles.length)
+         const temporaryFilesSize = temporaryFiles.length
+
+         if (temporaryFilesSize)
             for (const file of temporaryFiles) {
                const filePath = join(temporaryFolderPath, file)
                await unlink(filePath)
             }
+
+         console.log('🗑️ Cleaned up temp folder', ':', temporaryFilesSize, 'files removed')
       }
       catch (error) {
-         console.error('❌ Temp cleanup error', ':', error)
+         console.error('❌ Failed to clean temp folder', ':', error)
       }
    }, temporaryFileInterval)
 }

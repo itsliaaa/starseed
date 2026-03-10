@@ -1,11 +1,13 @@
 import { isJidNewsletter } from '@itsliaaa/baileys'
-import { Zip, ZipDeflate } from 'fflate'
+import { unzip, Zip, ZipDeflate } from 'fflate'
 import { createWriteStream, createReadStream } from 'fs'
-import { readdir, rename } from 'fs/promises'
-import { basename, join, relative, resolve } from 'path'
+import { mkdir, readdir, readFile, rename, unlink, writeFile } from 'fs/promises'
+import { basename, dirname, join, relative, resolve } from 'path'
 
 import { createFileName, downscaleImage, isMimeImage, persistToFile, toArray } from '../../lib/Utilities.js'
 import { ModuleCache } from '../../lib/Watcher.js'
+
+const TOP_PATH = 'starseed-main/'
 
 const MENU_STYLES = {
    1: '🌱 `Extended Text Message` with `externalAdReply`.',
@@ -20,6 +22,7 @@ const MENU_STYLES = {
 const SETTING_MAPS = {
    gconly: 'groupOnly',
    autodownload: 'autoDownload',
+   commandsuggestion: 'commandSuggestions',
    noprefix: 'noPrefix',
    onlinestatus: 'onlineStatus',
    rejectcall: 'rejectCall',
@@ -29,38 +32,50 @@ const SETTING_MAPS = {
 const PRETTY_SETTING_MAPS = {
    gconly: 'Group Only',
    autodownload: 'Auto Download',
+   commandsuggestion: 'Command Suggestions',
    noprefix: 'No Prefix',
    onlinestatus: 'Online Status',
    rejectcall: 'Reject Call',
    slowmode: 'Slow Mode'
 }
 
-const EXCLUDE = new Set(['node_modules', 'yarn.lock', '.git', 'session', databaseFilename, storeFilename, temporaryFolder])
+const ExcludeForWrap = new Set(['node_modules', 'yarn.lock', 'package-lock.json', '.git', '.github', '.gitignore', 'session', databaseFilename, storeFilename, temporaryFolder])
+const ExcludeForUnzip = new Set(['.git', '.github', '.gitignore', 'config.js'])
 
 const writeAndDrain = (stream, chunk) =>
-   new Promise((res, rej) => {
-      const ok = stream.write(chunk)
-      if (ok) return res()
-      stream.once('drain', res)
-      stream.once('error', rej)
+   new Promise((resolve, reject) => {
+      const isOk = stream.write(chunk)
+      if (isOk)
+         return res()
+      stream.once('drain', resolve)
+      stream.once('error', reject)
    })
 
-const addDirectory = async (zip, dir, base) => {
-   const entries = await readdir(dir, { withFileTypes: true })
+const unzipAsync = (data) =>
+   new Promise((resolve, reject) => {
+      unzip(data, (error, files) => {
+         if (error)
+            reject(error)
+         else
+            resolve(files)
+      })
+   })
+
+const addDirectory = async (zip, directoryPath = process.cwd(), topPath = process.cwd()) => {
+   const entries = await readdir(directoryPath, { withFileTypes: true })
 
    for (const entry of entries) {
-      if (EXCLUDE.has(entry.name)) continue
+      if (ExcludeForWrap.has(entry.name)) continue
       if (entry.name.startsWith('.')) continue
       if (entry.isSymbolicLink()) continue
 
-      const fullPath = join(dir, entry.name)
-      const relPath = relative(base, fullPath)
+      const fullPath = join(directoryPath, entry.name)
+      const relPath = relative(topPath, fullPath)
 
-      if (entry.isDirectory()) {
-         await addDirectory(zip, fullPath, base)
-      } else if (entry.isFile()) {
+      if (entry.isDirectory())
+         await addDirectory(zip, fullPath, topPath)
+      else if (entry.isFile())
          await addStream(zip, fullPath, relPath)
-      }
    }
 }
 
@@ -68,53 +83,83 @@ const addStream = async (zip, fullPath, relPath, outputStream) => {
    const deflate = new ZipDeflate(relPath, { level: 6 })
 
    const origOndata = deflate.ondata
-   deflate.ondata = async (err, data, final) => {
-      if (err) throw err
+   deflate.ondata = async (error, data, final) => {
+      if (error)
+         throw error
+
       await writeAndDrain(outputStream, data)
-      if (origOndata) origOndata(err, data, final)
+
+      if (origOndata)
+         origOndata(error, data, final)
    }
 
    zip.add(deflate)
 
    const stream = createReadStream(fullPath, { highWaterMark: 64 * 1024 })
    for await (const chunk of stream) {
-      deflate.push(chunk instanceof Buffer ? chunk : Buffer.from(chunk))
+      if (chunk instanceof Buffer)
+         deflate.push(chunk)
+      else
+         deflate.push(Buffer.from(chunk))
+
       await new Promise(r => setImmediate(r))
    }
 
    deflate.push(new Uint8Array(0), true)
 }
 
-const wrap = () =>
-   new Promise(async (resolve, reject) => {
-      const fileName = join(temporaryFolder, `Starseed-${createFileName()}.zip`)
-      const output = createWriteStream(fileName)
+const wrapScript = () => {
+   const filePath = join(temporaryFolder, `Starseed-${createFileName()}.zip`)
+   const output = createWriteStream(filePath)
 
-      const zip = new Zip((err, chunk, final) => {
-         if (err) return reject(err)
+   return new Promise((resolve, reject) => {
+      const zip = new Zip((error, chunk, final) => {
+         if (error)
+            return reject(error)
          output.write(chunk)
          if (final) {
             output.end()
-            resolve(fileName)
+            resolve(filePath)
          }
       })
 
-      try {
-         await addDirectory(zip, process.cwd(), process.cwd())
-         zip.end()
-      } catch (err) {
-         reject(err)
-      }
+      addDirectory(zip)
+         .then(() => zip.end())
+         .catch(reject)
    })
+}
 
-const atomicWrite = async (db, store) =>
+const updateScript = async () => {
+   const zipPath = await persistToFile('https://github.com/itsliaaa/starseed/archive/refs/heads/main.zip')
+
+   const files = await unzipAsync(
+      new Uint8Array(await readFile(zipPath))
+   )
+
+   for (const fileName in files) {
+      if (!fileName.startsWith(TOP_PATH)) continue
+      if (fileName.endsWith('/')) continue
+
+      const relative = fileName.slice(14)
+      if (!relative || ExcludeForUnzip.has(relative)) continue
+
+      const destination = join(process.cwd(), relative)
+
+      await mkdir(dirname(destination), { recursive: true })
+      await writeFile(destination, files[fileName])
+   }
+
+   await unlink(zipPath)
+}
+
+const atomicWrite = (db, store) =>
    Promise.all([
       db.writeToFile(),
       store.writeToFile()
    ])
 
 export default {
-   command: ['autodownload', 'backup', 'backupsc', 'disable', 'enable', 'gconly', 'noprefix', 'onlinestatus', 'rejectcall', 'resetlimit', 'restart', 'restore', 'setbroadcastcd', 'setmenu', 'setname', 'setbio', 'setpp', 'setcover', 'setchid', 'slowmode', 'public', 'self', '+prefix', '-prefix'],
+   command: ['autodownload', 'backup', 'backupsc', 'commandsuggestion', 'disable', 'enable', 'gconly', 'noprefix', 'onlinestatus', 'rejectcall', 'resetlimit', 'restart', 'restore', 'setbroadcastcd', 'setmenu', 'setname', 'setbio', 'setpp', 'setcover', 'setchid', 'slowmode', 'public', 'self', 'updatesc', '+prefix', '-prefix'],
    category: 'owner',
    async run (m, {
       sock,
@@ -128,6 +173,7 @@ export default {
    }) {
       if (
          command === 'autodownload' ||
+         command === 'commandsuggestion' ||
          command === 'gconly' ||
          command === 'noprefix' ||
          command === 'onlinestatus' ||
@@ -162,8 +208,8 @@ export default {
       }
       else if (command === 'backupsc') {
          m.react('🕒')
-         const filePath = await wrap()
-         sock.sendMedia(m.chat, filePath, '✅ Backup success.', m, {
+         const filePath = await wrapScript()
+         sock.sendMedia(m.chat, filePath, '✅ Backup completed.', m, {
             document: true,
             fileName: basename(filePath)
          })
@@ -300,6 +346,27 @@ export default {
             return m.reply('❌ Already in self mode.')
          setting.self = true
          m.reply('✅ Successfully set to self mode.')
+      }
+      else if (command === 'updatesc') {
+         m.react('🕒')
+         await atomicWrite(db, store)
+         await sock.sendMedia(m.chat, resolve(databaseFilename), '✅ *(1/3)* Backup database completed.', m, {
+            fileName: databaseFilename
+         })
+         const filePath = await wrapScript()
+         await sock.sendMedia(m.chat, filePath, '✅ *(2/3)* Backup script completed.', m, {
+            document: true,
+            fileName: basename(filePath)
+         })
+         try {
+            await updateScript()
+            await m.reply('✅ *(3/3)* Successfully updated, restarting...')
+            process.send('reset')
+         }
+         catch (error) {
+            console.error(error)
+            m.reply('❌ Failed to update the script.')
+         }
       }
       else if (command === '+prefix') {
          const [symbol] = args

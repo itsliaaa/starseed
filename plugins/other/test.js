@@ -80,6 +80,7 @@ export default {
          const printSettings = frame('SETTINGS', [
             `*Mode*: ${setting.self ? '🔒 Self' : '🌐 Public'}`,
             `*Auto Download*: ${setting.autoDownload ? '✅' : '❌'}`,
+            `*Command Suggestions*: ${setting.commandSuggestions ? '✅' : '❌'}`,
             `*Group Only*: ${setting.groupOnly ? '✅' : '❌'}`,
             `*No Prefix*: ${setting.noPrefix ? '✅' : '❌'}`,
             `*Online Status*: ${setting.onlineStatus ? '✅' : '❌'}`,

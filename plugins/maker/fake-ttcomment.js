@@ -1,21 +1,22 @@
-import { nexray } from '../../lib/Request.js'
+import { zenzxz } from '../../lib/Request.js'
 import { uguu } from '../../lib/Scraper.js'
 import { fetchAsBuffer } from '../../lib/Utilities.js'
 
 export default {
-   command: 'fakeml',
+   command: 'fakettcomment',
    category: 'maker',
    async run(m, {
       sock,
       isPrefix,
       command,
-      args
+      text
    }) {
       try {
          const q = m.quoted?.url ? m.quoted : m
          const mimetype = (q.msg || q).mimetype
-         if (!args[0])
-            return m.reply(`👉🏻 *Example*: ${isPrefix + command} itsliaaa`)
+         const [comment, date = '1 m', username = m.pushName] = text.split('|')
+         if (!text)
+            return m.reply(`👉🏻 *Example*: ${isPrefix + command} ok! | 1 m | @itsliaaa`)
          m.react('🕒')
          let profilePicture
          if (mimetype)
@@ -25,9 +26,11 @@ export default {
          const upload = await uguu(
             await fetchAsBuffer(profilePicture)
          )
-         const data = await nexray('maker/fakelobyml', {
-            avatar: upload,
-            nickname: args[0]
+         const data = await zenzxz('maker/fakettcomment', {
+            url: upload,
+            username,
+            comment,
+            date
          })
          if (!Buffer.isBuffer(data))
             return m.reply('❌ Failed to get data.')

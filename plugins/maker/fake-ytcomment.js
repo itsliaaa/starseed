@@ -12,11 +12,17 @@ export default {
       text
    }) {
       try {
+         const q = m.quoted?.url ? m.quoted : m
+         const mimetype = (q.msg || q).mimetype
          const [caption, username = m.pushName] = text.split('|')
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} nice gurl | @itsliaaa`)
          m.react('🕒')
-         const profilePicture = await sock.profilePicture(m.sender)
+         let profilePicture
+         if (mimetype)
+            profilePicture = await q.download()
+         else
+            profilePicture = await sock.profilePicture(m.sender)
          const upload = await uguu(
             await fetchAsBuffer(profilePicture)
          )
