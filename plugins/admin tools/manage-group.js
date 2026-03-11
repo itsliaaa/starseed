@@ -68,7 +68,7 @@ export default {
       }
       else if (command === 'upgcsw') {
          const q = m.quoted ? m.quoted : m
-         const body = text ?? q.body
+         const body = text || q.body
          const mimetype = (q.msg || q).mimetype
          if (!body && !mimetype)
             return m.reply('💭 Provide text or media you would like to send to the group status.')

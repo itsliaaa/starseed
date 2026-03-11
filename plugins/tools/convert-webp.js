@@ -1,7 +1,6 @@
-import { JPG_CONVERSION_ARGS } from '../../lib/Constants.js'
 import { nexray } from '../../lib/Request.js'
 import { uguu } from '../../lib/Scraper.js'
-import { ffmpeg, isMimeWebP, persistToFile } from '../../lib/Utilities.js'
+import { downscaleImage, isMimeWebP } from '../../lib/Utilities.js'
 
 export default {
    command: ['toimage', 'tovideo'],
@@ -27,15 +26,11 @@ export default {
             if (!data.status)
                return m.reply('❌ Failed to get data.')
          }
-         else {
-            const filePath = await persistToFile(buffer)
-            data = await ffmpeg(
-               filePath,
-               [],
-               JPG_CONVERSION_ARGS,
-               'jpg'
+         else
+            data = await downscaleImage(
+               await q.download(),
+               512
             )
-         }
          sock.sendMedia(m.chat, data?.result || data, '', m)
       }
       catch (error) {

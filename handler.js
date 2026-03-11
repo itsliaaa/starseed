@@ -14,7 +14,7 @@ import './config.js'
 import './error.js'
 
 import { Boom } from '@hapi/boom'
-import { areJidsSameUser, delay, DisconnectReason, isLidUser, isJidGroup, isJidMetaAI, jidNormalizedUser, makeWASocket } from '@itsliaaa/baileys'
+import { areJidsSameUser, delay, DisconnectReason, isLidUser, isJidGroup, isJidMetaAI, jidNormalizedUser, makeCacheableSignalKeyStore, makeWASocket, useMultiFileAuthState } from '@itsliaaa/baileys'
 import { mkdir, unlink, readdir } from 'fs/promises'
 import { join } from 'path'
 import pino from 'pino'
@@ -25,11 +25,8 @@ import { Serialize, shouldUpdatePresence, StickerCommand } from './lib/Serialize
 import { cleanUpFolder, fetchAsBuffer, findTopSuggestions, frame, getNextMidnight, greeting, isEmptyObject, isFileExists, messageLogger, randomInteger, Sender, toTime } from './lib/Utilities.js'
 import { CommandIndex, EventIndex, ModuleCache, scanDirectory } from './lib/Watcher.js'
 
-import AntiSpam from './lib/Components/AntiSpam.js'
-import AuthState from './lib/Components/AuthState.js'
 import SholatReminder from './lib/Components/SholatReminder.js'
 
-const detectSpam = AntiSpam()
 const sholatReminder = SholatReminder()
 
 const logger = pino({ level: 'silent' })
@@ -42,11 +39,12 @@ let isRestarting = false,
    restartScore = 0
 
 const Connect = async (db, store) => {
-   const { state, saveCreds } = await AuthState()
+   const { state, saveCreds } = await useMultiFileAuthState(authFolder)
 
    const sock = makeWASocket({
       logger,
-      auth: state,
+      shouldIgnoreJid: (jid) =>
+         jid && isJidMetaAI(jid),
       cachedGroupMetadata: async (jid) => {
          let metadata = store.getGroup(jid)
          if (metadata)
@@ -65,8 +63,10 @@ const Connect = async (db, store) => {
             chat: key.remoteJid,
             id: key.id
          }),
-      shouldIgnoreJid: (jid) =>
-         jid && isJidMetaAI(jid)
+      auth: {
+         creds: state.creds,
+         keys: makeCacheableSignalKeyStore(state.keys)
+      }
    })
 
    let setting = db.getSetting()
@@ -253,10 +253,13 @@ const Connect = async (db, store) => {
    })
 
    sock.ev.on('group-participants.update', async ({ id, author, participants, action }) => {
+      const group = db.getGroup(id)
       const metadata = store.getGroup(id) || await sock.groupMetadata(id)
 
-      const group = db.getGroup(id)
       const isMuted = group.mute
+      const isBotAdmin = metadata.participants?.some(participant =>
+         participant.id === sock.user.decodedLid && participant.admin
+      )
 
       participants.forEach(async (participant) => {
          let userId = participant.phoneNumber
@@ -272,8 +275,18 @@ const Connect = async (db, store) => {
          }
          if (action === 'add') {
             metadata.participants.push(participant)
-            group.participants[userId] = {
-               ...SCHEMA.Participant
+            if (!group.participants[userId])
+               group.participants[userId] = {
+                  ...SCHEMA.Participant
+               }
+
+            if (
+               group.antiRejoin &&
+               group.participants[userId].leftGroup &&
+               isBotAdmin
+            ) {
+               await sock.sendText(id, `❌ You @${userId.split('@')[0]} already left this group before. Rejoining is not allowed.`)
+               return sock.groupParticipantsUpdate(id, [userId], 'remove')
             }
 
             if (group.welcome && !isMuted) {
@@ -307,7 +320,7 @@ const Connect = async (db, store) => {
          }
          else if (action === 'remove') {
             metadata.participants = metadata.participants.filter(x => x.id !== participant.id)
-            delete group.participants[userId]
+            group.participants[userId].leftGroup = true
 
             if (group.left && !isMuted) {
                const profilePicture = await sock.profilePicture(userId)
@@ -453,29 +466,21 @@ const Connect = async (db, store) => {
          const isPartner = isOwner || setting.partner.includes(message.sender)
          const isBanned = user.banned
          const isAdmin = message.isGroup &&
-            groupMetadata.participants?.some(p =>
+            groupMetadata.participants?.some(participant =>
                (
-                  p.phoneNumber === message.sender ||
-                  p.id === message.sender ||
-                  p.id === message.senderLid
-               ) && p.admin
+                  participant.phoneNumber === message.sender ||
+                  participant.id === message.sender ||
+                  participant.id === message.senderLid
+               ) && participant.admin
             )
          const isBotAdmin = message.isGroup &&
-            groupMetadata.participants?.some(p =>
-               p.id === sock.user.decodedLid && p.admin
+            groupMetadata.participants?.some(participant =>
+               participant.id === sock.user.decodedLid && participant.admin
             )
 
          user.lastSeen = timestampMs
 
          if (message.isGroup) {
-            const isSpam =
-               group.antiSpam &&
-               !isPartner &&
-               !isAdmin &&
-               isBotAdmin &&
-               !message.type.startsWith('react') &&
-               detectSpam(message.sender)
-
             group.lastActivity = timestampMs
 
             if (group.participants[message.sender]) {
@@ -498,11 +503,6 @@ const Connect = async (db, store) => {
                user.afkReason = ''
                user.afkContext = {}
                user.afkTimestamp = -1
-            }
-
-            if (isSpam) {
-               await message.reply('⚠️ You should be removed for spamming.')
-               return sock.groupParticipantsUpdate(message.chat, [message.sender], 'remove')
             }
          }
 
@@ -697,16 +697,22 @@ const Setup = async () => {
 
    scheduleDailyTasks()
 
+   if (global.gc)
+      setInterval(() => {
+         global.gc()
+         console.log('🧹 Garbage collector called, heap cleaned')
+      }, gcInterval)
+
    const check = setInterval(async () => {
       await db.writeToFile()
       await store.writeToFile()
+
+      console.log('📦 Database autosaved successfully')
 
       if (process.memoryUsage().rss >= rssLimit) {
          clearInterval(check)
          process.send('reset')
       }
-
-      console.log('📦 Database autosaved successfully')
    }, dataInterval)
 
    setInterval(async () => {

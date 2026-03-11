@@ -1,4 +1,3 @@
-import { SCHEMA } from '../../lib/Constants.js'
 import { frame, isURL, isWhatsAppURL } from '../../lib/Utilities.js'
 
 export const handleWarning = async (m, {
@@ -7,7 +6,7 @@ export const handleWarning = async (m, {
    note,
    max = 5
 } = {}) => {
-   participant.warningPoint += 1
+   participant.warningPoint++
    if (participant.warningPoint >= max) {
       await sock.sendMessage(m.chat, {
          delete: {
@@ -19,7 +18,7 @@ export const handleWarning = async (m, {
       })
       const print = frame('WARNING', [
          `👋🏻 Good bye!`,
-         `*Warning*: 5 / ${max}`
+         `*Warning*: ${max} / ${max}`
       ], '⚠️')
       await m.reply(print)
       sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
@@ -59,7 +58,7 @@ export default {
          handleWarning(m, {
             sock,
             participant,
-            note: `5 warnings and you’ll be removed. No more send any types of link.`
+            note: `5 warnings and you’ll be removed. No more sending any type of link.`
          })
       }
       if (
@@ -72,7 +71,7 @@ export default {
          handleWarning(m, {
             sock,
             participant,
-            note: `5 warnings and you’ll be removed. No more send group and channel link.`
+            note: `5 warnings and you’ll be removed. No sending group or channel links.`
          })
       }
    },

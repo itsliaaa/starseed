@@ -331,7 +331,7 @@ export default {
          if (!args.length)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} 12111111111111@newsletter`)
          if (!isJidNewsletter(args[0]))
-            return m.reply('❌ Invalid newsletter id')
+            return m.reply('❌ Invalid newsletter id, you can get it your newsletter id with \`${isPrefix}channelid\` command.')
          setting.newsletterId = args[0]
          m.reply('✅ Successfully set newsletter id.')
       }

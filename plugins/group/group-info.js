@@ -27,10 +27,14 @@ export default {
       ], '👥')
       const printModeration = frame('MODERATION', [
          `*Auto Sticker*: ${group.autoSticker ? '✅' : '❌'}`,
+         `*Anti Bot*: ${group.antiBot ? '✅' : '❌'}`,
          `*Anti Delete*: ${group.antiDelete ? '✅' : '❌'}`,
+         `*Anti Porn*: ${group.antiPorn ? '✅' : '❌'}`,
          `*Anti Group Status*: ${group.antiGroupStatus ? '✅' : '❌'}`,
          `*Anti Link*: ${group.antiLink ? '✅' : '❌'}`,
+         `*Anti Rejoin*: ${group.antiRejoin ? '✅' : '❌'}`,
          `*Anti Spam*: ${group.antiSpam ? '✅' : '❌'}`,
+         `*Anti Tag All*: ${group.antiTagAll ? '✅' : '❌'}`,
          `*Anti Tag Status*: ${group.antiTagStatus ? '✅' : '❌'}`,
          `*Anti Toxic*: ${group.antiToxic ? '✅' : '❌'}`,
          `*Anti WhatsApp Link*: ${group.antiWALink ? '✅' : '❌'}`,

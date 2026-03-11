@@ -4,20 +4,25 @@ export default {
    async run(m, {
       sock,
       group,
+      groupMetadata,
       isPartner,
       isAdmin
    }) {
       if (
-         group.antiTagStatus &&
+         group.antiTagAll &&
          !isPartner &&
          !isAdmin &&
-         m.message.groupStatusMentionMessage
+         (
+            m.mentionedJid.length >= groupMetadata.size ||
+            m.msg?.contextInfo?.nonJidMentions ||
+            m.mentionedJid.length > 10
+         )
       ) {
          const participant = group.participants[m.sender]
          handleWarning(m, {
             sock,
             participant,
-            note: `3 warnings and you’ll be removed. No more status mentions.`,
+            note: `3 warnings and you’ll be removed. Please don’t tag all group participants again.`,
             max: 3
          })
       }

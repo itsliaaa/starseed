@@ -3,8 +3,8 @@ import { uguu } from '../../lib/Scraper.js'
 import { isMimeImage, isMimeVideo } from '../../lib/Utilities.js'
 
 export default {
-   command: 'enhance',
-   hidden: 'hd',
+   command: 'hd',
+   hidden: 'enhance',
    category: 'tools',
    async run(m, {
       sock,

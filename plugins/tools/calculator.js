@@ -19,7 +19,7 @@ const REVERSE_MAP = {
 
 export default {
    command: 'calculator',
-   hidden: 'c',
+   hidden: 'cal',
    category: 'tools',
    async run(m, {
       text,

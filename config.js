@@ -31,6 +31,12 @@ Object.assign(global, {
    // Sticker pack publisher
    stickerPackPublisher: 'GitHub: itsliaaa',
 
+   // ********** API KEYS ********** //
+
+   // [IMPORTANT] SightEngine for Anti Porn --- https://sightengine.com/
+   apiUser: '',
+   apiSecret: '',
+
    // ********** ADVANCED SETTINGS ********** //
 
    // Local timezone
@@ -60,6 +66,9 @@ Object.assign(global, {
    // Persist database to file interval (ms)
    dataInterval: 600_000,
 
+   // Call the garbage collector if exposed (ms)
+   gcInterval: 3_600_000,
+
    // API request timeout
    requestTimeout: 60_000,
 
@@ -67,18 +76,18 @@ Object.assign(global, {
    ffmpegTimeout: 60_000,
 
    // RSS limit (mb)
-   rssLimit: 400 * 1024 * 1024,
+   rssLimit: 384 * 1024 * 1024,
 
    // FFmpeg stream max concurrent processes (min: 1)
-   ffmpegConcurrency: Math.max(1, cpuCount - 1)
+   ffmpegConcurrency: Math.max(4, cpuCount * 2)
 })
 
 setGlobalDispatcher(
    new Agent({
-      connections: 3,
+      connections: 5,
       pipelining: 1,
       keepAliveTimeout: 1_000,
-      keepAliveMaxTimeout: 30_000,
+      keepAliveMaxTimeout: 60_000,
       connectTimeout: 5_000,
       bodyTimeout: 30_000,
       maxRedirections: 2

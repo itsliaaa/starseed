@@ -61,7 +61,7 @@ bash install.sh
 After installation completes, start the bot:
 
 ```bash
-pm2 start app.config.cjs
+pm2 start app.config.cjs --only bot
 pm2 logs bot
 ```
 
@@ -76,7 +76,7 @@ Run PowerShell as Administrator, then execute:
 After installation completes:
 
 ```powershell
-pm2 start app.config.cjs
+pm2 start app.config.cjs --only bot
 pm2 logs bot
 ```
 
@@ -112,6 +112,12 @@ Object.assign(global, {
 
    // Sticker pack publisher
    stickerPackPublisher: 'GitHub: itsliaaa',
+
+   // ********** API KEYS ********** //
+
+   // [IMPORTANT] SightEngine for Anti Porn --- https://sightengine.com/
+   apiUser: '',
+   apiSecret: '',
 
    // ...
 })

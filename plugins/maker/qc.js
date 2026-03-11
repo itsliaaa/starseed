@@ -1,4 +1,4 @@
-import { nexray } from '../../lib/Request.js'
+import { nekolabs } from '../../lib/Request.js'
 import { uguu } from '../../lib/Scraper.js'
 import { fetchAsBuffer } from '../../lib/Utilities.js'
 
@@ -19,11 +19,11 @@ export default {
          const upload = await uguu(
             await fetchAsBuffer(profilePicture)
          )
-         const data = await nexray('maker/qc', {
+         const data = await nekolabs('canvas/quote-chat', {
             text,
             name: m.pushName,
-            avatar: upload,
-            color: 'Putih'
+            profile: upload,
+            color: '#000000'
          })
          if (!Buffer.isBuffer(data))
             return m.reply('❌ Failed to get data.')

@@ -16,7 +16,7 @@ export default {
       text
    }) {
       if (!setting.newsletterId || !isJidNewsletter(setting.newsletterId))
-         return m.reply('❌ Newsletter ID are still empty or invalid.')
+         return m.reply(`❌ Newsletter ID are still empty or invalid, you can change it with \`${isPrefix}setchid\` command.`)
       const newsletters = await sock.newsletterSubscribed()
       if (!newsletters.some(newsletter => newsletter.id === setting.newsletterId))
          return m.reply('❌ Newsletter was not found using the newsletter ID you previously configured.')

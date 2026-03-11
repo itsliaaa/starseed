@@ -56,18 +56,22 @@ export default {
             participants[userId] = {
                ...SCHEMA.Participant
             }
-         participants[userId].warningPoint += 1
+         ++participants[userId].warningPoint
          await m.reply(`✅ Added +1 warning point for @${userId.split('@')[0]}.`)
-         if (participants[userId].warningPoint >= 5)
+         if (participants[userId].warningPoint >= 5) {
+            participants[userId].leftGroup = true
             sock.groupParticipantsUpdate(m.chat, [userId], 'remove')
+         }
       }
       else if (command === '-warn') {
          if (!participants[userId])
             participants[userId] = {
                ...SCHEMA.Participant
             }
-         participants[userId].warningPoint -= 1
-         return m.reply(`✅ Reduced -1 warning point for @${userId.split('@')[0]}.`)
+         if (participants[userId].warningPoint < 1)
+            return m.reply(`❌ @${userId.split('@')[0]} warning point already 0.`)
+         --participants[userId].warningPoint
+         m.reply(`✅ Reduced -1 warning point for @${userId.split('@')[0]}.`)
       }
       else {
          const isUserInGroup = groupMetadata.participants.some(p => p.id === userId || p.phoneNumber === userId)

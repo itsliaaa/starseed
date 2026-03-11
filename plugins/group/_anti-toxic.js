@@ -1,5 +1,3 @@
-import { SCHEMA } from '../../lib/Constants.js'
-
 import { handleWarning } from './_anti-link.js'
 
 export default {

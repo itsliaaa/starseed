@@ -1,9 +1,13 @@
 const MODERATION_MAPS = {
    adminonly: 'adminOnly',
+   antibot: 'antiBot',
    antidelete: 'antiDelete',
+   antiporn: 'antiPorn',
    antigroupstatus: 'antiGroupStatus',
    antilink: 'antiLink',
+   antirejoin: 'antiRejoin',
    antispam: 'antiSpam',
+   antitagall: 'antiTagAll',
    antitagstatus: 'antiTagStatus',
    antitoxic: 'antiToxic',
    antiwalink: 'antiWALink',
@@ -14,10 +18,14 @@ const MODERATION_MAPS = {
 
 const PRETTY_MODERATION_MAPS = {
    adminonly: 'Admin Only',
+   antibot: 'Anti Bot',
    antidelete: 'Anti Delete',
+   antiporn: 'Anti Porn',
    antigroupstatus: 'Anti Group Status',
    antilink: 'Anti Link',
+   antirejoin: 'Anti Rejoin',
    antispam: 'Anti Spam',
+   antitagall: 'Anti Tag All',
    antitagstatus: 'Anti Tag Status',
    antiwalink: 'Anti WhatsApp Link',
    antitoxic: 'Anti Toxic',
@@ -29,19 +37,24 @@ const PRETTY_MODERATION_MAPS = {
 }
 
 const BOT_ADMIN_COMMANDS = [
-  'antigroupstatus',
-  'antilink',
-  'antispam',
-  'antitagstatus',
-  'antiwalink',
-  'antitoxic'
+   'antibot',
+   'antiporn',
+   'antigroupstatus',
+   'antilink',
+   'antirejoin',
+   'antispam',
+   'antitagall',
+   'antitagstatus',
+   'antiwalink',
+   'antitoxic'
 ]
 
 export default {
-   command: ['adminonly', 'antidelete', 'antigroupstatus', 'antilink', 'antispam', 'antitagstatus', 'antitoxic', 'antiwalink', 'autosticker', 'sholatreminder', 'left', 'welcome'],
+   command: ['adminonly', 'antibot', 'antidelete', 'antiporn', 'antigroupstatus', 'antilink', 'antirejoin', 'antispam', 'antitagall', 'antitagstatus', 'antitoxic', 'antiwalink', 'autosticker', 'sholatreminder', 'left', 'welcome'],
    category: 'admin tools',
    async run(m, {
       group,
+      isBotAdmin,
       isPrefix,
       command,
       args
@@ -51,8 +64,10 @@ export default {
          return m.reply(`👉🏻 *Example*: ${isPrefix + command} on`)
       if (option !== 'on' && option !== 'off')
          return m.reply(`👉🏻 *Example*: ${isPrefix + command} on`)
-      if (BOT_ADMIN_COMMANDS.includes(command))
+      if (BOT_ADMIN_COMMANDS.includes(command) && !isBotAdmin)
          return m.reply('⚠️ This command will work when bot become an admin.')
+      if (command === 'antiporn' && (!apiUser || !apiSecret))
+         return m.reply('❌ The Anti Porn feature is currently unavailable. Please ask the bot owner to set it up first.')
       const isActivating = option === 'on'
       const keySetting = MODERATION_MAPS[command] || command
       const prettyKeyName = PRETTY_MODERATION_MAPS[command]

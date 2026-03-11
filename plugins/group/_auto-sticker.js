@@ -11,7 +11,6 @@ export default {
       const mimetype = m.msg?.mimetype
       if (
          user.limit > 0 &&
-         !m.fromMe &&
          !isMimeWebP(mimetype) &&
          (
             isMimeImage(mimetype) ||

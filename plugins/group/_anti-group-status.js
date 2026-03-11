@@ -1,5 +1,3 @@
-import { SCHEMA } from '../../lib/Constants.js'
-
 import { handleWarning } from './_anti-link.js'
 
 export default {
@@ -22,7 +20,7 @@ export default {
          handleWarning(m, {
             sock,
             participant,
-            note: `3 warnings and you’ll be removed. No more sending group status.`,
+            note: `3 warnings and you’ll be removed. No more group status posts.`,
             max: 3
          })
       }

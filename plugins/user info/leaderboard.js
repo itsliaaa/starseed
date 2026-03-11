@@ -13,10 +13,10 @@ export default {
       command
    }) {
       const users = [...new Set(db.users.values())]
-      const isPartnerOrOwner = user =>
-         setting.partner.includes(user.jid) ||
-         user.jid?.startsWith(ownerNumber) ||
-         areJidsSameUser(sock.user.decodedId, user.jid)
+      const isPartnerOrOwner = (user) =>
+         areJidsSameUser(sock.user.decodedId, user.jid) ||
+            user.jid?.startsWith(ownerNumber) ||
+               setting.partner.includes(user.jid)
       const sorted = users.sort((a, b) => {
          const aIsPartner = isPartnerOrOwner(a)
          const bIsPartner = isPartnerOrOwner(b)
@@ -26,10 +26,10 @@ export default {
          const bLimit = b.limit ?? 0
          return bLimit - aLimit
       })
-      const leaderboard = sorted.slice(0, 10).flatMap((user, index, array) => {
+      const leaderboard = sorted.slice(0, 10).flatMap((userData, index, array) => {
          const lines = [
-            `${medal(index)} *Name*: ${user.name}`,
-            `*Limit*: ${isPartnerOrOwner(user) ? '`ꝏ Unlimited`' : user.limit}`
+            `${medal(index)} *Name*: ${userData.name}`,
+            `*Limit*: ${isPartnerOrOwner(userData) ? '`ꝏ Unlimited`' : userData.limit}`
          ]
          if (index !== array.length - 1)
             lines.push('')

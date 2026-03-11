@@ -4,6 +4,7 @@ import { isMimeImage } from '../../lib/Utilities.js'
 
 export default {
    command: 'editimage',
+   hidden: 'nanobanana',
    category: 'ai',
    async run(m, {
       sock,

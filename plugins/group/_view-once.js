@@ -14,8 +14,8 @@ export default {
          group.viewOnceForwarder &&
          !isPartner &&
          !isAdmin &&
-         m.msg.viewOnce &&
-         !m.fromMe
+         !m.fromMe &&
+         m.msg.viewOnce
       ) {
          m.msg.viewOnce = false
          const context = await sock.sendMessage(m.chat, {
