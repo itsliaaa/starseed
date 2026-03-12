@@ -21,6 +21,24 @@ const major = parseInt(
    10
 )
 
+const Banner = async () => {
+   const { default: CFonts } = await import('cfonts')
+
+   console.log('\x1Bc')
+
+   CFonts.say('STARSEED', {
+      font: 'tiny',
+      align: 'center',
+      gradient: ['#CB9DF0', '#FFF9BF']
+   })
+
+   CFonts.say('GitHub: https://github.com/itsliaaa/starseed', {
+      colors: ['system'],
+      font: 'console',
+      align: 'center'
+   })
+}
+
 const Start = () => {
    const p = spawn(process.execPath, [
       ...process.execArgv,
@@ -45,35 +63,17 @@ const Start = () => {
       console.error(`⚠️ Exited with code ${code}`)
 
       if (code !== 0)
-         setTimeout(Start, 1000)
+         setTimeout(Start, 3000)
    })
 }
 
-const Print = async () => {
-   const { default: CFonts } = await import('cfonts')
+Banner()
 
-   console.log('\x1Bc')
-
-   CFonts.say('STARSEED', {
-      font: 'tiny',
-      align: 'center',
-      gradient: ['#CB9DF0', '#FFF9BF']
-   })
-
-   CFonts.say('GitHub: https://github.com/itsliaaa/starseed', {
-      colors: ['system'],
-      font: 'console',
-      align: 'center'
-   })
-}
-
-Print()
-
-if (major < 22) {
+if (major < 20) {
    console.error(
-      `\n❌ This script requires Node.js 22+ to run reliably.\n` +
+      `\n❌ This script requires Node.js 20+ to run reliably.\n` +
       `   You are using Node.js ${process.versions.node}.\n` +
-      `   Please upgrade to Node.js 22+ to proceed.\n`
+      `   Please upgrade to Node.js 20+ to proceed.\n`
    )
 
    process.exit(0)

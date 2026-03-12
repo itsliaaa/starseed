@@ -239,7 +239,7 @@ const Connect = async (db, store) => {
 
                await sock.rejectCall(call.id, call.from)
 
-               if (callFrom.startsWith(ownerNumber)) return
+               if (!userData || callFrom.startsWith(ownerNumber)) return
 
                ++userData.callAttempt
                if (userData.callAttempt >= 3) {
@@ -254,7 +254,7 @@ const Connect = async (db, store) => {
 
    sock.ev.on('group-participants.update', async ({ id, author, participants, action }) => {
       const group = db.getGroup(id)
-      const metadata = store.getGroup(id) || await sock.groupMetadata(id)
+      const metadata = store.getGroup(id) || (await sock.groupMetadata(id))
 
       const isMuted = group.mute
       const isBotAdmin = metadata.participants?.some(participant =>
@@ -275,6 +275,7 @@ const Connect = async (db, store) => {
          }
          if (action === 'add') {
             metadata.participants.push(participant)
+
             if (!group.participants[userId])
                group.participants[userId] = {
                   ...SCHEMA.Participant
@@ -283,7 +284,8 @@ const Connect = async (db, store) => {
             if (
                group.antiRejoin &&
                group.participants[userId].leftGroup &&
-               isBotAdmin
+               isBotAdmin &&
+               author === userId
             ) {
                await sock.sendText(id, `❌ You @${userId.split('@')[0]} already left this group before. Rejoining is not allowed.`)
                return sock.groupParticipantsUpdate(id, [userId], 'remove')
@@ -320,6 +322,12 @@ const Connect = async (db, store) => {
          }
          else if (action === 'remove') {
             metadata.participants = metadata.participants.filter(x => x.id !== participant.id)
+
+            if (!group.participants[userId])
+               group.participants[userId] = {
+                  ...SCHEMA.Participant
+               }
+
             group.participants[userId].leftGroup = true
 
             if (group.left && !isMuted) {
@@ -506,7 +514,7 @@ const Connect = async (db, store) => {
             }
          }
 
-         if (setting.self && !isPartner) return
+         if (setting.self && !isOwner) return
 
          if (setting.groupOnly && message.isPrivate && !isPartner) return
 
@@ -561,8 +569,13 @@ const Connect = async (db, store) => {
                         plugin.limit :
                         0
 
-               if (user.limit >= limitCost)
+               if (user.limit >= limitCost) {
+                  if (Math.random() < 0.15) {
+                     user.maxLimit += 1
+                     message.reply('🎉 Congratulations! Your storage limit has been increased by 1.')
+                  }
                   user.limit -= limitCost
+               }
                else
                   return message.reply(`⚠️ Your limit is not enough to use this feature, try \`${isPrefix}claim\` command to claim limit.`)
             }
@@ -641,23 +654,17 @@ const Connect = async (db, store) => {
          }
       })
    })
-
-   if (isEmptyObject(setting))
-      Object.assign(setting, SCHEMA.Setting)
 }
 
 const Setup = async () => {
    const db = Database(databasePath)
    const store = Store(storePath)
 
-   await isFileExists(databasePath) &&
-      await db.readFromFile()
-
-   await isFileExists(storePath) &&
-      await store.readFromFile()
+   await db.readFromFile()
+   await store.readFromFile()
 
    await isFileExists(temporaryFolder) ||
-      await mkdir(temporaryFolderPath, { recursive: true })
+      (await mkdir(temporaryFolderPath, { recursive: true }))
 
    await scanDirectory(pluginsFolder)
 

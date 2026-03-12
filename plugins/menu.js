@@ -190,10 +190,11 @@ export default {
             })
          else if (setting.menuStyle == 6) {
             const profilePicture = await sock.profilePicture(m.sender)
-            const profilePictureBuffer = await downscaleImage(profilePicture, 200)
             sock.sendMessage(m.chat, {
-               document: profilePictureBuffer,
-               jpegThumbnail: profilePictureBuffer,
+               document: {
+                  url: profilePicture
+               },
+               jpegThumbnail: await downscaleImage(profilePicture, 252),
                fileName: '👋🏻 ' + greeting() + ' ' + m.pushName,
                mimetype: 'image/jpeg',
                caption: message.trim(),

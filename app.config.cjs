@@ -2,7 +2,7 @@ module.exports = {
    apps: [{
       name: 'bot',
       script: './index.js',
-      node_args: ['--max-old-space-size=196'],
+      node_args: ['--max-old-space-size=320'],
       stop_exit_codes: [0],
       env: {
          NODE_ENV: 'production'

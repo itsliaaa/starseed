@@ -2,7 +2,7 @@ import { isMimeImage, isMimeVideo } from '../../lib/Utilities.js'
 
 export default {
    command: 'sticker',
-   hidden: ['s', 'svid', 'stiker'],
+   hidden: ['stc', 'svid', 'stiker'],
    category: 'maker',
    async run (m, {
       sock,

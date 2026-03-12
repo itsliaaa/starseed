@@ -6,24 +6,11 @@ export const handleWarning = async (m, {
    note,
    max = 5
 } = {}) => {
-   participant.warningPoint++
-   if (participant.warningPoint >= max) {
-      await sock.sendMessage(m.chat, {
-         delete: {
-            remoteJid: m.chat,
-            fromMe: false,
-            id: m.id,
-            participant: m.sender
-         }
-      })
+   if (++participant.warningPoint >= max) {
       const print = frame('WARNING', [
          `👋🏻 Good bye!`,
          `*Warning*: ${max} / ${max}`
       ], '⚠️')
-      await m.reply(print)
-      sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-   }
-   else {
       await sock.sendMessage(m.chat, {
          delete: {
             remoteJid: m.chat,
@@ -32,11 +19,23 @@ export const handleWarning = async (m, {
             participant: m.sender
          }
       })
+      await m.reply(print)
+      sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+   }
+   else {
       const print = frame('WARNING', [
          note,
          `*Warning*: ${participant.warningPoint} / ${max}`
       ], '⚠️')
-      await m.reply(print)
+      await sock.sendMessage(m.chat, {
+         delete: {
+            remoteJid: m.chat,
+            fromMe: false,
+            id: m.id,
+            participant: m.sender
+         }
+      })
+      m.reply(print)
    }
 }
 

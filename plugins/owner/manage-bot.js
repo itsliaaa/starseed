@@ -21,6 +21,7 @@ const MENU_STYLES = {
 
 const SETTING_MAPS = {
    gconly: 'groupOnly',
+   afknotifier: 'afkNotifier',
    autodownload: 'autoDownload',
    commandsuggestion: 'commandSuggestions',
    noprefix: 'noPrefix',
@@ -31,6 +32,7 @@ const SETTING_MAPS = {
 
 const PRETTY_SETTING_MAPS = {
    gconly: 'Group Only',
+   afknotifier: 'AFK Notifier',
    autodownload: 'Auto Download',
    commandsuggestion: 'Command Suggestions',
    noprefix: 'No Prefix',
@@ -159,7 +161,7 @@ const atomicWrite = (db, store) =>
    ])
 
 export default {
-   command: ['autodownload', 'backup', 'backupsc', 'commandsuggestion', 'disable', 'enable', 'gconly', 'noprefix', 'onlinestatus', 'rejectcall', 'resetlimit', 'restart', 'restore', 'setbroadcastcd', 'setmenu', 'setname', 'setbio', 'setpp', 'setcover', 'setchid', 'slowmode', 'public', 'self', 'updatesc', '+prefix', '-prefix'],
+   command: ['afknotifier', 'autodownload', 'backup', 'backupsc', 'commandsuggestion', 'disable', 'enable', 'gconly', 'noprefix', 'onlinestatus', 'rejectcall', 'resetlimit', 'restart', 'restore', 'setbroadcastcd', 'setmenu', 'setname', 'setbio', 'setpp', 'setcover', 'setchid', 'slowmode', 'public', 'self', 'updatesc', '+prefix', '-prefix'],
    category: 'owner',
    async run (m, {
       sock,
@@ -172,6 +174,7 @@ export default {
       text
    }) {
       if (
+         command === 'afknotifier' ||
          command === 'autodownload' ||
          command === 'commandsuggestion' ||
          command === 'gconly' ||

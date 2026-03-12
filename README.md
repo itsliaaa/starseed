@@ -11,9 +11,9 @@ This project is a direct implementation of [`@itsliaaa/baileys`](https://github.
 
 | Principle | Implementation |
 |------------|----------------|
-| ⚡ Native ESM Architecture | Fully structured using modern ECMAScript Modules (`type: module`) and designed for Node.js >=22 environments. |
-| 🪶 Lean Dependency Strategy | Only feature-driven packages are included (image processing, scraping, scheduling) to avoid unnecessary overhead. |
-| 🧩 Runtime Minimalism | No obfuscation, or bundling layers are used, ensuring predictable execution and optimal performance. |
+| ⚡ Native ESM Architecture | Fully structured using modern ECMAScript Modules (`type: module`) and designed for Node.js >=20 environments. |
+| 🪶 Lean Dependency Strategy | Minimal, purpose-specific dependencies to keep the runtime lightweight. |
+| 🧩 Runtime Minimalism | No obfuscation or bundling layers are used, ensuring predictable execution and optimal performance. |
 
 ### 📄 System Requirements
 
@@ -23,7 +23,7 @@ This project is a direct implementation of [`@itsliaaa/baileys`](https://github.
 | 512 MB RAM | 1 GB RAM |
 | 1 GB Free Space | 2 GB Free Space |
 | FFmpeg v6.x | FFmpeg v6.x |
-| Node.js v22 LTS | Node.js v24 LTS |
+| Node.js v20 LTS | Node.js v24 LTS |
 | Yarn v1.x | Yarn v1.22.22 |
 
 ### 🗄️ Server
@@ -48,9 +48,9 @@ To run the bot, I highly recommend the following services. They are not only aff
 Check this repository regularly for updates. The project is still under development. If you encounter any issues, please open an issue. Thank you!
 
 > [!NOTE]
-The installer supports Linux, macOS (Darwin), Android (Termux), and Windows.
-
-#### 🐧🍎📱 Linux / macOS / Android (Termux)
+The installer supports Linux, macOS (Darwin), and Android (Termux).
+>
+> I’m not familiar with Windows because I primarily use Linux, so no Windows installation files are provided.
 
 Make sure your system meets the required dependencies. Then run:
 
@@ -58,25 +58,15 @@ Make sure your system meets the required dependencies. Then run:
 bash install.sh
 ```
 
-After installation completes, start the bot:
+After installation completes, start the bot by choosing one runtime mode:
 
 ```bash
+# Normal mode (balanced resource usage)
 pm2 start app.config.cjs --only bot
-pm2 logs bot
-```
 
-#### 🪟 Windows
+# Smol mode (higher CPU usage, lower RAM usage, may impact performance)
+pm2 start app.config.cjs --only smol
 
-Run PowerShell as Administrator, then execute:
-
-```powershell
-.\install.ps1
-```
-
-After installation completes:
-
-```powershell
-pm2 start app.config.cjs --only bot
 pm2 logs bot
 ```
 

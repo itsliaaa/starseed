@@ -79,6 +79,7 @@ export default {
          ], '📊')
          const printSettings = frame('SETTINGS', [
             `*Mode*: ${setting.self ? '🔒 Self' : '🌐 Public'}`,
+            `*AFK Notifier*: ${setting.afkNotifier ? '✅' : '❌'}`,
             `*Auto Download*: ${setting.autoDownload ? '✅' : '❌'}`,
             `*Command Suggestions*: ${setting.commandSuggestions ? '✅' : '❌'}`,
             `*Group Only*: ${setting.groupOnly ? '✅' : '❌'}`,

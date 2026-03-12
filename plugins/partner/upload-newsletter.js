@@ -16,7 +16,7 @@ export default {
       text
    }) {
       if (!setting.newsletterId || !isJidNewsletter(setting.newsletterId))
-         return m.reply(`❌ Newsletter ID are still empty or invalid, you can change it with \`${isPrefix}setchid\` command.`)
+         return m.reply(`❌ Newsletter ID are still empty or invalid, the bot owner need to change it with \`${isPrefix}setchid\` command.`)
       const newsletters = await sock.newsletterSubscribed()
       if (!newsletters.some(newsletter => newsletter.id === setting.newsletterId))
          return m.reply('❌ Newsletter was not found using the newsletter ID you previously configured.')
@@ -52,7 +52,7 @@ export default {
       }
       else if (command === 'upch') {
          const q = m.quoted ? m.quoted : m
-         const body = text ?? q.body
+         const body = text || q.body
          const mimetype = (q.msg || q).mimetype
          if (!body && !mimetype)
             return m.reply('💭 Provide text or media you would like to send to the newsletter.')

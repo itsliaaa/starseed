@@ -12,6 +12,7 @@ const MODERATION_MAPS = {
    antitoxic: 'antiToxic',
    antiwalink: 'antiWALink',
    autosticker: 'autoSticker',
+   labelupdate: 'memberLabelUpdate',
    sholatreminder: 'sholatReminder',
    viewonce: 'viewOnceForwarder'
 }
@@ -30,6 +31,7 @@ const PRETTY_MODERATION_MAPS = {
    antiwalink: 'Anti WhatsApp Link',
    antitoxic: 'Anti Toxic',
    autosticker: 'Auto Sticker',
+   labelupdate: 'Member Label Update',
    sholatreminder: 'Sholat Reminder',
    viewonce: 'View Once Forwarder',
    welcome: 'Welcome Message',
@@ -50,7 +52,7 @@ const BOT_ADMIN_COMMANDS = [
 ]
 
 export default {
-   command: ['adminonly', 'antibot', 'antidelete', 'antiporn', 'antigroupstatus', 'antilink', 'antirejoin', 'antispam', 'antitagall', 'antitagstatus', 'antitoxic', 'antiwalink', 'autosticker', 'sholatreminder', 'left', 'welcome'],
+   command: ['adminonly', 'antibot', 'antidelete', 'antiporn', 'antigroupstatus', 'antilink', 'antirejoin', 'antispam', 'antitagall', 'antitagstatus', 'antitoxic', 'antiwalink', 'autosticker', 'labelupdate', 'sholatreminder', 'left', 'welcome'],
    category: 'admin tools',
    async run(m, {
       group,

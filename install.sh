@@ -74,7 +74,6 @@ Darwin)
 
 *)
    echo "❌ Unsupported OS for this script."
-   echo "Use PowerShell installer for Windows."
    exit 1
    ;;
 

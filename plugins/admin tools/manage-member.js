@@ -56,12 +56,11 @@ export default {
             participants[userId] = {
                ...SCHEMA.Participant
             }
-         ++participants[userId].warningPoint
+         if (participants[userId].warningPoint < 5)
+            ++participants[userId].warningPoint
          await m.reply(`✅ Added +1 warning point for @${userId.split('@')[0]}.`)
-         if (participants[userId].warningPoint >= 5) {
-            participants[userId].leftGroup = true
+         if (participants[userId].warningPoint >= 5) 
             sock.groupParticipantsUpdate(m.chat, [userId], 'remove')
-         }
       }
       else if (command === '-warn') {
          if (!participants[userId])
@@ -74,7 +73,7 @@ export default {
          m.reply(`✅ Reduced -1 warning point for @${userId.split('@')[0]}.`)
       }
       else {
-         const isUserInGroup = groupMetadata.participants.some(p => p.id === userId || p.phoneNumber === userId)
+         const isUserInGroup = groupMetadata.participants.some(participant => participant.id === userId || participant.phoneNumber === userId)
          if (!isUserInGroup)
             return m.reply('❌ User not found in this group.')
          const [json] = await sock.groupParticipantsUpdate(m.chat, [userId], command === 'kick' ?
