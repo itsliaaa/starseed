@@ -20,7 +20,7 @@ export default {
       try {
          const q = m.quoted?.url ? m.quoted : m
          const mimetype = (q.msg || q).mimetype
-         const body = text || q?.body
+         const body = text ?? q?.body
          if (!body)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} fresh updates!`)
          m.react('🕒')

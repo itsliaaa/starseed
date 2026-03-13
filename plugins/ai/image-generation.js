@@ -1,6 +1,5 @@
-import { JPG_CONVERSION_ARGS } from '../../lib/Constants.js'
 import { nekolabs } from '../../lib/Request.js'
-import { ffmpeg } from '../../lib/Utilities.js'
+import { downscaleImage } from '../../lib/Utilities.js'
 
 export default {
    command: ['animagine', 'cartoony', 'dreamshaper', 'newreality'],
@@ -28,13 +27,11 @@ export default {
          })
          if (!data.success)
             return m.reply('❌ Failed to get data.')
-         const filePath = await ffmpeg(
+         const buffer = await downscaleImage(
             data.result,
-            [],
-            JPG_CONVERSION_ARGS,
-            'jpg'
+            720, -1, 100
          )
-         sock.sendMedia(m.chat, filePath, '', m)
+         sock.sendMedia(m.chat, buffer, '', m)
       }
       catch (error) {
          console.error(error)

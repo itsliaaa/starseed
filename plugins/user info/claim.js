@@ -7,7 +7,7 @@ export default {
    async run (m, {
       user
    }) {
-      const cooldown = 5 * HOUR
+      const cooldown = 3 * HOUR
       if (user.lastClaim && user.lastSeen - user.lastClaim < cooldown) {
          const remaining = cooldown - (user.lastSeen - user.lastClaim)
          return m.reply(`⏰ You can claim again in ${toTime(remaining)}`)

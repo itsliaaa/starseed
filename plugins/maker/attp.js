@@ -1,4 +1,4 @@
-import { nexray } from '../../lib/Request.js'
+import { deline, nexray } from '../../lib/Request.js'
 
 export default {
    command: ['attp', 'ttp'],
@@ -13,7 +13,10 @@ export default {
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} hello`)
          m.react('🕒')
-         const data = await nexray('maker/' + command, {
+         const endpoint = command === 'attp' ?
+            deline :
+            nexray
+         const data = await endpoint('maker/' + command, {
             text
          })
          if (!Buffer.isBuffer(data))

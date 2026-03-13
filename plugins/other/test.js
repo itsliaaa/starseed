@@ -11,13 +11,17 @@ const getPingEmojis = (ms) => {
 }
 
 export default {
-   command: ['ping', 'ram', 'server', 'statistic'],
+   command: ['disk', 'ping', 'ram', 'run', 'server', 'statistic'],
    category: 'other',
    async run (m, {
       setting,
       command
    }) {
-      if (command === 'ping') {
+      if (command === 'disk') {
+         const diskUsage = await getDiskStats()
+         m.reply('🗂️ *Disk Used*: ' + formatSize(diskUsage.used) + ' / ' + formatSize(diskUsage.total))
+      }
+      else if (command === 'ping') {
          const old = performance.now()
          await m.react('🚀')
          const ping = (performance.now() - old) | 0
@@ -30,6 +34,8 @@ export default {
       }
       else if (command === 'ram')
          m.reply('💾 *RAM Usage*: ' + formatSize(process.memoryUsage().rss) + ' / ' + formatSize(totalmem()))
+      else if (command === 'run')
+         m.reply('🕒 *Runtime*: ' + toTime(process.uptime() * SECOND))
       else if (command === 'server') {
          const cpu = cpus()
          const totalMemory = totalmem()

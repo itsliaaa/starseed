@@ -1,4 +1,4 @@
-import { isMimeAudio, isMimeImage } from '../../lib/Utilities.js'
+import { isMimeAudio, isMimeImage, randomHex } from '../../lib/Utilities.js'
 
 export default {
    command: ['closegc', 'opengc', 'delete', 'setgcdesc', 'setgcname', 'setgcpp', 'setleft', 'setwelcome', 'upgcsw'],
@@ -68,7 +68,7 @@ export default {
       }
       else if (command === 'upgcsw') {
          const q = m.quoted ? m.quoted : m
-         const body = text || q.body
+         const body = text ?? q.body
          const mimetype = (q.msg || q).mimetype
          if (!body && !mimetype)
             return m.reply('💭 Provide text or media you would like to send to the group status.')
@@ -82,6 +82,8 @@ export default {
          else if (body)
             context = await sock.sendText(m.chat, body, null, {
                groupStatus: true
+            }, {
+               backgroundColor: randomHex()
             })
          sock.sendText(m.chat, '✅ Successfully sent group status.', context)
       }

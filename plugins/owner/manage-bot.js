@@ -16,7 +16,8 @@ const MENU_STYLES = {
    4: '🛒 `Interactive Message` with `Product Header`.',
    5: '🛒 `Interactive Message` with `Product Header` and `bottom_sheet`.',
    6: '🛒 `Interactive Message` with `Document Header`, `bottom_sheet`, and `externalAdReply`.',
-   7: '🖼️ `Interactive Message` with `Carousel Message`.'
+   7: '🛒 `Buttons Message` with `Document Header` and `externalAdReply`.',
+   8: '🖼️ `Interactive Message` with `Carousel Message`.'
 }
 
 const SETTING_MAPS = {

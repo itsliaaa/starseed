@@ -72,17 +72,14 @@ export default {
                caption: message.trim(),
                footer,
                nativeFlow: [{
-                  name: 'single_select',
-                  buttonParamsJson: JSON.stringify({
-                     title: '📄 List Menu',
-                     sections: [{
-                        rows: categories.map(category => ({
-                           title: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
-                           description: `📦 There are ${grouped[category].length} commands`,
-                           id: `${isPrefix + command} ${category}`
-                        }))
-                     }]
-                  })
+                  text: '📄 List Menu',
+                  sections: [{
+                     rows: categories.map(category => ({
+                        title: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
+                        description: `📦 There are ${grouped[category].length} commands`,
+                        id: `${isPrefix + command} ${category}`
+                     }))
+                  }]
                }]
             }, {
                quoted: m
@@ -99,17 +96,14 @@ export default {
                optionText: '✴️ Tap Here',
                optionTitle: '📋 Select Options',
                nativeFlow: [{
-                  name: 'single_select',
-                  buttonParamsJson: JSON.stringify({
-                     title: '📄 List Menu',
-                     sections: [{
-                        rows: categories.map(category => ({
-                           title: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
-                           description: `📦 There are ${grouped[category].length} commands`,
-                           id: `${isPrefix + command} ${category}`
-                        }))
-                     }]
-                  })
+                  text: '📄 List Menu',
+                  sections: [{
+                     rows: categories.map(category => ({
+                        title: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
+                        description: `📦 There are ${grouped[category].length} commands`,
+                        id: `${isPrefix + command} ${category}`
+                     }))
+                  }]
                }, {
                   text: '📃 All Menu',
                   id: `${isPrefix}allmenu`
@@ -135,20 +129,17 @@ export default {
                caption: message.trim(),
                footer,
                nativeFlow: [{
-                  name: 'single_select',
-                  buttonParamsJson: JSON.stringify({
-                     title: '📄 List Menu',
-                     sections: [{
-                        rows: categories.map(category => ({
-                           title: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
-                           description: `📦 There are ${grouped[category].length} commands`,
-                           id: `${isPrefix + command} ${category}`
-                        }))
-                     }]
-                  })
+                  text: '📄 List Menu',
+                  sections: [{
+                     rows: categories.map(category => ({
+                        title: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
+                        description: `📦 There are ${grouped[category].length} commands`,
+                        id: `${isPrefix + command} ${category}`
+                     }))
+                  }]
                }, {
-                  text: '📥 Source Code',
-                  id: `${isPrefix}script`
+                  text: '📃 All Menu',
+                  id: `${isPrefix}allmenu`
                }]
             }, {
                quoted: m
@@ -167,23 +158,20 @@ export default {
                optionText: '✴️ Tap Here',
                optionTitle: '📋 Select Options',
                nativeFlow: [{
-                  name: 'single_select',
-                  buttonParamsJson: JSON.stringify({
-                     title: '📄 List Menu',
-                     sections: [{
-                        rows: categories.map(category => ({
-                           title: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
-                           description: `📦 There are ${grouped[category].length} commands`,
-                           id: `${isPrefix + command} ${category}`
-                        }))
-                     }]
-                  })
+                  text: '📄 List Menu',
+                  sections: [{
+                     rows: categories.map(category => ({
+                        title: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
+                        description: `📦 There are ${grouped[category].length} commands`,
+                        id: `${isPrefix + command} ${category}`
+                     }))
+                  }]
                }, {
                   text: '📃 All Menu',
                   id: `${isPrefix}allmenu`
                }, {
-                  text: '📥 Source Code',
-                  id: `${isPrefix}script`
+                  text: '📊 Statistic',
+                  id: `${isPrefix}statistic`
                }]
             }, {
                quoted: m
@@ -215,7 +203,44 @@ export default {
                quoted: m
             })
          }
-         else if (setting.menuStyle == 7)
+         else if (setting.menuStyle == 7) {
+            const profilePicture = await sock.profilePicture(m.sender)
+            sock.sendMessage(m.chat, {
+               document: {
+                  url: profilePicture
+               },
+               jpegThumbnail: await downscaleImage(profilePicture, 252),
+               fileName: '👋🏻 ' + greeting() + ' ' + m.pushName,
+               mimetype: 'image/jpeg',
+               caption: message.trim(),
+               footer,
+               buttons: [{
+                  text: '📄 List Menu',
+                  sections: [{
+                     rows: categories.map(category => ({
+                        title: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
+                        description: `📦 There are ${grouped[category].length} commands`,
+                        id: `${isPrefix + command} ${category}`
+                     }))
+                  }]
+               }, {
+                  text: '📃 All Menu',
+                  id: `${isPrefix}allmenu`
+               }, {
+                  text: '📊 Statistic',
+                  id: `${isPrefix}statistic`
+               }],
+               externalAdReply: {
+                  title: botName,
+                  body: greeting(),
+                  thumbnail: await fetchThumbnail(),
+                  largeThumbnail: true
+               }
+            }, {
+               quoted: m
+            })
+         }
+         else if (setting.menuStyle == 8)
             sock.sendMessage(m.chat, {
                text: message.trim(),
                footer,
