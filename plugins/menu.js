@@ -16,19 +16,21 @@ import { CATEGORY_DESCRIPTIONS, CATEGORY_EMOJIS, FAKE_QUOTE, POPULAR_CATEGORIES 
 import { fetchThumbnail, frame, greeting, resizeImage, toArray, toTitleCase } from '../lib/Utilities.js'
 import { CommandIndex, ModuleCache } from '../lib/Watcher.js'
 
+const OFFER_EXPIRATION = Date.now() * 2
+
 const HIGHLIGHT_LABEL = { highlight_label: 'Most Used' }
 
 let CACHED_REGISTRY = null,
-   LAST_SIZE = 0
+   LAST_REGISTRY_SIZE = 0
 
 const getCommandRegistry = () => {
-   const commandIndexSize = Object.keys(CommandIndex).length
-   if (CACHED_REGISTRY && LAST_SIZE === commandIndexSize)
+   const commandIndexSize = CommandIndex.size
+   if (CACHED_REGISTRY && LAST_REGISTRY_SIZE === commandIndexSize)
       return CACHED_REGISTRY
 
    const commandsSet = new Set()
    const categoriesSet = new Set()
-   const grouped = Object.create(null)
+   const grouped = {}
 
    for (const modules of ModuleCache.values()) {
       const { command: cachedCommand, category } = modules
@@ -51,7 +53,7 @@ const getCommandRegistry = () => {
       grouped[key].sort()
 
    CACHED_REGISTRY = { commands, categories, grouped }
-   LAST_SIZE = commandIndexSize.size
+   LAST_REGISTRY_SIZE = commandIndexSize
 
    return CACHED_REGISTRY
 }
@@ -111,7 +113,7 @@ export default {
                caption: message.trim(),
                footer,
                nativeFlow: [{
-                  text: '📄 List Menu',
+                  text: '📚 List Menu',
                   sections: categories.map(category => ({
                      ...(POPULAR_CATEGORIES[category] ? HIGHLIGHT_LABEL : {}),
                      rows: [{
@@ -131,12 +133,13 @@ export default {
                },
                caption: message.trim(),
                footer,
-               couponText: botName,
-               couponCode: greeting(),
+               offerText: botName,
+               offerUrl: DONATE_URL,
+               offerExpiration: OFFER_EXPIRATION,
                optionText: '✴️ Tap Here',
                optionTitle: '📋 Select Options',
                nativeFlow: [{
-                  text: '📄 List Menu',
+                  text: '📚 List Menu',
                   sections: categories.map(category => ({
                      ...(POPULAR_CATEGORIES[category] ? HIGHLIGHT_LABEL : {}),
                      rows: [{
@@ -151,9 +154,6 @@ export default {
                }, {
                   text: '📊 Statistic',
                   id: `${isPrefix}statistic`
-               }, {
-                  text: '📥 Source Code',
-                  id: `${isPrefix}script`
                }, {
                   text: '💰 Donate',
                   url: DONATE_URL
@@ -173,7 +173,7 @@ export default {
                caption: message.trim(),
                footer,
                nativeFlow: [{
-                  text: '📄 List Menu',
+                  text: '📚 List Menu',
                   sections: categories.map(category => ({
                      ...(POPULAR_CATEGORIES[category] ? HIGHLIGHT_LABEL : {}),
                      rows: [{
@@ -206,7 +206,7 @@ export default {
                optionText: '✴️ Tap Here',
                optionTitle: '📋 Select Options',
                nativeFlow: [{
-                  text: '📄 List Menu',
+                  text: '📚 List Menu',
                   sections: categories.map(category => ({
                      ...(POPULAR_CATEGORIES[category] ? HIGHLIGHT_LABEL : {}),
                      rows: [{
@@ -239,7 +239,7 @@ export default {
                mimetype: 'image/jpeg',
                caption: message.trim(),
                footer,
-               optionText: '📄 List Menu',
+               optionText: '📚 List Menu',
                optionTitle: '📋 Select Menu',
                nativeFlow: categories.map(category => ({
                   text: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
@@ -267,7 +267,7 @@ export default {
                caption: message.trim(),
                footer,
                buttons: [{
-                  text: '📄 List Menu',
+                  text: '📚 List Menu',
                   sections: categories.map(category => ({
                      ...(POPULAR_CATEGORIES[category] ? HIGHLIGHT_LABEL : {}),
                      rows: [{
@@ -303,6 +303,9 @@ export default {
                   },
                   caption: frame(category.toUpperCase(), [CATEGORY_DESCRIPTIONS[category]], CATEGORY_EMOJIS[category] ?? '📁'),
                   footer: `📦 There are ${grouped[category].length} commands`,
+                  offerText: botName,
+                  offerUrl: DONATE_URL,
+                  offerExpiration: OFFER_EXPIRATION,
                   nativeFlow: [{
                      text: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
                      id: `${isPrefix + command} ${category}`

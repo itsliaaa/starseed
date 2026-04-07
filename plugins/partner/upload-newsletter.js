@@ -1,7 +1,8 @@
 import { isJidNewsletter } from '@itsliaaa/baileys'
+import ytsearch from 'yt-search'
 
 import { nexray } from '../../lib/Request.js'
-import { isMimeAudio, isMimeWebP } from '../../lib/Utilities.js'
+import { fetchAsBuffer, formatNumber, frame, isMimeAudio, isMimeWebP } from '../../lib/Utilities.js'
 
 import { isMeNewsletterAdmin } from '../owner/manage-newsletter.js'
 
@@ -26,12 +27,33 @@ export default {
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} you say run`)
          m.react('🕒')
-         const data = await nexray('downloader/ytplay', {
-            q: text
-         })
-         if (!data.status)
+         const data = await ytsearch(text)
+         if (!data.all?.length)
             return m.reply('❌ Failed to get data.')
-         const context = await sock.sendMedia(setting.newsletterId, data.result.download_url, '', m, {
+         const firstVideo = data.all[0]
+         const audioData = await nexray('downloader/ytmp3', {
+            url: firstVideo.url
+         })
+         if (!audioData.status)
+            return m.reply('❌ Failed to get data.')
+         const printCaption = frame('YOUTUBE PLAY', [
+            `*Title*: ${firstVideo.title}`,
+            `*Views*: ${formatNumber(firstVideo.views || 0)}`,
+            `*Duration*: ${firstVideo.timestamp || '0:00'}`,
+            `*Uploaded*: ${firstVideo.ago || 'Long time ago'}`
+         ], '🎵')
+         sock.sendText(setting.newsletterId, printCaption, null, {
+            externalAdReply: {
+               title: firstVideo.title,
+               body: firstVideo.description,
+               thumbnail: await fetchAsBuffer(firstVideo.image || botThumbnail),
+               url: firstVideo.url,
+               sourceUrl: firstVideo.url,
+               largeThumbnail: true,
+               mediaType: 2
+            }
+         })
+         const context = await sock.sendMedia(setting.newsletterId, audioData.result.url, '', null, {
             ptt: true
          })
          sock.sendText(m.chat, '✅ Successfully sent music to newsletter.', context)
@@ -40,12 +62,18 @@ export default {
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} mayonaka`)
          m.react('🕒')
-         const data = await nexray('downloader/ytplayvid', {
-            q: text
-         })
-         if (!data.status)
+         const data = await ytsearch(text)
+         if (!data.all?.length)
             return m.reply('❌ Failed to get data.')
-         const context = await sock.sendMedia(setting.newsletterId, data.result.download_url, data.result.title, m, {
+         const firstVideo = data.all[0]
+         if (firstVideo.seconds > 1440)
+            return m.reply('❌ Video is too long. Maximum duration is 24 minutes.')
+         const videoData = await nexray('downloader/v1/ytmp4', {
+            url: firstVideo.url
+         })
+         if (!videoData.status)
+            return m.reply('❌ Failed to get data.')
+         const context = await sock.sendMedia(setting.newsletterId, videoData.result.url, firstVideo.title, null, {
             ptv: command === 'ptvch'
          })
          sock.sendText(m.chat, '✅ Successfully sent video to newsletter.', context)

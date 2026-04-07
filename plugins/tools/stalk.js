@@ -29,7 +29,7 @@ export default {
                externalAdReply: {
                   title: data.result.display_name,
                   body: data.result.global_name,
-                  thumbnail: await fetchAsBuffer(data.result.avatar),
+                  thumbnail: await fetchAsBuffer(data.result.avatar || botThumbnail),
                   largeThumbnail: true
                }
             })
@@ -91,7 +91,7 @@ export default {
                externalAdReply: {
                   title: data.result.name,
                   body: '@' + data.result.username,
-                  thumbnail: await fetchAsBuffer(data.result.profile_pic),
+                  thumbnail: await fetchAsBuffer(data.result.profile_pic || botThumbnail),
                   largeThumbnail: true
                }
             })
@@ -150,7 +150,7 @@ export default {
                externalAdReply: {
                   title: data.result.nickname,
                   body: '@' + data.result.username,
-                  thumbnail: await fetchAsBuffer(data.result.avatar),
+                  thumbnail: await fetchAsBuffer(data.result.avatar || botThumbnail),
                   largeThumbnail: true
                }
             })

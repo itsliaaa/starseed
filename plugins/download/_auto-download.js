@@ -1,6 +1,6 @@
 import { URL_EXTRACT_REGEX } from '../../lib/Constants.js'
-import { nekolabs, nexray } from '../../lib/Request.js'
-import { instagram, tiktok } from '../../lib/Scraper.js'
+import { nekolabs, nexray, zenzxz } from '../../lib/Request.js'
+import { instagram } from '../../lib/Scraper.js'
 import { isURL, resizeImage } from '../../lib/Utilities.js'
 
 export default {
@@ -31,6 +31,27 @@ export default {
             if (!data.status)
                return m.reply('❌ Failed to get data.')
             sock.sendMedia(m.chat, data.result.url, data.result.title, m)
+         }
+         else if (url.includes('douyin.com')) {
+            m.react('🕒')
+            const data = await nexray('downloader/douyin', {
+               url
+            })
+            if (!data.status)
+               return m.reply('❌ Failed to get data.')
+            const videoContent = data.result.media.find(media => media.type === 'video')
+            const imageContent = data.result.media.filter(media => media.type === 'image')
+            if (imageContent.length > 1)
+               return sock.sendMessage(m.chat, {
+                  album: imageContent.map(image => ({
+                     image: {
+                        url: image.url
+                     }
+                  }))
+               }, {
+                  quoted: m
+               })
+            sock.sendMedia(m.chat, videoContent.url, data.result.title, m)
          }
          else if (url.includes('facebook.')) {
             m.react('🕒')
@@ -109,22 +130,24 @@ export default {
          }
          else if (url.includes('tiktok.com')) {
             m.react('🕒')
-            const data = await tiktok(url)
-            if (!data.media.length)
+            const data = await zenzxz('download/tiktok', {
+               url
+            })
+            if (!data.status)
                return m.reply('❌ Failed to get data.')
-            const videoContent = data.media.find(video => video.type === 'hd' || video.type === 'mp4')
-            const imageContent = data.media.filter(image => image.type === 'image')
-            if (imageContent.length > 1)
+            const videoContent = data.result.hdplay || data.result.play
+            const imageContent = data.result.images
+            if (imageContent?.length > 1)
                return sock.sendMessage(m.chat, {
-                  album: imageContent.map(image => ({
+                  album: imageContent.map(imageUrl => ({
                      image: {
-                        url: image.url
+                        url: imageUrl
                      }
                   }))
                }, {
                   quoted: m
                })
-            sock.sendMedia(m.chat, imageContent[0]?.url || videoContent?.url, data.title, m)
+            sock.sendMedia(m.chat, imageContent?.[0] || videoContent, data.result.title, m)
          }
          else if (url.includes('twitter.com') || url.includes('x.com')) {
             m.react('🕒')
@@ -135,15 +158,14 @@ export default {
                return m.reply('❌ Failed to get data.')
             if (data.result.length < 2)
                return sock.sendMedia(m.chat, data.result.download_url[0].url, '', m)
-            const album = data.result.download_url
-               .filter(result => result.type === 'image' || result.type === 'video')
-               .map(value => ({
-                  [value.type]: {
-                     url: value.url
-                  }
-               }))
             sock.sendMessage(m.chat, {
-               album
+               album: data.result.download_url
+                  .filter(result => result.type === 'image' || result.type === 'video')
+                  .map(value => ({
+                     [value.type]: {
+                        url: value.url
+                     }
+                  }))
             }, {
                quoted: m
             })
@@ -164,6 +186,8 @@ export default {
             })
             if (!data.status)
                return m.reply('❌ Failed to get data.')
+            if (data.result.duration > 1440)
+               return m.reply('❌ Video is too long. Maximum duration is 24 minutes.')
             sock.sendMedia(m.chat, data.result.url, data.result.title, m)
          }
       }

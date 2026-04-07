@@ -18,7 +18,7 @@ export default {
             !isMimeWebP(mimetype)
          )
             return m.reply('💭 Reply sticker message.')
-         const [packName, publisher] = text.split('|')
+         const [packName = '', publisher = ''] = text.split('|')
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} ${stickerPackName} | ${stickerPackPublisher}`)
          m.react('🕒')

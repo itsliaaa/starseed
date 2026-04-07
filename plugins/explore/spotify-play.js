@@ -1,7 +1,7 @@
 import { isJidNewsletter } from '@itsliaaa/baileys'
 
-import { nexray } from '../../lib/Request.js'
-import { fetchAsBuffer, frame } from '../../lib/Utilities.js'
+import { zenzxz } from '../../lib/Request.js'
+import { fetchAsBuffer, frame, toTime } from '../../lib/Utilities.js'
 
 export default {
    command: 'spotplay',
@@ -16,26 +16,34 @@ export default {
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} abnormal heat`)
          m.react('🕒')
-         const data = await nexray('downloader/spotifyplay', {
+         const data = await zenzxz('search/spotify', {
             q: text
          })
-         if (!data.status)
+         if (!data.status || !data.result?.success)
             return m.reply('❌ Failed to get data.')
-         const printCaption = frame('SPOTIFY PLAY', [
-            `*Title*: ${data.result.title}`,
-            `*Artist*: ${data.result.artist}`
+         const firstAudio = data.result.results[0]
+         const trackUrl = 'https://open.spotify.com/track/' + firstAudio.id
+         const audioData = await zenzxz('download/spotify', {
+            url: trackUrl
+         })
+         if (!audioData.status)
+            return m.reply('❌ Failed to get data.')
+         const printMessage = frame('SPOTIFY', [
+            `*Title*: ${audioData.result.title}`,
+            `*Artist*: ${audioData.result.artist}`,
+            `*Duration*: ${toTime(audioData.result.duration_ms)}`
          ], '🎵')
-         m.reply(printCaption, {
+         m.reply(printMessage, {
             externalAdReply: {
-               title: data.result.title,
-               body: '✍🏻 Artist: ' + data.result.artist,
-               thumbnail: await fetchAsBuffer(data.result.thumbnail || botThumbnail),
-               url: data.result.url,
-               sourceUrl: data.result.url,
+               title: audioData.result.title,
+               body: '✍🏻 Artist: ' + audioData.result.artist,
+               thumbnail: await fetchAsBuffer(audioData.result.thumbnail || botThumbnail),
+               url: trackUrl,
+               sourceUrl: trackUrl,
                largeThumbnail: true
             }
          })
-         sock.sendMedia(m.chat, data.result.download_url, '', m, {
+         sock.sendMedia(m.chat, audioData.result.download_url, '', m, {
             audio: true,
             ptt: isJidNewsletter(m.chat)
          })

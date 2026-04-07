@@ -2,7 +2,7 @@ import { nexray } from '../../lib/Request.js'
 
 export default {
    command: 'gdrive',
-   category: 'downloader',
+   category: 'download',
    async run(m, {
       sock,
       isPrefix,

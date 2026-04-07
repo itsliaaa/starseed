@@ -58,16 +58,10 @@ Make sure your system meets the required dependencies. Then run:
 bash install.sh
 ```
 
-After installation completes, start the bot by choosing one runtime mode:
+After installation completes, start the bot using pm2:
 
 ```bash
-# Normal mode (balanced resource usage)
-pm2 start app.config.cjs --only bot
-
-# Smol mode (higher CPU usage, lower RAM usage, may impact performance)
-pm2 start app.config.cjs --only smol
-
-pm2 logs bot
+pm2 start app.config.cjs && pm2 logs bot
 ```
 
 ### 🔧 Configuration
@@ -80,7 +74,7 @@ Object.assign(global, {
    ownerName: 'Lia Wynn',
 
    // Owner phone number
-   ownerNumber: '628111111',
+   ownerNumber: '6281111',
 
    // Bot name
    botName: 'Starseed',
@@ -89,7 +83,7 @@ Object.assign(global, {
    footer: '✦ Starseed',
 
    // [IMPORTANT] Bot phone number for pairing code
-   botNumber: '628111111',
+   botNumber: '6281111',
 
    // Pairing using code method (set to true for pairing code, false for QR pairing)
    pairingCode: false,

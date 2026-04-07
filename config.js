@@ -1,4 +1,4 @@
-import { Agent, setGlobalDispatcher } from 'undici'
+import { LRUCache } from 'lru-cache'
 import { cpus } from 'os'
 
 const CPU_COUNT = cpus().length
@@ -8,7 +8,7 @@ Object.assign(global, {
    ownerName: 'Lia Wynn',
 
    // Owner phone number
-   ownerNumber: '628111111',
+   ownerNumber: '6281111',
 
    // Bot name
    botName: 'Starseed',
@@ -17,7 +17,7 @@ Object.assign(global, {
    footer: '✦ Starseed',
 
    // [IMPORTANT] Bot phone number for pairing code
-   botNumber: '628111111',
+   botNumber: '6281111',
 
    // Pairing using code method (set to true for pairing code, false for QR pairing)
    pairingCode: false,
@@ -67,56 +67,47 @@ Object.assign(global, {
    databaseFilename: 'database.json',
 
    // Interval to clean temporary files (ms)
-   temporaryFileInterval: 1_800_000,
+   temporaryFileInterval: 1_000 * 60 * 30,
 
    // Persist database to file interval (ms)
-   dataInterval: 600_000,
+   dataInterval: 1_000 * 60 * 10,
 
    // Call the garbage collector if exposed (ms)
-   gcInterval: 3_600_000,
+   gcInterval: 1_000 * 60 * 60,
 
    // API request timeout (ms)
-   requestTimeout: 90_000,
+   requestTimeout: 1_000 * 60 * 1.5,
 
    // FFmpeg process timeout (ms)
-   ffmpegTimeout: 60_000,
+   ffmpegTimeout: 1_000 * 60,
 
    // Min delay response (ms)
    minDelay: 100,
 
    // Max delay response (ms)
-   maxDelay: 3_000,
+   maxDelay: 1_000 * 3,
 
    // Ignore user old message (sec)
-   ignoreOldMessageTimestamp: 30,
-
-   // Search cache results TTL (sec)
-   searchCacheTTL: 300,
+   ignoreOldMessageTS: 30,
 
    // RSS limit (mb)
-   rssLimit: 384 * 1024 * 1024,
+   rssLimit: 1_024 * 1_024 * 384,
 
    // FFmpeg stream max concurrent processes (min: 1)
-   ffmpegConcurrency: Math.max(3, Math.floor(CPU_COUNT * 1.3)),
+   ffmpegConcurrency: Math.max(4, Math.floor(CPU_COUNT * 1.3)),
 
    // Maximum allowed NSFW score (lower values are stricter)
    maxNSFWScore: 0.75,
 
    // Maximum chat bot history length
-   maxHistoryChatSize: 20
-})
+   maxHistoryChatSize: 20,
 
-setGlobalDispatcher(
-   new Agent({
-      connections: 4,
-      pipelining: 1,
-      keepAliveTimeout: 3_000,
-      keepAliveMaxTimeout: 60_000,
-      connectTimeout: 5_000,
-      bodyTimeout: 30_000,
-      maxRedirections: 3,
-      connect: {
-         rejectUnauthorized: false
-      }
+   // Global search cache results
+   ResultCache: new LRUCache({
+      max: 1_024,
+      ttl: 1_000 * 60 * 1.5,
+      updateAgeOnGet: false,
+      updateAgeOnHas: false,
+      ttlAutopurge: true
    })
-)
+})

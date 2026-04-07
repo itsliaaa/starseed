@@ -4,6 +4,7 @@ import { isMimeWebP, resizeImage } from '../../lib/Utilities.js'
 
 export default {
    command: ['toimage', 'tovideo'],
+   hidden: ['toimg', 'tovid'],
    category: 'tools',
    async run (m, {
       sock,
@@ -17,7 +18,8 @@ export default {
          m.react('🕒')
          const buffer = await q.download()
          let data
-         if (command === 'tovideo') {
+         const isNeedVideoConvert = command === 'tovid' || command === 'tovideo'
+         if (isNeedVideoConvert) {
             const upload = await uguu(buffer)
             data = await nexray('tools/converter', {
                url: upload,

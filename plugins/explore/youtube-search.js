@@ -1,14 +1,8 @@
 import { isJidNewsletter } from '@itsliaaa/baileys'
-import NodeCache from '@cacheable/node-cache'
+import ytsearch from 'yt-search'
 
 import { nexray } from '../../lib/Request.js'
-import { frame } from '../../lib/Utilities.js'
-
-const ResultCache = new NodeCache({
-   stdTTL: searchCacheTTL,
-   useClones: false,
-   deleteOnExpire: true
-})
+import { frame, formatNumber } from '../../lib/Utilities.js'
 
 export default {
    command: 'ytsearch',
@@ -21,7 +15,7 @@ export default {
       text
    }) {
       try {
-         const keyCache = m.sender
+         const keyCache = m.sender + 'youtube-search'
          const userPreviousResult = ResultCache.get(keyCache)
          if (
             text &&
@@ -32,6 +26,8 @@ export default {
             if (!result)
                return m.reply(`❌ Invalid input.`)
             m.react('🕒')
+            if (result.seconds > 1440)
+               return m.reply('❌ Video is too long. Maximum duration is 24 minutes.')
             const shouldAsAudio = command === 'ytsa'
             const path = shouldAsAudio ?
                'ytmp3' :
@@ -41,7 +37,7 @@ export default {
             })
             if (!data.status)
                return m.reply('❌ Failed to get data.')
-            sock.sendMedia(m.chat, data.result.url, data.result.title, m, {
+            sock.sendMedia(m.chat, data.result.url, result.title, m, {
                audio: shouldAsAudio,
                ptt: shouldAsAudio && isJidNewsletter(m.chat)
             })
@@ -50,17 +46,15 @@ export default {
             if (!text)
                return m.reply(`👉🏻 *Example*: ${isPrefix + command} abnormal heat`)
             m.react('🕒')
-            const data = await nexray('search/youtube', {
-               q: text
-            })
-            if (!data.status)
+            const data = await ytsearch(text)
+            if (!data.all?.length)
                return m.reply('❌ Failed to get data.')
-            const flattedResult = data.result.flatMap((result, index, array) => {
+            const flattedResult = data.all.flatMap((result, index, array) => {
                const lines = [
                   `${index + 1}. ${result.title}`,
-                  `*Views*: ${result.views}`,
-                  `*Duration*: ${result.duration}`,
-                  `*Uploaded*: ${result.upload_at}`
+                  `*Views*: ${formatNumber(result.views || 0)}`,
+                  `*Duration*: ${result.timestamp || '0:00'}`,
+                  `*Uploaded*: ${result.ago || 'Long time ago'}`
                ]
                if (index !== array.length - 1)
                   lines.push('')
@@ -71,7 +65,7 @@ export default {
                `*Example*: ${isPrefix}ytsv 1`
             ], '📄')
             const printList = frame('YOUTUBE SEARCH', flattedResult, '🎥')
-            ResultCache.set(keyCache, data.result)
+            ResultCache.set(keyCache, data.all)
             m.reply(printHowTo + '\n\n' +
                printList)
          }

@@ -4,7 +4,7 @@ import { isURL } from '../../lib/Utilities.js'
 export default {
    command: 'twitter',
    hidden: 'tw',
-   category: 'downloader',
+   category: 'download',
    async run(m, {
       sock,
       isPrefix,
@@ -24,15 +24,14 @@ export default {
             return m.reply('❌ Failed to get data.')
          if (data.result.length < 2)
             return sock.sendMedia(m.chat, data.result.download_url[0].url, '', m)
-         const album = data.result.download_url
-            .filter(result => result.type === 'image' || result.type === 'video')
-            .map(value => ({
-               [value.type]: {
-                  url: value.url
-               }
-            }))
          sock.sendMessage(m.chat, {
-            album
+            album: data.result.download_url
+               .filter(result => result.type === 'image' || result.type === 'video')
+               .map(value => ({
+                  [value.type]: {
+                     url: value.url
+                  }
+               }))
          }, {
             quoted: m
          })

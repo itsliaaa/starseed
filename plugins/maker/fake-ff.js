@@ -7,14 +7,14 @@ export default {
       sock,
       isPrefix,
       command,
-      args
+      text
    }) {
       try {
-         if (!args[0])
+         if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} itsliaaa`)
          m.react('🕒')
          const data = await nexray('maker/fakelobyff', {
-            nickname: args[0]
+            nickname: text
          })
          if (!Buffer.isBuffer(data))
             return m.reply('❌ Failed to get data.')

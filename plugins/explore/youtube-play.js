@@ -1,7 +1,8 @@
 import { isJidNewsletter } from '@itsliaaa/baileys'
+import ytsearch from 'yt-search'
 
 import { nexray } from '../../lib/Request.js'
-import { fetchAsBuffer, frame } from '../../lib/Utilities.js'
+import { fetchAsBuffer, frame, formatNumber } from '../../lib/Utilities.js'
 
 export default {
    command: 'play',
@@ -16,29 +17,33 @@ export default {
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} you say run`)
          m.react('🕒')
-         const data = await nexray('downloader/ytplay', {
-            q: text
+         const data = await ytsearch(text)
+         if (!data.all?.length)
+            return m.reply('❌ Failed to get data.')
+         const firstVideo = data.all[0]
+         const audioData = await nexray('downloader/ytmp3', {
+            url: firstVideo.url
          })
-         if (!data.status)
+         if (!audioData.status)
             return m.reply('❌ Failed to get data.')
          const printCaption = frame('YOUTUBE PLAY', [
-            `*Title*: ${data.result.title}`,
-            `*Views*: ${data.result.views}`,
-            `*Duration*: ${data.result.duration}`,
-            `*Uploaded*: ${data.result.upload_at}`
+            `*Title*: ${firstVideo.title}`,
+            `*Views*: ${formatNumber(firstVideo.views || 0)}`,
+            `*Duration*: ${firstVideo.timestamp || '0:00'}`,
+            `*Uploaded*: ${firstVideo.ago || 'Long time ago'}`
          ], '🎵')
          m.reply(printCaption, {
             externalAdReply: {
-               title: data.result.title,
-               body: data.result.description,
-               thumbnail: await fetchAsBuffer(data.result.thumbnail || botThumbnail),
-               url: data.result.url,
-               sourceUrl: data.result.url,
+               title: firstVideo.title,
+               body: firstVideo.description,
+               thumbnail: await fetchAsBuffer(firstVideo.image || botThumbnail),
+               url: firstVideo.url,
+               sourceUrl: firstVideo.url,
                largeThumbnail: true,
                mediaType: 2
             }
          })
-         sock.sendMedia(m.chat, data.result.download_url, '', m, {
+         sock.sendMedia(m.chat, audioData.result.url, '', m, {
             audio: true,
             ptt: isJidNewsletter(m.chat)
          })

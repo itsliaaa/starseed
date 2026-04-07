@@ -3,7 +3,7 @@ import { fetchAsBuffer, formatNumber, frame, greeting } from '../../lib/Utilitie
 
 export default {
    command: 'channelid',
-   hidden: 'chid',
+   hidden: 'idch',
    category: 'tools',
    async run(m, {
       sock,

@@ -4,7 +4,7 @@ import { isURL, resizeImage } from '../../lib/Utilities.js'
 export default {
    command: 'instagram',
    hidden: 'ig',
-   category: 'downloader',
+   category: 'download',
    async run(m, {
       sock,
       isPrefix,

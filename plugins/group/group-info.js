@@ -2,6 +2,7 @@ import { fetchAsBuffer, frame, greeting } from '../../lib/Utilities.js'
 
 export default {
    command: 'gcinfo',
+   hidden: 'idgc',
    category: 'group',
    async run(m, {
       sock,

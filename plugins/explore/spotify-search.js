@@ -1,13 +1,7 @@
-import NodeCache from '@cacheable/node-cache'
+import { isJidNewsletter } from '@itsliaaa/baileys'
 
 import { zenzxz } from '../../lib/Request.js'
 import { fetchAsBuffer, frame, toTime } from '../../lib/Utilities.js'
-
-const ResultCache = new NodeCache({
-   stdTTL: searchCacheTTL,
-   useClones: false,
-   deleteOnExpire: true
-})
 
 export default {
    command: 'spotsearch',
@@ -19,7 +13,7 @@ export default {
       text
    }) {
       try {
-         const keyCache = m.sender
+         const keyCache = m.sender + 'spotify-search'
          const userPreviousResult = ResultCache.get(keyCache)
          if (
             text &&
@@ -52,7 +46,8 @@ export default {
                }
             })
             sock.sendMedia(m.chat, data.result.download_url, '', m, {
-               audio: true
+               audio: true,
+               ptt: isJidNewsletter(m.chat)
             })
          }
          else {

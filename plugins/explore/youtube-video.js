@@ -1,3 +1,5 @@
+import ytsearch from 'yt-search'
+
 import { nexray } from '../../lib/Request.js'
 
 export default {
@@ -13,12 +15,18 @@ export default {
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} mayonaka`)
          m.react('🕒')
-         const data = await nexray('downloader/ytplayvid', {
-            q: text
-         })
-         if (!data.status)
+         const data = await ytsearch(text)
+         if (!data.all?.length)
             return m.reply('❌ Failed to get data.')
-         sock.sendMedia(m.chat, data.result.download_url, data.result.title, m, {
+         const firstVideo = data.all[0]
+         if (firstVideo.seconds > 1440)
+            return m.reply('❌ Video is too long. Maximum duration is 24 minutes.')
+         const videoData = await nexray('downloader/v1/ytmp4', {
+            url: firstVideo.url
+         })
+         if (!videoData.status)
+            return m.reply('❌ Failed to get data.')
+         sock.sendMedia(m.chat, videoData.result.url, firstVideo.title, m, {
             ptv: command === 'ptv'
          })
       }

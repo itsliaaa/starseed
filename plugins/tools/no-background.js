@@ -3,7 +3,8 @@ import { uguu } from '../../lib/Scraper.js'
 import { isMimeImage } from '../../lib/Utilities.js'
 
 export default {
-   command: 'nobackground',
+   command: 'removebg',
+   hidden: 'nobackground',
    category: 'tools',
    async run(m, {
       sock,

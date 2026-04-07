@@ -13,7 +13,8 @@ export default {
          !isAdmin &&
          (
             m.message.groupStatusMessage ||
-            m.message.groupStatusMessageV2
+            m.message.groupStatusMessageV2 ||
+            m.msg?.contextInfo?.isGroupStatus
          )
       ) {
          const participant = group.participants[m.sender]

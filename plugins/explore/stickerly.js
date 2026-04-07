@@ -1,11 +1,8 @@
-import { getStickerPack } from '../../lib/Scraper.js'
+import { stickerLy } from '../../lib/Scraper.js'
 import { createSticker, frame, shuffleArray } from '../../lib/Utilities.js'
 
-const CDN_URL = 'https://s3.getstickerpack.com/'
-
 export default {
-   command: 'stickerpack',
-   hidden: 'skpack',
+   command: 'stickerly',
    category: 'explore',
    async run(m, {
       sock,
@@ -14,7 +11,7 @@ export default {
       text
    }) {
       try {
-         const keyCache = m.sender + 'sticker-pack'
+         const keyCache = m.sender + 'stickerly'
          const userPreviousResult = ResultCache.get(keyCache)
          if (
             text &&
@@ -25,11 +22,10 @@ export default {
             if (!result)
                return m.reply(`❌ Invalid input.`)
             m.react('🕒')
-            const data = await getStickerPack.detail(result.slug)
             const stickers = []
-            for (const value of data.images)
+            for (const url of result.resourceFiles)
                stickers.push({
-                  data: await createSticker(CDN_URL + value.url, {
+                  data: await createSticker(result.resourceUrlPrefix + url, {
                      stickerPackPublisher
                   })
                })
@@ -40,7 +36,7 @@ export default {
                stickers,
                name: stickerPackName,
                publisher: stickerPackPublisher,
-               description: data.about || footer
+               description: footer
             }, {
                quoted: m
             })
@@ -49,13 +45,13 @@ export default {
             if (!text)
                return m.reply(`👉🏻 *Example*: ${isPrefix + command} cat`)
             m.react('🕒')
-            const data = await getStickerPack.search(text)
+            const data = await stickerLy(text)
             const sliced = shuffleArray(data)
                .splice(0, 10)
             const flattedResult = sliced.flatMap((result, index, array) => {
                const lines = [
-                  `${index + 1}. ${result.title}`,
-                  `*Created by*: ${result.user.username || '-'}`
+                  `${index + 1}. ${result.name}`,
+                  `*Created by*: ${result.authorName}`
                ]
                if (index !== array.length - 1)
                   lines.push('')
@@ -65,7 +61,7 @@ export default {
                `To get the stickers use \`${isPrefix + command} <number>\` command`,
                `*Example*: ${isPrefix + command} 1`
             ], '📄')
-            const printList = frame('STICKER PACKS', flattedResult, '📦')
+            const printList = frame('STICKER.LY', flattedResult, '📦')
             ResultCache.set(keyCache, sliced)
             m.reply(printHowTo + '\n\n' +
                printList)

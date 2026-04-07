@@ -1,17 +1,10 @@
-import NodeCache from '@cacheable/node-cache'
-
 import { zenzxz } from '../../lib/Request.js'
 import { formatTime, frame, isURL } from '../../lib/Utilities.js'
 
-const ResultCache = new NodeCache({
-   stdTTL: searchCacheTTL,
-   useClones: false,
-   deleteOnExpire: true
-})
-
 export default {
    command: 'terabox',
-   category: 'downloader',
+   hidden: 'tb',
+   category: 'download',
    async run(m, {
       sock,
       isPrefix,
@@ -19,7 +12,7 @@ export default {
       args
    }) {
       try {
-         const keyCache = m.sender
+         const keyCache = m.sender + 'terabox'
          const userPreviousResult = ResultCache.get(keyCache)
          if (
             args[0] &&

@@ -1,8 +1,9 @@
-import { nekolabs } from '../../lib/Request.js'
+import { zenzxz } from '../../lib/Request.js'
+import { isURL } from '../../lib/Utilities.js'
 
 export default {
-   command: 'pin',
-   category: 'downloader',
+   command: 'ssweb',
+   category: 'tools',
    async run(m, {
       sock,
       isPrefix,
@@ -11,16 +12,16 @@ export default {
    }) {
       try {
          if (!args[0])
-            return m.reply(`👉🏻 *Example*: ${isPrefix + command} https://pin.it/5fXaAWE/`)
-         if (!args[0].includes('pin.it'))
+            return m.reply(`👉🏻 *Example*: ${isPrefix + command} https://www.npmjs.com/package/@itsliaaa/baileys/`)
+         if (!isURL(args[0]))
             return m.reply('❌ Invalid URL.')
          m.react('🕒')
-         const data = await nekolabs('downloader/pinterest', {
+         const data = await zenzxz('tools/ssweb', {
             url: args[0]
          })
-         if (!data.success)
+         if (!data.status)
             return m.reply('❌ Failed to get data.')
-         sock.sendMedia(m.chat, data.result.medias.at(-1).url, '', m)
+         sock.sendMedia(m.chat, data.result.url, '', m)
       }
       catch (error) {
          console.error(error)

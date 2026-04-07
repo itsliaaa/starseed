@@ -2,7 +2,7 @@ import { nexray } from '../../lib/Request.js'
 
 export default {
    command: 'spotify',
-   category: 'downloader',
+   category: 'download',
    async run(m, {
       sock,
       isPrefix,

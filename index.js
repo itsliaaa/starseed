@@ -14,33 +14,42 @@ import { spawn } from 'child_process'
 import { fileURLToPath } from 'url'
 
 const SETUP_PATH = fileURLToPath(
-   new URL('./handler.js', import.meta.url)
+   new URL('./socket.js', import.meta.url)
 )
 
 const [MAJOR, MINOR, PATCH] = process.versions.node
    .split('.')
    .map(value => +value.replace(/\D.*$/, ''))
 
-const Banner = async () => {
-   const { default: CFonts } = await import('cfonts')
-
+const Banner = () => {
    console.log('\x1Bc')
 
-   CFonts.say('STARSEED', {
-      font: 'tiny',
-      align: 'center',
-      gradient: ['#CB9DF0', '#FFF9BF']
-   })
+   /**
+    * Banner characters derived from the "tiny" font by cfonts.
+    * Credit to the original authors:
+    * https://github.com/dominikwilkowski/cfonts/blob/released/fonts/tiny.json
+    */
+   const banner = [
+      '█▀▀ ▀█▀ ▄▀█ █▀█ █▀▀ █▀▀ █▀▀ █▀▄',
+      '▄▄█  █  █▀█ █▀▄ ▄▄█ ██▄ ██▄ █▄▀'
+   ]
 
-   CFonts.say('GitHub: https://github.com/itsliaaa/starseed', {
-      colors: ['system'],
-      font: 'console',
-      align: 'center'
-   })
+   const footer = 'GitHub: https://github.com/itsliaaa/starseed'
+
+   const terminalWidth = process.stdout?.columns || 80
+
+   const toCenter = (text) => {
+      const padding = Math.floor((terminalWidth - text.length) / 2)
+      return ' '.repeat(Math.max(padding, 0)) + text
+   }
+
+   banner.forEach(line => console.log(toCenter(line)))
+   console.log('\n' + toCenter(footer))
 }
 
 const Start = () => {
-   const p = spawn(process.execPath, [
+   const instance = spawn(process.execPath, [
+      '--import', './config.js',
       ...process.execArgv,
       SETUP_PATH,
       ...process.argv.slice(2)
@@ -48,18 +57,18 @@ const Start = () => {
       stdio: ['inherit', 'inherit', 'inherit', 'ipc']
    })
 
-   p.once('message', data => {
+   instance.once('message', data => {
       if (data === 'leak' || data === 'reset') {
          console[data === 'leak' ? 'warn' : 'log'](
             data === 'leak'
                ? '⚠️ RAM limit reached, restarting...'
                : '🔃 Restarting...'
          )
-         p.kill('SIGTERM')
+         instance.kill('SIGTERM')
       }
    })
 
-   p.once('exit', code => {
+   instance.once('exit', code => {
       console.error(`⚠️ Exited with code ${code}`)
 
       if (code !== 0)

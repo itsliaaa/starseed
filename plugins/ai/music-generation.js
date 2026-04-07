@@ -1,3 +1,5 @@
+import { isJidNewsletter } from '@itsliaaa/baileys'
+
 import { zenzxz } from '../../lib/Request.js'
 import { fetchAsBuffer } from '../../lib/Utilities.js'
 
@@ -32,12 +34,13 @@ export default {
          for (const result of data.result)
             await sock.sendMedia(m.chat, result.audio_url, '', m, {
                audio: true,
+               ptt: isJidNewsletter(m.chat),
                mimetype: 'audio/mpeg',
                fileName: title + '.mp3',
                externalAdReply: {
                   title,
                   body: '🎵 A song created by ' + m.pushName,
-                  thumbnail: await fetchAsBuffer(result.image_url),
+                  thumbnail: await fetchAsBuffer(result.image_url || botThumbnail),
                   largeThumbnail: true
                }
             })

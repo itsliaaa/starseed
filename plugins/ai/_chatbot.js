@@ -31,7 +31,11 @@ export default {
          const mediaSize = (q.msg || q).fileLength?.low
          const instanceBody = (
             m.quoted ?
-               body + `\n\n${QUOTED_MESSAGE[m.quoted.fromMe]}` + m.quoted.text :
+               `[Message from ${m.pushName}]:\n` +
+               body +
+               `\n${QUOTED_MESSAGE[m.quoted.fromMe]}` +
+               m.quoted.text :
+               `[Message from ${m.pushName}]:\n` +
                body
          )?.trim()
          const cleanBody = instanceBody

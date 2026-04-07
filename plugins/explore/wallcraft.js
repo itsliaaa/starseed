@@ -1,17 +1,17 @@
-import { deline } from '../../lib/Request.js'
+import { nexray } from '../../lib/Request.js'
 import { frame } from '../../lib/Utilities.js'
 
 export default {
-   command: 'lyric',
-   hidden: 'lirik',
+   command: 'wallcraft',
    category: 'explore',
    async run(m, {
+      sock,
       isPrefix,
       command,
       text
    }) {
       try {
-         const keyCache = m.sender + 'lyric'
+         const keyCache = m.sender + 'wallcraft'
          const userPreviousResult = ResultCache.get(keyCache)
          if (
             text &&
@@ -21,21 +21,22 @@ export default {
             const result = userPreviousResult[Number(text) - 1]
             if (!result)
                return m.reply(`❌ Invalid input.`)
-            m.reply(result.plainLyrics)
+            m.react('🕒')
+            sock.sendMedia(m.chat, result.url, result.description, m)
          }
          else {
             if (!text)
-               return m.reply(`👉🏻 *Example*: ${isPrefix + command} Army dreamers`)
+               return m.reply(`👉🏻 *Example*: ${isPrefix + command} nature`)
             m.react('🕒')
-            const data = await deline('tools/lyrics', {
-               title: text
+            const data = await nexray('search/wallcraft', {
+               q: text
             })
             if (!data.status)
                return m.reply('❌ Failed to get data.')
             const flattedResult = data.result.flatMap((result, index, array) => {
                const lines = [
-                  `${index + 1}. ${result.trackName}`,
-                  `*Artist*: ${result.artistName}`
+                  `${index + 1}. ${result.id}`,
+                  `*Tags*: ${result.tags.join(', ')}`
                ]
                if (index !== array.length - 1)
                   lines.push('')
@@ -45,7 +46,7 @@ export default {
                `To show the lyric use \`${isPrefix + command} <number>\` command`,
                `*Example*: ${isPrefix + command} 1`
             ], '📄')
-            const printList = frame('LYRICS', flattedResult, '🎼')
+            const printList = frame('WALLCRAFT', flattedResult, '🖼️')
             ResultCache.set(keyCache, data.result)
             m.reply(printHowTo + '\n\n' +
                printList)

@@ -95,6 +95,7 @@ export default {
             `*React Status*: ${setting.reactStatus ? '✅' : '❌'}`,
             `*Read Message*: ${setting.readMessage ? '✅' : '❌'}`,
             `*Reject Call*: ${setting.rejectCall ? '✅' : '❌'}`,
+            `*Secure Label*: ${setting.secureLabel ? '✅' : '❌'}`,
             `*Slow Mode*: ${setting.slowMode ? '✅' : '❌'}`,
             `*Typing Presence*: ${setting.typingPresence ? '✅' : '❌'}`,
             `*Prefixes*: [${setting.prefixes}]`,

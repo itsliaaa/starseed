@@ -9,12 +9,12 @@ export default {
       sock,
       isPrefix,
       command,
-      args
+      text
    }) {
       try {
          const q = m.quoted?.url ? m.quoted : m
          const mimetype = (q.msg || q).mimetype
-         if (!args[0])
+         if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} itsliaaa`)
          m.react('🕒')
          let profilePicture
@@ -27,7 +27,7 @@ export default {
          )
          const data = await nexray('maker/fakelobyml', {
             avatar: upload,
-            nickname: args[0]
+            nickname: text
          })
          if (!Buffer.isBuffer(data))
             return m.reply('❌ Failed to get data.')

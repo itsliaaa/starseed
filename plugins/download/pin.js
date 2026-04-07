@@ -1,8 +1,8 @@
-import { nexray } from '../../lib/Request.js'
+import { nekolabs } from '../../lib/Request.js'
 
 export default {
-   command: 'videy',
-   category: 'downloader',
+   command: 'pin',
+   category: 'download',
    async run(m, {
       sock,
       isPrefix,
@@ -11,16 +11,16 @@ export default {
    }) {
       try {
          if (!args[0])
-            return m.reply(`👉🏻 *Example*: ${isPrefix + command} https://videy.co/v?id=7ZH1ZRIF`)
-         if (!args[0].includes('videy.co'))
+            return m.reply(`👉🏻 *Example*: ${isPrefix + command} https://pin.it/5fXaAWE/`)
+         if (!args[0].includes('pin.it'))
             return m.reply('❌ Invalid URL.')
          m.react('🕒')
-         const data = await nexray('downloader/videy', {
+         const data = await nekolabs('downloader/pinterest', {
             url: args[0]
          })
-         if (!data.status)
+         if (!data.success)
             return m.reply('❌ Failed to get data.')
-         sock.sendMedia(m.chat, data.result, '', m)
+         sock.sendMedia(m.chat, data.result.medias.at(-1).url, '', m)
       }
       catch (error) {
          console.error(error)

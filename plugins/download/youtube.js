@@ -6,7 +6,7 @@ import { isURL } from '../../lib/Utilities.js'
 export default {
    command: ['ytmp3', 'ytmp4'],
    hidden: ['yta', 'ytv'],
-   category: 'downloader',
+   category: 'download',
    async run(m, {
       sock,
       isPrefix,

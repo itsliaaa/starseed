@@ -5,7 +5,7 @@ import { mkdir, readdir, readFile, rename, unlink, writeFile } from 'fs/promises
 import { basename, dirname, join, relative, resolve } from 'path'
 
 import { AVAILABLE_MODELS } from '../../lib/Constants.js'
-import { createFileName, isMimeAudio, isMimeImage, persistToFile, resizeImage, Sender, toArray } from '../../lib/Utilities.js'
+import { createFileName, isMimeAudio, isMimeImage, persistToFile, resizeImage, toArray } from '../../lib/Utilities.js'
 import { ModuleCache } from '../../lib/Watcher.js'
 
 const TOP_PATH = 'starseed-main/'
@@ -34,6 +34,7 @@ const SETTING_MAPS = {
    reactstatus: 'reactStatus',
    readmessage: 'readMessage',
    rejectcall: 'rejectCall',
+   securelabel: 'secureLabel',
    slowmode: 'slowMode',
    typingpresence: 'typingPresence'
 }
@@ -49,6 +50,7 @@ const PRETTY_SETTING_MAPS = {
    reactstatus: 'React Status',
    readmessage: 'Read Message',
    rejectcall: 'Reject Call',
+   securelabel: 'Secure Label',
    slowmode: 'Slow Mode',
    typingpresence: 'Typing Presence'
 }
@@ -173,7 +175,7 @@ const atomicWrite = (db, store) =>
    ])
 
 export default {
-   command: ['afknotifier', 'autodownload', 'backup', 'backupsc', 'chatbot', 'commandsuggestion', 'disable', 'enable', 'gconly', 'menumusic', 'noprefix', 'public', 'reactstatus', 'readmessage', 'rejectcall', 'resetlimit', 'restart', 'restore', 'setbroadcastcd', 'setinstruction', 'setmenu', 'setmenumusic', 'setmenumessage', 'setmodel', 'setname', 'setbio', 'setpp', 'setcover', 'setchid', 'slowmode', 'self', 'typingpresence', 'updatesc', '+prefix', '-prefix'],
+   command: ['afknotifier', 'autodownload', 'backup', 'backupsc', 'chatbot', 'commandsuggestion', 'disable', 'enable', 'gconly', 'menumusic', 'noprefix', 'public', 'reactstatus', 'readmessage', 'rejectcall', 'resetlimit', 'restart', 'restore', 'securelabel', 'setbroadcastcd', 'setinstruction', 'setmenu', 'setmenumusic', 'setmenumessage', 'setmodel', 'setname', 'setbio', 'setpp', 'setcover', 'setchid', 'slowmode', 'self', 'typingpresence', 'updatesc', '+prefix', '-prefix'],
    category: 'owner',
    async run (m, {
       sock,
@@ -196,6 +198,7 @@ export default {
          command === 'reactstatus' ||
          command === 'readmessage' ||
          command === 'rejectcall' ||
+         command === 'securelabel' ||
          command === 'slowmode' ||
          command === 'typingpresence'
       ) {
@@ -218,8 +221,12 @@ export default {
          print = isActivating ?
             `✅ Successfully activating ${prettyKeyName}.` :
             `✅ Successfully deactivating ${prettyKeyName}.`
-         if (command === 'typingpresence')
-            Sender(sock, setting.typingPresence)
+         if (
+            command === 'securelabel' ||
+            command === 'slowmode' ||
+            command === 'typingpresence'
+         )
+            print += '\n\n> ⚠️ Restart is required to apply the changes.'
          m.reply(print)
       }
       else if (command === 'backup') {
@@ -277,7 +284,6 @@ export default {
       else if (command === 'restart') {
          await m.reply('🔃 Restarting...')
          await atomicWrite(db, store)
-         sock.end()
          process.send('reset')
       }
       else if (command === 'restore') {

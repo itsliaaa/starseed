@@ -7,17 +7,17 @@ export default {
       sock,
       isPrefix,
       command,
-      args
+      text
    }) {
       try {
-         if (!args[0])
+         if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} 100000`)
          m.react('🕒')
-         const path = args[1] === '--crop' ?
+         const path = text.includes('--crop') ?
             'fakedana' :
             'fakedanav2'
          const data = await zenzxz('maker/' + path, {
-            nominal: args[0]
+            nominal: text.replace(' ', '.')
          })
          if (!Buffer.isBuffer(data))
             return m.reply('❌ Failed to get data.')
