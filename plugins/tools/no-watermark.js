@@ -32,5 +32,6 @@ export default {
          m.reply('❌ ' + error.message)
       }
    },
+   premium: true,
    limit: 1
 }

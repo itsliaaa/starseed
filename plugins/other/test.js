@@ -14,6 +14,7 @@ export default {
    command: ['disk', 'ping', 'ram', 'run', 'server', 'statistic'],
    category: 'other',
    async run (m, {
+      sock,
       setting,
       command
    }) {
@@ -22,15 +23,23 @@ export default {
          m.reply('🗂️ *Disk Used*: ' + formatSize(diskUsage.used) + ' / ' + formatSize(diskUsage.total))
       }
       else if (command === 'ping') {
-         const old = performance.now()
-         await m.react('🚀')
-         const ping = (performance.now() - old) | 0
-         m.reply(
-            getPingEmojis(ping) +
-            ' *Latency*: ' +
-            ping +
-            'ms'
-         )
+         const [rtt, presence] = await Promise.all([
+            (async () => {
+               const start = performance.now()
+               await m.react('🚀')
+               return (performance.now() - start).toFixed(2)
+            })(),
+            (async () => {
+               const start = performance.now()
+               await sock.sendPresenceUpdate('available', m.chat)
+               return (performance.now() - start).toFixed(2)
+            })()
+         ])
+         const print = frame('PING', [
+            '*RTT*: ' + rtt + ' ms',
+            '*Presence*: ' + presence + ' ms'
+         ], getPingEmojis(rtt))
+         m.reply(print)
       }
       else if (command === 'ram')
          m.reply('💾 *RAM Usage*: ' + formatSize(process.memoryUsage().rss) + ' / ' + formatSize(totalmem()))
@@ -92,6 +101,7 @@ export default {
             `*Group Only*: ${setting.groupOnly ? '✅' : '❌'}`,
             `*Menu Music*: ${setting.menuMusic ? '✅' : '❌'}`,
             `*No Prefix*: ${setting.noPrefix ? '✅' : '❌'}`,
+            `*Notifier*: ${setting.notifier ? '✅' : '❌'}`,
             `*React Status*: ${setting.reactStatus ? '✅' : '❌'}`,
             `*Read Message*: ${setting.readMessage ? '✅' : '❌'}`,
             `*Reject Call*: ${setting.rejectCall ? '✅' : '❌'}`,

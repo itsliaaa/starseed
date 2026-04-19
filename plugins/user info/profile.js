@@ -1,5 +1,6 @@
 import { areJidsSameUser } from '@itsliaaa/baileys'
 
+import { extractNumber } from '../../lib/Serialize.js'
 import { fetchAsBuffer, frame, greeting } from '../../lib/Utilities.js'
 
 export default {
@@ -11,10 +12,7 @@ export default {
       db,
       setting
    }) {
-      const userId = m.quoted ?
-         m.quoted.sender :
-         m.mentionedJid[0] ||
-            m.sender
+      const userId = extractNumber(m) || m.sender
       const userData = db.getUser(userId)
       if (!userData)
          return m.reply('❌ User not found.')
@@ -29,7 +27,8 @@ export default {
       const profilePicture = await sock.profilePicture(userData.jid)
       const printUserInfo = frame('USER INFO', [
          `*Name*: ${userData.name}`,
-         `*Limit*: ${isPartner ? '`ꝏ Unlimited`' : userData.limit}`
+         `*Limit*: ${isPartner ? '`ꝏ Unlimited`' : userData.limit}`,
+         `*Energy*: ${isPartner ? '`ꝏ Unlimited`' : userData.energy}`,
       ], '👤')
       const printUserStats = frame('USER STATS', [
          `*Hit Command*: ${userData.commandUsage}x`,

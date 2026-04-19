@@ -79,7 +79,7 @@ export default {
                   externalAdReply: {
                      title: botName,
                      body: greeting(),
-                     thumbnail: await fetchAsBuffer('./lib/Media/broadcast.jpg'),
+                     thumbnail: await fetchAsBuffer('./media/Image/broadcast.jpg'),
                      largeThumbnail: true
                   }
                }, {

@@ -27,5 +27,6 @@ export default {
          m.reply('❌ Failed to get view once message.')
       }
    },
-   group: true
+   group: true,
+   premium: true
 }

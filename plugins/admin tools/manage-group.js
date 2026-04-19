@@ -2,6 +2,7 @@ import { isMimeAudio, isMimeImage, randomHex } from '../../lib/Utilities.js'
 
 export default {
    command: ['closegc', 'opengc', 'delete', 'setgcdesc', 'setgcname', 'setgcpp', 'setleft', 'setwelcome', 'upgcsw'],
+   hidden: 'del',
    category: 'admin tools',
    async run(m, {
       sock,
@@ -18,7 +19,7 @@ export default {
          await sock.groupSettingUpdate(m.chat, 'not_announcement')
          m.reply('✅ Successfully open the grup.')
       }
-      else if (command === 'delete') {
+      else if (command === 'del' || command === 'delete') {
          await sock.sendMessage(m.chat, {
             delete: {
                remoteJid: m.chat,

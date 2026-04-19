@@ -14,7 +14,7 @@ export default {
    }) {
       try {
          const keyCache = m.sender + 'spotify-search'
-         const userPreviousResult = ResultCache.get(keyCache)
+         const userPreviousResult = ExploreSession.get(keyCache)
          if (
             text &&
             !isNaN(text) &&
@@ -73,7 +73,7 @@ export default {
                `*Example*: ${isPrefix + command} 1`
             ], '📄')
             const printList = frame('SPOTIFY SEARCH', flattedResult, '🎶')
-            ResultCache.set(keyCache, data.result.results)
+            ExploreSession.set(keyCache, data.result.results)
             m.reply(printHowTo + '\n\n' +
                printList)
          }

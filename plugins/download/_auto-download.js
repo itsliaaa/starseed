@@ -1,6 +1,6 @@
 import { URL_EXTRACT_REGEX } from '../../lib/Constants.js'
 import { nekolabs, nexray, zenzxz } from '../../lib/Request.js'
-import { instagram } from '../../lib/Scraper.js'
+import { reelsvideo, tikwm } from '../../lib/Scraper.js'
 import { isURL, resizeImage } from '../../lib/Utilities.js'
 
 export default {
@@ -9,9 +9,14 @@ export default {
       user,
       setting,
       isPartner,
+      isPremium,
       body
    }) {
-      if (!setting.autoDownload || !isURL(body)) return
+      if (
+         !setting.autoDownload ||
+         !isPremium ||
+         !isURL(body)
+      ) return
       if (!isPartner) {
          if (user.limit > 0)
             user.limit -= 1
@@ -73,7 +78,7 @@ export default {
          }
          else if (url.includes('instagram.')) {
             m.react('🕒')
-            const data = await instagram(url)
+            const data = await reelsvideo(url)
             if (!data.media.length)
                return m.reply('❌ Failed to get data.')
             if (data.media.length <= 2) {
@@ -130,13 +135,9 @@ export default {
          }
          else if (url.includes('tiktok.com')) {
             m.react('🕒')
-            const data = await zenzxz('download/tiktok', {
-               url
-            })
-            if (!data.status)
-               return m.reply('❌ Failed to get data.')
-            const videoContent = data.result.hdplay || data.result.play
-            const imageContent = data.result.images
+            const data = await tikwm(url)
+            const videoContent = data.play
+            const imageContent = data.images
             if (imageContent?.length > 1)
                return sock.sendMessage(m.chat, {
                   album: imageContent.map(imageUrl => ({
@@ -147,7 +148,7 @@ export default {
                }, {
                   quoted: m
                })
-            sock.sendMedia(m.chat, imageContent?.[0] || videoContent, data.result.title, m)
+            sock.sendMedia(m.chat, imageContent?.[0] || videoContent, data.title, m)
          }
          else if (url.includes('twitter.com') || url.includes('x.com')) {
             m.react('🕒')

@@ -1,11 +1,11 @@
 {
    "name": "@itsliaaa/starseed",
-   "version": "0.2.0-beta.17",
+   "version": "0.2.0-beta.18",
    "description": "A simple WhatsApp bot built on Baileys",
    "main": "index.js",
    "type": "module",
    "scripts": {
-      "start": "NODE_ENV=production MALLOC_ARENA_MAX=2 node --max-old-space-size=320 --expose-gc index.js"
+      "start": "NODE_ENV=production MALLOC_ARENA_MAX=2 node --max-old-space-size=300 --expose-gc index.js"
    },
    "engines": {
       "node": ">=20.18.1"
@@ -29,7 +29,7 @@
    "author": "Lia Wynn",
    "license": "Apache-2.0",
    "dependencies": {
-      "@itsliaaa/baileys": "^0.1.16",
+      "@itsliaaa/baileys": "^0.1.26",
       "@napi-rs/image": "^1.12.0",
       "awesome-phonenumber": "~2.59.0",
       "file-type": "21.3.4",

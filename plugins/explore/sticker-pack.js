@@ -15,7 +15,7 @@ export default {
    }) {
       try {
          const keyCache = m.sender + 'sticker-pack'
-         const userPreviousResult = ResultCache.get(keyCache)
+         const userPreviousResult = ExploreSession.get(keyCache)
          if (
             text &&
             !isNaN(text) &&
@@ -66,7 +66,7 @@ export default {
                `*Example*: ${isPrefix + command} 1`
             ], '📄')
             const printList = frame('STICKER PACKS', flattedResult, '📦')
-            ResultCache.set(keyCache, sliced)
+            ExploreSession.set(keyCache, sliced)
             m.reply(printHowTo + '\n\n' +
                printList)
          }

@@ -1,3 +1,6 @@
+import { tokenizeCode } from '@itsliaaa/baileys'
+
+import { FENCE_REGEX, TABLE_SEPARATOR_REGEX } from '../../lib/Constants.js'
 import { persistToFile } from '../../lib/Utilities.js'
 
 import Gemini from '../../lib/Components/Gemini.js'
@@ -48,7 +51,11 @@ export default {
                isTag = true
                break
             }
-         if (!isTag && m.quoted)
+         if (
+            !isTag &&
+            m.quoted &&
+            m.quoted.type === 'conversation'
+         )
             isTag = m.quoted.sender === sock.user.decodedId || m.quoted.sender === sock.user.decodedLid
          if ((m.isGroup && isTag) || m.isPrivate) {
             if (mediaSize && mediaSize > MAX_SIZE)
@@ -71,7 +78,26 @@ export default {
                model: setting.botModel,
                instruction: setting.botInstruction
             })
-            m.reply(data.answer)
+            const binaryContent = parse(data.answer)
+            sock.sendMessage(m.chat, {
+               richResponse: binaryContent.map(node => {
+                  switch (node.type) {
+                     case 'text':
+                        return { text: node.content }
+                     case 'table':
+                        return {
+                           table: node.rows.map((row, index) => ({ isHeading: index == 0, items: row }))
+                        }
+                     case 'code':
+                        return {
+                           language: node.language,
+                           code: tokenizeCode(node.content, node.language)
+                        }
+                  }
+               })
+            }, {
+               quoted: m
+            })
             user.historyChat = data.history
          }
       }
@@ -80,4 +106,91 @@ export default {
          m.reply('❌ ' + error.message)
       }
    }
+}
+
+const isTableSeparator = (line) =>
+   TABLE_SEPARATOR_REGEX.test(line)
+
+const isTableRow = (line) =>
+   line.includes('|')
+
+const parseRow = (line) =>
+   line.split('|')
+      .map(s => s.trim())
+      .filter(Boolean)
+
+const parse = (input) => {
+   const lines = input.split('\n')
+   const binaryContent = []
+
+   let inCode = false,
+      codeLanguage = 'text',
+      codeBuffer = []
+   let inTable = false,
+      tableRows = []
+   let textBuffer = []
+
+   const flushText = () => {
+      if (textBuffer.length > 0) {
+         const joinedText = textBuffer.join('\n').trim()
+         if (joinedText)
+            binaryContent.push({ type: 'text', content: joinedText })
+         textBuffer = []
+      }
+   }
+
+   for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      const fenceMatch = line.match(FENCE_REGEX)
+
+      if (fenceMatch) {
+         if (!inCode) {
+            flushText()
+            inCode = true
+            codeLanguage = fenceMatch[1] || 'text'
+            codeBuffer = []
+         }
+         else {
+            binaryContent.push({
+               type: 'code',
+               language: codeLanguage,
+               content: codeBuffer.join('\n') + '\n'
+            })
+            inCode = false
+         }
+         continue
+      }
+
+      if (inCode) {
+         codeBuffer.push(line)
+         continue
+      }
+
+      if (!inTable && isTableRow(line) && isTableSeparator(lines[i + 1] || '')) {
+         flushText()
+         inTable = true
+         tableRows = [parseRow(line)]
+         i++
+         continue
+      }
+
+      if (inTable) {
+         if (isTableRow(line)) {
+            tableRows.push(parseRow(line))
+            continue
+         }
+         else {
+            binaryContent.push({ type: 'table', rows: tableRows })
+            inTable = false
+         }
+      }
+
+      textBuffer.push(line)
+   }
+
+   if (inTable)
+      binaryContent.push({ type: 'table', rows: tableRows })
+   flushText()
+
+   return binaryContent
 }

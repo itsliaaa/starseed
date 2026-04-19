@@ -19,8 +19,15 @@ const MENU_STYLES = {
    4: '🛒 `Interactive Message` with `Product Header`.',
    5: '🛒 `Interactive Message` with `Product Header` and `bottom_sheet`.',
    6: '🛒 `Interactive Message` with `Document Header`, `bottom_sheet`, and `externalAdReply`.',
-   7: '🛒 `Buttons Message` with `Document Header` and `externalAdReply`.',
-   8: '🖼️ `Interactive Message` with `Carousel Message`.'
+   7: '📍 `Interactive Message` with `Location Header`, `bottom_sheet`, and `externalAdReply`.',
+   8: '🛒 `Buttons Message` with `Document Header` and `externalAdReply`.',
+   9: '🖼️ `Interactive Message` with `Carousel Message`.'
+}
+
+const REPLY_STYLES = {
+   1: '💭 Classic quote user message.',
+   2: '💳 Quoted `requestPaymentMessage` with forward.',
+   3: '👤 Quoted `contactMessage` with forward.'
 }
 
 const SETTING_MAPS = {
@@ -31,6 +38,7 @@ const SETTING_MAPS = {
    commandsuggestion: 'commandSuggestions',
    menumusic: 'menuMusic',
    noprefix: 'noPrefix',
+   notifier: 'notifier',
    reactstatus: 'reactStatus',
    readmessage: 'readMessage',
    rejectcall: 'rejectCall',
@@ -47,6 +55,7 @@ const PRETTY_SETTING_MAPS = {
    commandsuggestion: 'Command Suggestions',
    menumusic: 'Menu Music',
    noprefix: 'No Prefix',
+   notifier: 'Notifier',
    reactstatus: 'React Status',
    readmessage: 'Read Message',
    rejectcall: 'Reject Call',
@@ -57,6 +66,7 @@ const PRETTY_SETTING_MAPS = {
 
 const ExcludeForWrap = new Set(['.git', '.github', '.gitignore', 'node_modules', 'package-lock.json', 'session', 'yarn.lock', databaseFilename, storeFilename, temporaryFolder])
 const ExcludeForUnzip = new Set(['.git', '.github', '.gitignore', 'broadcast.jpg', 'mosque.jpg', 'profile.jpg', 'thumbnail.jpg'])
+const EvaluateCharacters = new Set(['=>', '~>', '>', '$', '%'])
 
 const writeAndDrain = (stream, chunk) =>
    new Promise((resolve, reject) => {
@@ -175,7 +185,7 @@ const atomicWrite = (db, store) =>
    ])
 
 export default {
-   command: ['afknotifier', 'autodownload', 'backup', 'backupsc', 'chatbot', 'commandsuggestion', 'disable', 'enable', 'gconly', 'menumusic', 'noprefix', 'public', 'reactstatus', 'readmessage', 'rejectcall', 'resetlimit', 'restart', 'restore', 'securelabel', 'setbroadcastcd', 'setinstruction', 'setmenu', 'setmenumusic', 'setmenumessage', 'setmodel', 'setname', 'setbio', 'setpp', 'setcover', 'setchid', 'slowmode', 'self', 'typingpresence', 'updatesc', '+prefix', '-prefix'],
+   command: ['afknotifier', 'autodownload', 'backup', 'backupsc', 'chatbot', 'commandsuggestion', 'disable', 'enable', 'gconly', 'menumusic', 'noprefix', 'notifier', 'public', 'reactstatus', 'readmessage', 'rejectcall', 'resetlimit', 'restart', 'restore', 'securelabel', 'setbroadcastcd', 'setinstruction', 'setmenu', 'setmenumusic', 'setmenumessage', 'setmodel', 'setname', 'setbio', 'setpp', 'setcover', 'setchid', 'setreply', 'slowmode', 'self', 'typingpresence', 'updatesc', '+prefix', '-prefix'],
    category: 'owner',
    async run (m, {
       sock,
@@ -195,6 +205,7 @@ export default {
          command === 'menumusic' ||
          command === 'gconly' ||
          command === 'noprefix' ||
+         command === 'notifier' ||
          command === 'reactstatus' ||
          command === 'readmessage' ||
          command === 'rejectcall' ||
@@ -416,6 +427,16 @@ export default {
          setting.newsletterId = args[0]
          m.reply('✅ Successfully set newsletter id.')
       }
+      else if (command === 'setreply') {
+         if (!args.length)
+            return m.reply(`👉🏻 *Example*: ${isPrefix + command} 1`)
+         const selected = REPLY_STYLES[args[0]]
+         if (!selected)
+            return m.reply('❌ Style not available.')
+         setting.replyStyle = args[0]
+         m.reply('✅ Successfully set reply style.' +
+            '\n\n> ' + selected)
+      }
       else if (command === 'public') {
          if (!setting.self)
             return m.reply('❌ Already in public mode.')
@@ -457,6 +478,8 @@ export default {
             return m.reply('❌ Prefix must be a single character or single emoji.')
          if (symbol.includes('\u200D') || symbol.includes('\uFE0F'))
             return m.reply('❌ Invalid emoji to be used as prefix.')
+         if (EvaluateCharacters.has(symbol))
+            return m.reply(`❌ Cannot add prefix *"${symbol}"* because an error will occur.`)
          if (setting.prefixes.includes(symbol))
             return m.reply('💭 Symbol already used as prefix.')
          setting.prefixes.push(symbol)

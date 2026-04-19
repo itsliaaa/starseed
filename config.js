@@ -3,7 +3,7 @@ import { cpus } from 'os'
 
 const CPU_COUNT = cpus().length
 
-Object.assign(global, {
+Object.assign(globalThis, {
    // Owner name
    ownerName: 'Lia Wynn',
 
@@ -46,10 +46,10 @@ Object.assign(global, {
    localTimezone: 'Asia/Jakarta',
 
    // Bot thumbnail (optional, you can change it with setcover command)
-   botThumbnail: './lib/Media/thumbnail.jpg',
+   botThumbnail: './media/Image/thumbnail.jpg',
 
    // Bot menu music (optional, you can change it with setmenumusic command)
-   botMenuMusic: './lib/Media/music.mp3',
+   botMenuMusic: './media/Audio/menu-music.mp3',
 
    // Temporary folder name (optional)
    temporaryFolder: 'temp',
@@ -102,9 +102,9 @@ Object.assign(global, {
    // Maximum chat bot history length
    maxHistoryChatSize: 20,
 
-   // Global search cache results
-   ResultCache: new LRUCache({
-      max: 1_024,
+   // Global explore session cache
+   ExploreSession: new LRUCache({
+      max: 512,
       ttl: 1_000 * 60 * 1.5,
       updateAgeOnGet: false,
       updateAgeOnHas: false,

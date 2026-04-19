@@ -12,7 +12,7 @@ export default {
    }) {
       try {
          const keyCache = m.sender + 'tiktok-photo'
-         const userPreviousResult = ResultCache.get(keyCache)
+         const userPreviousResult = ExploreSession.get(keyCache)
          if (
             text &&
             !isNaN(text) &&
@@ -77,7 +77,7 @@ export default {
                `*Example*: ${isPrefix + command} 1`
             ], '📄')
             const printList = frame('TIKTOK PHOTO', flattedResult, '🖼️')
-            ResultCache.set(keyCache, data.result)
+            ExploreSession.set(keyCache, data.result)
             m.reply(printHowTo + '\n\n' +
                printList)
          }

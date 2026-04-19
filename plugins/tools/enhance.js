@@ -8,19 +8,22 @@ export default {
    category: 'tools',
    async run(m, {
       sock,
+      isPremium,
       isPrefix,
       command
    }) {
       try {
          const q = m.quoted?.url ? m.quoted : m
          const mimetype = (q.msg || q).mimetype
-         if (!isMimeImage(mimetype) && !isMimeVideo(mimetype))
+         const isVideo = isMimeVideo(mimetype)
+         if (!isMimeImage(mimetype) && !isVideo)
             return m.reply('💭 Provide an image or video to enhance it.')
+         if (isVideo && !isPremium)
+            return m.reply('⚠️ This command only for premium.')
          m.react('🕒')
          const upload = await uguu(
             await q.download()
          )
-         const isVideo = isMimeVideo(mimetype)
          const endpoint = isVideo ?
             faa :
             nexray

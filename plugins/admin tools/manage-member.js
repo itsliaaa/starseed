@@ -1,6 +1,7 @@
 import { isLidUser } from '@itsliaaa/baileys'
 
 import { INACTIVE_THRESHOLD, SCHEMA } from '../../lib/Constants.js'
+import { extractNumber } from '../../lib/Serialize.js'
 import { frame } from '../../lib/Utilities.js'
 
 export default {
@@ -10,18 +11,19 @@ export default {
       sock,
       group,
       groupMetadata,
+      setting,
       isPrefix,
       command,
       args
    }) {
       if (command === 'sider') {
          const [option] = args
-         const now = Date.now()
+         const timestampMs = Date.now()
          const inactiveMembers = groupMetadata.participants.reduce((acc, x) => {
             const memberId = x.phoneNumber
             if (!memberId || x.admin) return acc
             const memberData = group.participants[memberId]
-            if (!memberData || memberData.messages < 1 || (now - memberData.lastSeen) > INACTIVE_THRESHOLD)
+            if (!memberData || memberData.messages < 1 || (timestampMs - memberData.lastSeen) > INACTIVE_THRESHOLD)
                acc.push(memberId)
             return acc
          }, [])
@@ -45,11 +47,23 @@ export default {
                printParticipants)
          }
       }
-      const userId = m.quoted?.sender || m.mentionedJid[0]
+      const userId = extractNumber(m)
       if (!userId)
-         return m.reply('💭 Reply user message.')
+         return m.reply(
+            frame('EXAMPLE', [
+               `${isPrefix + command} <reply user message>`,
+               `${isPrefix + command} @0`,
+               `${isPrefix + command} ${m.sender.split('@')[0]}`
+            ], '👉🏻')
+         )
       if (isLidUser(userId))
-         return m.reply('❌ Invalid user.')
+         return m.reply('❌ LID detected, can\'t manage member.')
+      if (userId.startsWith(ownerNumber))
+         return m.reply('❌ Can\'t manage owner member data.')
+      if (userId === sock.user.decodedId)
+         return m.reply('❌ Can\'t manage bot member data.')
+      if (setting.partner.includes(userId))
+         return m.reply('❌ Can\'t manage partner member data.')
       const participants = group.participants
       if (command === '+warn') {
          if (!participants[userId])
@@ -76,10 +90,10 @@ export default {
          const isUserInGroup = groupMetadata.participants.some(participant => participant.id === userId || participant.phoneNumber === userId)
          if (!isUserInGroup)
             return m.reply('❌ User not found in this group.')
-         const [json] = await sock.groupParticipantsUpdate(m.chat, [userId], command === 'kick' ?
+         const action = command === 'kick' ?
             'remove' :
             command
-         )
+         const [json] = await sock.groupParticipantsUpdate(m.chat, [userId], action)
          if (json.status == 200)
             return m.reply(`✅ Successfully ${command} @${userId.split('@')[0]}.`)
          m.reply(`❌ Failed to ${command} @${userId.split('@')[0]}.`)

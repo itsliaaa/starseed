@@ -1,4 +1,4 @@
-import { fetchAsBuffer, frame, greeting } from '../../lib/Utilities.js'
+import { fetchAsBuffer, frame, greeting, toTime } from '../../lib/Utilities.js'
 
 export default {
    command: 'gcinfo',
@@ -46,7 +46,8 @@ export default {
       ], '🔧')
       const printStatus = frame('STATUS', [
          `*Admin Only*: ${group.adminOnly ? '✅' : '❌'}`,
-         `*Mute*: ${group.mute ? '✅' : '❌'}`
+         `*Mute*: ${group.mute ? '✅' : '❌'}`,
+         `*Expired*: ${group.rentExpiry > 0 ? toTime(group.rentExpiry) : 'Unset'}`
       ], '💬')
       m.reply(printGroupInfo + '\n\n' +
          printModeration + '\n\n' +

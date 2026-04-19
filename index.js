@@ -49,7 +49,6 @@ const Banner = () => {
 
 const Start = () => {
    const instance = spawn(process.execPath, [
-      '--import', './config.js',
       ...process.execArgv,
       SETUP_PATH,
       ...process.argv.slice(2)
@@ -57,9 +56,9 @@ const Start = () => {
       stdio: ['inherit', 'inherit', 'inherit', 'ipc']
    })
 
-   instance.once('message', data => {
+   instance.once('message', (data) => {
       if (data === 'leak' || data === 'reset') {
-         console[data === 'leak' ? 'warn' : 'log'](
+         console[data === 'leak' ? 'error' : 'log'](
             data === 'leak'
                ? '⚠️ RAM limit reached, restarting...'
                : '🔃 Restarting...'
@@ -68,12 +67,43 @@ const Start = () => {
       }
    })
 
-   instance.once('exit', code => {
+   instance.once('error', (error) => {
+      console.error('❌ Unexpected error occurred when starting the bot:', error)
+   })
+
+   instance.once('exit', (code) => {
       console.error(`⚠️ Exited with code ${code}`)
+
+      cleanUp(instance)
 
       if (code !== 0)
          setTimeout(Start, 2000)
    })
+}
+
+const cleanUp = (instance) => {
+   if (!instance) return
+
+   if (!instance.killed)
+      try {
+         instance.kill('SIGTERM')
+      }
+      catch { }
+
+   if (instance.connected)
+      try {
+         instance.disconnect()
+      }
+      catch { }
+
+   try {
+      instance.stdout?.destroy()
+      instance.stderr?.destroy()
+      instance.stdin?.destroy()
+   }
+   catch { }
+
+   instance.removeAllListeners()
 }
 
 Banner()

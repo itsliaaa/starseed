@@ -12,7 +12,7 @@ export default {
    }) {
       try {
          const keyCache = m.sender + 'meloboom'
-         const userPreviousResult = ResultCache.get(keyCache)
+         const userPreviousResult = ExploreSession.get(keyCache)
          if (
             text &&
             !isNaN(text) &&
@@ -44,7 +44,7 @@ export default {
                `*Example*: ${isPrefix + command} 1`
             ], '📄')
             const printList = frame('MELOBOOM', flattedResult, '📢')
-            ResultCache.set(keyCache, data)
+            ExploreSession.set(keyCache, data)
             m.reply(printHowTo + '\n\n' +
                printList)
          }

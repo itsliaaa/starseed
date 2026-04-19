@@ -1,0 +1,380 @@
+[
+    {
+        "img": "https://a.top4top.io/p_3492gr2hf0.png",
+        "fullimg": "https://a.top4top.io/p_3492gr2hf0.png",
+        "jawaban": "oscar",
+        "deskripsi": "Karakter ini dapat menghancurkan Gloo Wall saat berlari dan memberikan damage. Cocok untuk rusher."
+    },
+    {
+        "img": "https://h.top4top.io/p_34924mah40.jpeg",
+        "fullimg": "https://h.top4top.io/p_34924mah40.jpeg",
+        "jawaban": "kassie",
+        "deskripsi": "Karakter support yang dapat terhubung dengan rekan tim menggunakan tali energi untuk penyembuhan."
+    },
+    {
+        "img": "https://d.top4top.io/p_3492eljw00.jpeg",
+        "fullimg": "https://d.top4top.io/p_3492eljw00.jpeg",
+        "jawaban": "kairos",
+        "deskripsi": "Karakter dengan dua mode: Defense (pulihkan EP) dan Breaker (tingkatkan damage ke armor/shield)."
+    },
+    {
+        "img": "https://e.top4top.io/p_3492e08ml1.jpeg",
+        "fullimg": "https://e.top4top.io/p_3492e08ml1.jpeg",
+        "jawaban": "ryden",
+        "deskripsi": "Karakter ini menembakkan laba-laba yang berjalan lurus ke depan untuk efek support."
+    },
+    {
+        "img": "https://g.top4top.io/p_3492cxqfq0.jpeg",
+        "fullimg": "https://g.top4top.io/p_3492cxqfq0.jpeg",
+        "jawaban": "ignis",
+        "deskripsi": "Karakter ini memiliki kemampuan api unik untuk menciptakan dinding api yang merusak dan menghalangi."
+    },
+    {
+        "img": "https://h.top4top.io/p_34924xiri1.jpeg",
+        "fullimg": "https://h.top4top.io/p_34924xiri1.jpeg",
+        "jawaban": "adam",
+        "deskripsi": "Karakter pria pertama tanpa skill unik, tapi penampilannya bisa disesuaikan."
+    },
+    {
+        "img": "https://l.top4top.io/p_34920uurd0.png",
+        "fullimg": "https://l.top4top.io/p_34920uurd0.png",
+        "jawaban": "nulla",
+        "deskripsi": "Karakter perempuan pertama tanpa skill unik, tapi penampilannya bisa disesuaikan."
+    },
+    {
+        "img": "https://a.top4top.io/p_3492dq3g41.jpeg",
+        "fullimg": "https://a.top4top.io/p_3492dq3g41.jpeg",
+        "jawaban": "kelly",
+        "deskripsi": "Karakter ikonik dengan kecepatan lari tinggi, versi Awakened memberi bonus damage setelah berlari."
+    },
+    {
+        "img": "https://j.top4top.io/p_3492zjlsq0.png",
+        "fullimg": "https://j.top4top.io/p_3492zjlsq0.png",
+        "jawaban": "ford",
+        "deskripsi": "Mengurangi damage saat berada di luar zona aman. Cocok untuk strategi bertahan."
+    },
+    {
+        "img": "https://k.top4top.io/p_34926ydqs1.jpeg",
+        "fullimg": "https://k.top4top.io/p_34926ydqs1.jpeg",
+        "jawaban": "shani",
+        "deskripsi": "Armor dapat auto-upgrade setiap kali melakukan kill. Sangat cocok untuk pertarungan agresif."
+    },
+    {
+        "img": "https://l.top4top.io/p_34924h0v82.jpeg",
+        "fullimg": "https://l.top4top.io/p_34924h0v82.jpeg",
+        "jawaban": "olivia",
+        "deskripsi": "Meningkatkan efek healing untuk dirinya dan rekan tim yang dipulihkan."
+    },
+    {
+        "img": "https://i.top4top.io/p_349264ysu0.jpeg",
+        "fullimg": "https://i.top4top.io/p_349264ysu0.jpeg",
+        "jawaban": "notora",
+        "deskripsi": "Memulihkan HP secara otomatis saat berada di dalam kendaraan bersama rekan tim."
+    },
+    {
+        "img": "https://j.top4top.io/p_34925nwl01.jpeg",
+        "fullimg": "https://j.top4top.io/p_34925nwl01.jpeg",
+        "jawaban": "a124",
+        "deskripsi": "Dulu mengubah EP menjadi HP, kini memiliki skill yang lebih ofensif."
+    },
+    {
+        "img": "https://k.top4top.io/p_3492on1we2.jpeg",
+        "fullimg": "https://k.top4top.io/p_3492on1we2.jpeg",
+        "jawaban": "kla",
+        "deskripsi": "Memiliki keahlian Muay Thai yang menghasilkan damage tinju besar di awal game."
+    },
+    {
+        "img": "https://l.top4top.io/p_3492ujpty3.jpeg",
+        "fullimg": "https://l.top4top.io/p_3492ujpty3.jpeg",
+        "jawaban": "wukong",
+        "deskripsi": "Skill Camouflage mengubahnya menjadi semak, bisa diaktifkan kembali setelah kill."
+    },
+    {
+        "img": "https://e.top4top.io/p_3492d98qc0.jpeg",
+        "fullimg": "https://e.top4top.io/p_3492d98qc0.jpeg",
+        "jawaban": "joseph",
+        "deskripsi": "Meningkatkan kecepatan gerak setiap kali terkena damage."
+    },
+    {
+        "img": "https://f.top4top.io/p_3492jixjr1.jpeg",
+        "fullimg": "https://f.top4top.io/p_3492jixjr1.jpeg",
+        "jawaban": "kapella",
+        "deskripsi": "Memperkuat efek healing dan memperlambat pengurangan HP rekan tim yang knock."
+    },
+    {
+        "img": "https://g.top4top.io/p_3492iayws2.jpeg",
+        "fullimg": "https://g.top4top.io/p_3492iayws2.jpeg",
+        "jawaban": "nikita",
+        "deskripsi": "Mempercepat reload senjata SMG. Cocok untuk pemain yang mengandalkan kecepatan tembak."
+    },
+    {
+        "img": "https://h.top4top.io/p_34921ec4e3.png",
+        "fullimg": "https://h.top4top.io/p_34921ec4e3.png",
+        "jawaban": "miguel",
+        "deskripsi": "Memberikan EP setiap kali mendapatkan kill, berguna untuk regenerasi HP."
+    },
+    {
+        "img": "https://i.top4top.io/p_3492kwf1c4.jpeg",
+        "fullimg": "https://i.top4top.io/p_3492kwf1c4.jpeg",
+        "jawaban": "paloma",
+        "deskripsi": "Memungkinkan membawa lebih banyak amunisi AR tanpa mengurangi kapasitas tas."
+    },
+    {
+        "img": "https://f.top4top.io/p_3492ner1x0.jpeg",
+        "fullimg": "https://f.top4top.io/p_3492ner1x0.jpeg",
+        "jawaban": "antonio",
+        "deskripsi": "Memulai pertandingan dengan tambahan HP, memberi daya tahan ekstra di early fight."
+    },
+    {
+        "img": "https://g.top4top.io/p_349233art1.jpeg",
+        "fullimg": "https://g.top4top.io/p_349233art1.jpeg",
+        "jawaban": "alvaro",
+        "deskripsi": "Meningkatkan damage dan radius ledakan. Berguna untuk granat dan senjata ledakan."
+    },
+    {
+        "img": "https://h.top4top.io/p_3492wconm2.jpeg",
+        "fullimg": "https://h.top4top.io/p_3492wconm2.jpeg",
+        "jawaban": "wolfrahh",
+        "deskripsi": "Meningkatkan damage ke tubuh musuh seiring bertambahnya penonton (mode ranked)."
+    },
+    {
+        "img": "https://i.top4top.io/p_34927jcqq3.jpeg",
+        "fullimg": "https://i.top4top.io/p_34927jcqq3.jpeg",
+        "jawaban": "clu",
+        "deskripsi": "Mengungkap posisi musuh yang tidak sedang jongkok atau tiarap di sekitar."
+    },
+    {
+        "img": "https://j.top4top.io/p_3492y1iom4.jpeg",
+        "fullimg": "https://j.top4top.io/p_3492y1iom4.jpeg",
+        "jawaban": "jota",
+        "deskripsi": "Memulihkan sebagian HP setelah kill menggunakan SMG atau shotgun."
+    },
+    {
+        "img": "https://f.top4top.io/p_3492qpfpt0.jpeg",
+        "fullimg": "https://f.top4top.io/p_3492qpfpt0.jpeg",
+        "jawaban": "alok",
+        "deskripsi": "Menciptakan aura penyembuhan dan meningkatkan kecepatan gerak. Sangat populer."
+    },
+    {
+        "img": "https://g.top4top.io/p_3492u8h5p1.jpeg",
+        "fullimg": "https://g.top4top.io/p_3492u8h5p1.jpeg",
+        "jawaban": "rafael",
+        "deskripsi": "Tembakan sniper tidak terdengar dan menyebabkan efek bleeding pada musuh."
+    },
+    {
+        "img": "https://h.top4top.io/p_3492r8vp12.jpeg",
+        "fullimg": "https://h.top4top.io/p_3492r8vp12.jpeg",
+        "jawaban": "laura",
+        "deskripsi": "Meningkatkan akurasi saat menggunakan scope. Ideal untuk sniper."
+    },
+    {
+        "img": "https://i.top4top.io/p_3492fzdl13.jpeg",
+        "fullimg": "https://i.top4top.io/p_3492fzdl13.jpeg",
+        "jawaban": "caroline",
+        "deskripsi": "Kecepatan gerak lebih tinggi saat menggunakan shotgun. Efektif jarak dekat."
+    },
+    {
+        "img": "https://b.top4top.io/p_3492e9h0d0.jpeg",
+        "fullimg": "https://b.top4top.io/p_3492e9h0d0.jpeg",
+        "jawaban": "andrew",
+        "deskripsi": "Mengurangi kerusakan yang diterima oleh armor, membuatnya lebih tangguh."
+    },
+    {
+        "img": "https://c.top4top.io/p_3492pi99s1.png",
+        "fullimg": "https://c.top4top.io/p_3492pi99s1.png",
+        "jawaban": "maxim",
+        "deskripsi": "Mempercepat konsumsi medkit dan jamur. Meningkatkan ketahanan di pertempuran panjang."
+    },
+    {
+        "img": "https://d.top4top.io/p_3492fwi9c2.jpeg",
+        "fullimg": "https://d.top4top.io/p_3492fwi9c2.jpeg",
+        "jawaban": "misha",
+        "deskripsi": "Meningkatkan kecepatan kendaraan dan mengurangi damage saat mengemudi."
+    },
+    {
+        "img": "https://e.top4top.io/p_3492wy3iu3.jpeg",
+        "fullimg": "https://e.top4top.io/p_3492wy3iu3.jpeg",
+        "jawaban": "steffie",
+        "deskripsi": "Menciptakan area yang mengurangi damage ledakan dan peluru. Perlindungan tim."
+    },
+    {
+        "img": "https://f.top4top.io/p_34921rab14.jpeg",
+        "fullimg": "https://f.top4top.io/p_34921rab14.jpeg",
+        "jawaban": "moco",
+        "deskripsi": "Menandai musuh yang terkena tembakan selama beberapa detik, memberi info tim."
+    },
+    {
+        "img": "https://g.top4top.io/p_3492fijdp5.jpeg",
+        "fullimg": "https://g.top4top.io/p_3492fijdp5.jpeg",
+        "jawaban": "hayato",
+        "deskripsi": "Meningkatkan armor penetration saat HP rendah. Berbahaya saat terpojok."
+    },
+    {
+        "img": "https://c.top4top.io/p_3492012k10.jpeg",
+        "fullimg": "https://c.top4top.io/p_3492012k10.jpeg",
+        "jawaban": "luqueta",
+        "deskripsi": "Menambah maksimum HP setiap kali mendapatkan kill. Kuat di pertandingan panjang."
+    },
+    {
+        "img": "https://d.top4top.io/p_3492sci9k1.jpeg",
+        "fullimg": "https://d.top4top.io/p_3492sci9k1.jpeg",
+        "jawaban": "k",
+        "deskripsi": "Meningkatkan EP max dan mempercepat regenerasi EP. Fleksibel untuk bertahan atau menyerang."
+    },
+    {
+        "img": "https://e.top4top.io/p_3492nyfy32.jpeg",
+        "fullimg": "https://e.top4top.io/p_3492nyfy32.jpeg",
+        "jawaban": "dasha",
+        "deskripsi": "Mengurangi recoil saat menembak dan damage dari jatuh."
+    },
+    {
+        "img": "https://f.top4top.io/p_3492lsn6j3.jpeg",
+        "fullimg": "https://f.top4top.io/p_3492lsn6j3.jpeg",
+        "jawaban": "chrono",
+        "deskripsi": "Menciptakan medan pelindung yang memblokir damage dari luar."
+    },
+    {
+        "img": "https://g.top4top.io/p_3492l8bp04.jpeg",
+        "fullimg": "https://g.top4top.io/p_3492l8bp04.jpeg",
+        "jawaban": "shirou",
+        "deskripsi": "Menandai penembak dan meningkatkan armor penetration pada serangan balasan."
+    },
+    {
+        "img": "https://h.top4top.io/p_3492bmwtq5.jpeg",
+        "fullimg": "https://h.top4top.io/p_3492bmwtq5.jpeg",
+        "jawaban": "skyler",
+        "deskripsi": "Menghancurkan Gloo Wall musuh dan menyembuhkan HP dari Gloo Wall yang dipasang sendiri."
+    },
+    {
+        "img": "https://i.top4top.io/p_3492t06rb6.jpeg",
+        "fullimg": "https://i.top4top.io/p_3492t06rb6.jpeg",
+        "jawaban": "xayne",
+        "deskripsi": "Memberikan tambahan HP sementara dan damage lebih besar ke Gloo Wall."
+    },
+    {
+        "img": "https://j.top4top.io/p_3492qhxjs0.jpeg",
+        "fullimg": "https://j.top4top.io/p_3492qhxjs0.jpeg",
+        "jawaban": "maro",
+        "deskripsi": "Semakin jauh jarak tembakan, semakin tinggi damage. Unggul di jarak jauh."
+    },
+    {
+        "img": "https://k.top4top.io/p_34920v47r1.jpeg",
+        "fullimg": "https://k.top4top.io/p_34920v47r1.jpeg",
+        "jawaban": "d-bee",
+        "deskripsi": "Meningkatkan akurasi dan movement saat menembak sambil berjalan."
+    },
+    {
+        "img": "https://l.top4top.io/p_3492ep12d2.jpeg",
+        "fullimg": "https://l.top4top.io/p_3492ep12d2.jpeg",
+        "jawaban": "dimitri",
+        "deskripsi": "Menciptakan zona penyembuhan dan bisa revive diri sendiri serta rekan."
+    },
+    {
+        "img": "https://a.top4top.io/p_34928qdcc3.jpeg",
+        "fullimg": "https://a.top4top.io/p_34928qdcc3.jpeg",
+        "jawaban": "thiva",
+        "deskripsi": "Meningkatkan kecepatan revive dan memberikan sedikit HP setelah revive."
+    },
+    {
+        "img": "https://b.top4top.io/p_3492q8ydp4.jpeg",
+        "fullimg": "https://b.top4top.io/p_3492q8ydp4.jpeg",
+        "jawaban": "nairi",
+        "deskripsi": "Memperkuat Gloo Wall dan menyembuhkan HP saat di dekatnya."
+    },
+    {
+        "img": "https://c.top4top.io/p_3492kluwd5.jpeg",
+        "fullimg": "https://c.top4top.io/p_3492kluwd5.jpeg",
+        "jawaban": "kenta",
+        "deskripsi": "Menciptakan shield berbentuk kipas untuk mengurangi damage di depan."
+    },
+    {
+        "img": "https://d.top4top.io/p_3492jq6zu6.jpeg",
+        "fullimg": "https://d.top4top.io/p_3492jq6zu6.jpeg",
+        "jawaban": "a-patroa",
+        "deskripsi": "Meningkatkan damage dengan senjata SMG saat berlari."
+    },
+    {
+        "img": "https://e.top4top.io/p_3492l26if7.png",
+        "fullimg": "https://e.top4top.io/p_3492l26if7.png",
+        "jawaban": "leon",
+        "deskripsi": "Memulihkan HP setelah bertahan dari pertempuran."
+    },
+    {
+        "img": "https://f.top4top.io/p_3492v2kez8.png",
+        "fullimg": "https://f.top4top.io/p_3492v2kez8.png",
+        "jawaban": "otho",
+        "deskripsi": "Mengungkap posisi musuh di sekitar setelah mengeliminasi lawan."
+    },
+    {
+        "img": "https://g.top4top.io/p_34922cltj9.jpeg",
+        "fullimg": "https://g.top4top.io/p_34922cltj9.jpeg",
+        "jawaban": "jai",
+        "deskripsi": "Setiap kali mendapatkan kill, otomatis me-reload sebagian amunisi dari senjata aktif."
+    },
+    {
+        "img": "https://k.top4top.io/p_3492aeolt0.jpeg",
+        "fullimg": "https://k.top4top.io/p_3492aeolt0.jpeg",
+        "jawaban": "homer",
+        "deskripsi": "Drone dapat melumpuhkan dan memperlambat musuh di area target."
+    },
+    {
+        "img": "https://l.top4top.io/p_3492b7hib1.jpeg",
+        "fullimg": "https://l.top4top.io/p_3492b7hib1.jpeg",
+        "jawaban": "j biebs",
+        "deskripsi": "Menyerap sebagian damage yang diterima oleh rekan tim di sekitar."
+    },
+    {
+        "img": "https://a.top4top.io/p_3492rjlgn2.jpeg",
+        "fullimg": "https://a.top4top.io/p_3492rjlgn2.jpeg",
+        "jawaban": "iris",
+        "deskripsi": "Dapat menembus Gloo Wall dan menandai musuh yang berlindung di baliknya."
+    },
+    {
+        "img": "https://b.top4top.io/p_3492c1u6b3.jpeg",
+        "fullimg": "https://b.top4top.io/p_3492c1u6b3.jpeg",
+        "jawaban": "tatsuya",
+        "deskripsi": "Meningkatkan kecepatan lari dan akurasi saat terkena damage."
+    },
+    {
+        "img": "https://c.top4top.io/p_3492kqgez4.jpeg",
+        "fullimg": "https://c.top4top.io/p_3492kqgez4.jpeg",
+        "jawaban": "luna",
+        "deskripsi": "Meningkatkan rate of fire saat bertarung dan movement speed saat tidak dalam pertempuran."
+    },
+    {
+        "img": "https://d.top4top.io/p_3492l2kkx5.jpeg",
+        "fullimg": "https://d.top4top.io/p_3492l2kkx5.jpeg",
+        "jawaban": "santino",
+        "deskripsi": "Memiliki skill Sculpture yang memungkinkan dia meninggalkan patung untuk teleportasi ulang."
+    },
+    {
+        "img": "https://e.top4top.io/p_3492yfnsb6.jpeg",
+        "fullimg": "https://e.top4top.io/p_3492yfnsb6.jpeg",
+        "jawaban": "orion",
+        "deskripsi": "Menggantikan HP dengan Crimson Energy dan memberikan ketahanan terhadap damage selama beberapa detik."
+    },
+    {
+        "img": "https://f.top4top.io/p_3492qc9ao7.jpeg",
+        "fullimg": "https://f.top4top.io/p_3492qc9ao7.jpeg",
+        "jawaban": "sonia",
+        "deskripsi": "Mendapatkan shield instan setelah terkena hit fatal, memberinya waktu tambahan untuk bertahan."
+    },
+    {
+        "img": "https://g.top4top.io/p_3492fy1qz8.jpeg",
+        "fullimg": "https://g.top4top.io/p_3492fy1qz8.jpeg",
+        "jawaban": "ignis",
+        "deskripsi": "Karakter api yang bisa menciptakan dinding api yang merusak dan menghalangi pandangan."
+    },
+    {
+        "img": "https://h.top4top.io/p_3492regpa9.jpeg",
+        "fullimg": "https://h.top4top.io/p_3492regpa9.jpeg",
+        "jawaban": "ryden",
+        "deskripsi": "Menembakkan laba-laba yang berjalan lurus ke depan untuk efek kontrol musuh."
+    },
+    {
+        "img": "https://i.top4top.io/p_3492p82mj0.png",
+        "fullimg": "https://i.top4top.io/p_3492p82mj0.png",
+        "jawaban": "alok awakened",
+        "deskripsi": "Versi yang ditingkatkan dari DJ Alok dengan aura penyembuhan dan kecepatan gerakan yang lebih kuat."
+    }
+]

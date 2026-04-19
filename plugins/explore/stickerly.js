@@ -12,7 +12,7 @@ export default {
    }) {
       try {
          const keyCache = m.sender + 'stickerly'
-         const userPreviousResult = ResultCache.get(keyCache)
+         const userPreviousResult = ExploreSession.get(keyCache)
          if (
             text &&
             !isNaN(text) &&
@@ -62,7 +62,7 @@ export default {
                `*Example*: ${isPrefix + command} 1`
             ], '📄')
             const printList = frame('STICKER.LY', flattedResult, '📦')
-            ResultCache.set(keyCache, sliced)
+            ExploreSession.set(keyCache, sliced)
             m.reply(printHowTo + '\n\n' +
                printList)
          }

@@ -16,7 +16,7 @@ export default {
    }) {
       try {
          const keyCache = m.sender + 'youtube-search'
-         const userPreviousResult = ResultCache.get(keyCache)
+         const userPreviousResult = ExploreSession.get(keyCache)
          if (
             text &&
             !isNaN(text) &&
@@ -65,7 +65,7 @@ export default {
                `*Example*: ${isPrefix}ytsv 1`
             ], '📄')
             const printList = frame('YOUTUBE SEARCH', flattedResult, '🎥')
-            ResultCache.set(keyCache, data.all)
+            ExploreSession.set(keyCache, data.all)
             m.reply(printHowTo + '\n\n' +
                printList)
          }

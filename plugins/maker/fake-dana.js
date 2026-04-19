@@ -17,7 +17,7 @@ export default {
             'fakedana' :
             'fakedanav2'
          const data = await zenzxz('maker/' + path, {
-            nominal: text.replace(' ', '.')
+            nominal: text.replace('--crop', '')
          })
          if (!Buffer.isBuffer(data))
             return m.reply('❌ Failed to get data.')

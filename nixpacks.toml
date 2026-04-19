@@ -1,2 +1,5 @@
 [phases.setup]
-aptPkgs = ["ffmpeg"]
+aptPkgs = ["ffmpeg", "build-essential"]
+
+[start]
+cmd = "NODE_ENV=production MALLOC_ARENA_MAX=2 node --max-old-space-size=300 --expose-gc index.js"

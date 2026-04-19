@@ -12,6 +12,7 @@
 
 import './lib/Components/ErrorHandler.js'
 import './lib/Components/Dispatcher.js'
+import './config.js'
 
 import { Boom } from '@hapi/boom'
 import { delay, DisconnectReason, jidNormalizedUser, makeCacheableSignalKeyStore, makeWASocket, useMultiFileAuthState } from '@itsliaaa/baileys'
@@ -65,6 +66,10 @@ const Socket = async () => {
                chat: key.remoteJid,
                id: key.id
             }),
+         appStateMacVerification: {
+            patch: true,
+            snapshot: true
+         },
          auth: {
             creds: state.creds,
             keys: makeCacheableSignalKeyStore(state.keys)
@@ -171,8 +176,6 @@ const Socket = async () => {
 
          listener.unbind()
 
-         await delay(2000)
-
          isRestarting = false
          return Socket()
       }
@@ -256,19 +259,23 @@ const Setup = async () => {
             const isProtected =
                user.banned ||
                user.premiumExpiry > 0 ||
-               user.limit >= 128
+               user.limit >= 200
 
             if (!isProtected && user.lastSeen < threshold)
                db.deleteUser(id)
          }
 
          for (const [id, group] of db.groups)
-            if (group.lastActivity < threshold)
+            if (group.lastActivity < threshold) {
+               store.deleteGroup(id)
                db.deleteGroup(id)
+            }
 
-         for (const user of db.users.values())
+         for (const user of db.users.values()) {
             if (user.limit < defaultLimit)
                user.limit = defaultLimit
+            user.energy = 100
+         }
 
          setting.lastReset = timestampMs
          db.writeToFile()

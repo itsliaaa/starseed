@@ -12,5 +12,6 @@ export default {
       ], '🏷️')
       m.reply(print)
    },
-   group: true
+   group: true,
+   botAdmin: true
 }

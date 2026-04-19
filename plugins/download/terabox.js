@@ -1,3 +1,4 @@
+import { SECOND } from '../../lib/Constants.js'
 import { zenzxz } from '../../lib/Request.js'
 import { formatTime, frame, isURL } from '../../lib/Utilities.js'
 
@@ -13,7 +14,7 @@ export default {
    }) {
       try {
          const keyCache = m.sender + 'terabox'
-         const userPreviousResult = ResultCache.get(keyCache)
+         const userPreviousResult = ExploreSession.get(keyCache)
          if (
             args[0] &&
             !isNaN(args[0]) &&
@@ -26,7 +27,7 @@ export default {
             const printDetail = frame('TERABOX', [
                `*File Name*: ${result.server_filename}`,
                `*File Size*: ${result.formatted_size}`,
-               `*Uploaded at*: ${formatTime(undefined, result.server_mtime * 1000)}`
+               `*Uploaded at*: ${formatTime(undefined, result.server_mtime * SECOND)}`
             ], '🗃️')
             sock.sendMedia(m.chat, result.direct_link, printDetail, m, {
                document: true,
@@ -58,7 +59,7 @@ export default {
                `*Example*: ${isPrefix + command} 1`
             ], '📄')
             const printList = frame('TERABOX LISTS', flattedResult, '🗃️')
-            ResultCache.set(keyCache, data.result.list)
+            ExploreSession.set(keyCache, data.result.list)
             m.reply(printHowTo + '\n\n' +
                printList)
          }

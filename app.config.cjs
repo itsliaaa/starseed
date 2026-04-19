@@ -4,7 +4,7 @@ module.exports = {
       script: './index.js',
       stop_exit_codes: [0],
       node_args: [
-         '--max-old-space-size=320',
+         '--max-old-space-size=300',
          '--expose-gc'
       ],
       env: {

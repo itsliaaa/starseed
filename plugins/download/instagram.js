@@ -1,4 +1,4 @@
-import { instagram } from '../../lib/Scraper.js'
+import { reelsvideo } from '../../lib/Scraper.js'
 import { isURL, resizeImage } from '../../lib/Utilities.js'
 
 export default {
@@ -17,7 +17,7 @@ export default {
          if (!isURL(args[0]))
             return m.reply('❌ Invalid URL.')
          m.react('🕒')
-         const data = await instagram(args[0])
+         const data = await reelsvideo(args[0])
          if (!data.media.length)
             return m.reply('❌ Failed to get data.')
          if (data.media.length <= 2) {

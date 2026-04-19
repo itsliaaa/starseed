@@ -26,7 +26,7 @@ install_common_tools() {
    corepack prepare yarn@1.22.22 --activate
 
    echo "📥 Installing dependencies..."
-   yarn install 2>/dev/null
+   yarn install --production --frozen-lockfile 2>/dev/null
 
    echo "🚀 Installing PM2 globally..."
    npm install -g pm2
@@ -40,7 +40,7 @@ Linux)
 
       pkg update -y
       pkg upgrade -y
-      pkg install -y nodejs-lts ffmpeg git curl
+      pkg install -y nodejs-lts ffmpeg build-essential git curl
 
       echo "⚡ Using built-in nodejs-lts (no NVM on Termux)"
 
@@ -50,7 +50,7 @@ Linux)
 
       sudo apt update -y
       sudo apt upgrade -y
-      sudo apt install -y ffmpeg git curl
+      sudo apt install -y ffmpeg build-essential git curl
 
       install_node_nvm
       install_common_tools

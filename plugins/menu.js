@@ -234,7 +234,7 @@ export default {
                document: {
                   url: profilePicture
                },
-               jpegThumbnail: await resizeImage(profilePicture, 200),
+               jpegThumbnail: await resizeImage(profilePicture, 252),
                fileName: '👋🏻 ' + m.pushName,
                mimetype: 'image/jpeg',
                caption: message.trim(),
@@ -258,10 +258,39 @@ export default {
          else if (setting.menuStyle == 7) {
             const profilePicture = await sock.profilePicture(m.sender)
             sock.sendMessage(m.chat, {
+               location: {
+                  address: greeting(),
+                  degreesLatitude: 0,
+                  degreesLongitude: 0,
+                  jpegThumbnail: await resizeImage(profilePicture, 252),
+                  name: '👋🏻 ' + m.pushName,
+                  url: DONATE_URL
+               },
+               caption: message.trim(),
+               footer,
+               optionText: '📚 List Menu',
+               optionTitle: '📋 Select Menu',
+               nativeFlow: categories.map(category => ({
+                  text: (CATEGORY_EMOJIS[category] ?? '📁') + ' ' + toTitleCase(category),
+                  id: `${isPrefix + command} ${category}`
+               })),
+               externalAdReply: {
+                  title: botName,
+                  body: greeting(),
+                  thumbnail: await fetchThumbnail(),
+                  largeThumbnail: true
+               }
+            }, {
+               quoted: m
+            })
+         }
+         else if (setting.menuStyle == 8) {
+            const profilePicture = await sock.profilePicture(m.sender)
+            sock.sendMessage(m.chat, {
                document: {
                   url: profilePicture
                },
-               jpegThumbnail: await resizeImage(profilePicture, 200),
+               jpegThumbnail: await resizeImage(profilePicture, 252),
                fileName: '👋🏻 ' + m.pushName,
                mimetype: 'image/jpeg',
                caption: message.trim(),
@@ -293,7 +322,7 @@ export default {
                quoted: m
             })
          }
-         else if (setting.menuStyle == 8)
+         else if (setting.menuStyle == 9)
             sock.sendMessage(m.chat, {
                text: message.trim(),
                footer,

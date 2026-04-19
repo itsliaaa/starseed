@@ -1,4 +1,4 @@
-import { catbox, uguu } from '../../lib/Scraper.js'
+import { catbox, uguu, quax } from '../../lib/Scraper.js'
 import { frame } from '../../lib/Utilities.js'
 
 export default {
@@ -15,11 +15,15 @@ export default {
             return m.reply('💭 Reply media to upload.')
          m.react('🕒')
          const buffer = await q.download()
-         const urls = await Promise.all([
+         const response = await Promise.allSettled([
             catbox(buffer),
-            uguu(buffer)
+            uguu(buffer),
+            quax(buffer)
          ])
-         const print = frame('TO URL', urls.map(url => url), '💾')
+         const urls = response
+            .filter(res => res.status === 'fulfilled')
+            .map(res => res.value)
+         const print = frame('TO URL', urls, '💾')
          m.reply(print)
       }
       catch (error) {
