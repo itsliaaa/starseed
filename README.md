@@ -145,7 +145,7 @@ Starseed is an independent project built and maintained by:
 
 Support this project:
 
-- [Saweria](https://saweria.co/itsliaaa)
+- [Saweria](https://saweria.co/D42nkids)
 
 #### 🌐 Third-Party Services
 
