@@ -82,12 +82,9 @@ export default {
                   '\n\n'
             }
             return m.reply(message.trim(), {
-               externalAdReply: {
-                  title: botName,
-                  body: greeting(),
-                  thumbnail: await fetchThumbnail(),
-                  largeThumbnail: true
-               }
+               description: greeting(),
+               thumbnail: await fetchThumbnail(),
+               largeThumbnail: true
             })
          }
          else if (categories.includes(text)) {
@@ -95,14 +92,11 @@ export default {
             return m.reply(print.trim())
          }
          else if (setting.menuStyle == 1) {
-            message += frame('CATEGORIES', categories.map(cmd => isPrefix + command + ' ' + cmd), '📋')
+            message += frame('MENU', categories.map(cmd => isPrefix + command + ' ' + cmd), '📋')
             m.reply(message.trim(), {
-               externalAdReply: {
-                  title: botName,
-                  body: greeting(),
-                  thumbnail: await fetchThumbnail(),
-                  largeThumbnail: true
-               }
+               description: greeting(),
+               thumbnail: await fetchThumbnail(),
+               largeThumbnail: true
             })
          }
          else if (setting.menuStyle == 2)

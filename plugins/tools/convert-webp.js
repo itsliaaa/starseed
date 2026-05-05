@@ -11,8 +11,8 @@ export default {
       command
    }) {
       try {
-         const q = m.quoted?.url ? m.quoted : m
-         const mimetype = (q.msg || q).mimetype
+         const q = m.quoted ? m.quoted : m
+         const mimetype = q.msg?.mimetype
          if (!isMimeWebP(mimetype))
             return m.reply('💭 Reply sticker.')
          m.react('🕒')

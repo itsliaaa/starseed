@@ -30,14 +30,14 @@ export default {
       ) return
       try {
          const q = m.quoted ? m.quoted : m
-         const mimetype = (q.msg || q).mimetype
-         const mediaSize = (q.msg || q).fileLength?.low
+         const mimetype = q.msg?.mimetype
+         const mediaSize = q.msg?.fileLength?.low
          const instanceBody = (
             m.quoted ?
                `[Message from ${m.pushName}]:\n` +
                body +
                `\n${QUOTED_MESSAGE[m.quoted.fromMe]}` +
-               m.quoted.text :
+               m.quoted.body :
                `[Message from ${m.pushName}]:\n` +
                body
          )?.trim()

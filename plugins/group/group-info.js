@@ -1,8 +1,8 @@
-import { fetchAsBuffer, frame, greeting, toTime } from '../../lib/Utilities.js'
+import { fetchAsBuffer, frame, greeting, formatTime } from '../../lib/Utilities.js'
 
 export default {
-   command: 'gcinfo',
-   hidden: 'idgc',
+   command: 'groupinfo',
+   hidden: 'gcinfo',
    category: 'group',
    async run(m, {
       sock,
@@ -12,18 +12,12 @@ export default {
    }) {
       const groupOwner = groupMetadata.ownerPn.split('@')[0]
       const groupAdmin = groupMetadata.participants.filter(participant => participant.admin)
-      let groupPicture
-      try {
-         groupPicture = await sock.profilePictureUrl(m.chat)
-      }
-      catch {
-         groupPicture = botThumbnail
-      }
+      const groupPicture = await sock.profilePicture(m.chat)
       const printGroupInfo = frame('GROUP INFO', [
          `*ID*: ${groupMetadata.id}`,
          `*Name*: ${groupMetadata.subject}`,
          `*Admin*: ${groupAdmin.length}`,
-         `*Member*: ${groupMetadata.participants.length}`,
+         `*Member*: ${groupMetadata.size}`,
          `*Owner*: @${groupOwner}`
       ], '👥')
       const printModeration = frame('MODERATION', [
@@ -46,18 +40,18 @@ export default {
       ], '🔧')
       const printStatus = frame('STATUS', [
          `*Admin Only*: ${group.adminOnly ? '✅' : '❌'}`,
-         `*Mute*: ${group.mute ? '✅' : '❌'}`,
-         `*Expired*: ${group.rentExpiry > 0 ? toTime(group.rentExpiry) : 'Unset'}`
+         `*Mute Bot*: ${group.mute ? '✅' : '❌'}`,
+         `*Expired At*: ${group.rentExpiry > 0 ? formatTime(undefined, group.rentExpiry) : 'Unset'}`
       ], '💬')
       m.reply(printGroupInfo + '\n\n' +
          printModeration + '\n\n' +
          printStatus, {
-         externalAdReply: {
-            title: botName,
-            body: greeting(),
-            thumbnail: await fetchAsBuffer(groupPicture),
-            largeThumbnail: true
-         }
+         title: botName,
+         description: greeting(),
+         thumbnail: await fetchAsBuffer(groupPicture),
+         width: 512,
+         height: 512,
+         largeThumbnail: true
       })
    },
    group: true

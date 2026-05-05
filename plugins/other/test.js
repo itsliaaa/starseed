@@ -77,12 +77,10 @@ export default {
             '\n\n' + printSystem +
             '\n\n' + printProcess
          , {
-            externalAdReply: {
-               title: botName,
-               body: greeting(),
-               thumbnail: await fetchThumbnail(),
-               largeThumbnail: true
-            }
+            title: botName,
+            description: greeting(),
+            thumbnail: await fetchThumbnail(),
+            largeThumbnail: true
          })
       }
       else if (command === 'statistic') {
@@ -115,12 +113,10 @@ export default {
             printStatistic +
             '\n\n' + printSettings
          , {
-            externalAdReply: {
-               title: botName,
-               body: greeting(),
-               thumbnail: await fetchThumbnail(),
-               largeThumbnail: true
-            }
+            title: botName,
+            description: greeting(),
+            thumbnail: await fetchThumbnail(),
+            largeThumbnail: true
          })
       }
    }

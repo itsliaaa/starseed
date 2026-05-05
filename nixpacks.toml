@@ -2,4 +2,4 @@
 aptPkgs = ["ffmpeg", "build-essential"]
 
 [start]
-cmd = "NODE_ENV=production MALLOC_ARENA_MAX=2 node --max-old-space-size=300 --expose-gc index.js"
+cmd = "NODE_ENV=production MALLOC_ARENA_MAX=2 node --max-old-space-size=256 --expose-gc index.js"

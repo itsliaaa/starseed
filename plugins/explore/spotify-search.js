@@ -36,14 +36,11 @@ export default {
                `*Duration*: ${toTime(data.result.duration_ms)}`
             ], '🎵')
             m.reply(printMessage, {
-               externalAdReply: {
-                  title: data.result.title,
-                  body: '✍🏻 Artist: ' + data.result.artist,
-                  thumbnail: await fetchAsBuffer(data.result.thumbnail || botThumbnail),
-                  url: trackUrl,
-                  sourceUrl: trackUrl,
-                  largeThumbnail: true
-               }
+               title: data.result.title,
+               description: '✍🏻 Artist: ' + data.result.artist,
+               thumbnail: await fetchAsBuffer(data.result.thumbnail || botThumbnail),
+               thumbnailUrl: trackUrl,
+               largeThumbnail: true
             })
             sock.sendMedia(m.chat, data.result.download_url, '', m, {
                audio: true,

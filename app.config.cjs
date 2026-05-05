@@ -4,8 +4,8 @@ module.exports = {
       script: './index.js',
       stop_exit_codes: [0],
       node_args: [
-         '--max-old-space-size=300',
-         '--expose-gc'
+         '--expose-gc',
+         '--max-old-space-size=256'
       ],
       env: {
          NODE_ENV: 'production',

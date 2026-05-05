@@ -9,7 +9,7 @@ export default {
       const q = m.quoted
       if (!q || !m.msg.contextInfo.quotedMessage.groupStatusMessageV2)
          return m.reply('💭 Reply group status.')
-      const mimetype = (q.msg || q).mimetype
+      const mimetype = q.msg?.mimetype
       if (!mimetype)
          return m.reply('💭 Reply media message in group status.')
       m.react('🕒')

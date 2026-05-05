@@ -1,5 +1,6 @@
 export default {
    command: 'quoted',
+   hidden: 'q',
    category: 'group',
    async run(m, {
       store,

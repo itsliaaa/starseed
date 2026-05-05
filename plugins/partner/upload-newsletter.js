@@ -43,15 +43,12 @@ export default {
             `*Uploaded*: ${firstVideo.ago || 'Long time ago'}`
          ], '🎵')
          sock.sendText(setting.newsletterId, printCaption, null, {
-            externalAdReply: {
-               title: firstVideo.title,
-               body: firstVideo.description,
-               thumbnail: await fetchAsBuffer(firstVideo.image || botThumbnail),
-               url: firstVideo.url,
-               sourceUrl: firstVideo.url,
-               largeThumbnail: true,
-               mediaType: 2
-            }
+            title: firstVideo.title,
+            description: firstVideo.description,
+            thumbnail: await fetchAsBuffer(firstVideo.image || botThumbnail),
+            thumbnailUrl: firstVideo.url,
+            largeThumbnail: true,
+            previewType: 1
          })
          const context = await sock.sendMedia(setting.newsletterId, audioData.result.url, '', null, {
             ptt: true
@@ -81,7 +78,7 @@ export default {
       else if (command === 'upch') {
          const q = m.quoted ? m.quoted : m
          const body = text ?? q.body
-         const mimetype = (q.msg || q).mimetype
+         const mimetype = q.msg?.mimetype
          if (!body && !mimetype)
             return m.reply('💭 Provide text or media you would like to send to the newsletter.')
          m.react('🕒')

@@ -1,7 +1,7 @@
 import { isJidNewsletter } from '@itsliaaa/baileys'
-import ytsearch from 'yt-search'
 
 import { nexray } from '../../lib/Request.js'
+import { yts } from '../../lib/Scraper.js'
 import { frame, formatNumber } from '../../lib/Utilities.js'
 
 export default {
@@ -30,7 +30,7 @@ export default {
                return m.reply('❌ Video is too long. Maximum duration is 24 minutes.')
             const shouldAsAudio = command === 'ytsa'
             const path = shouldAsAudio ?
-               'ytmp3' :
+               'v1/ytmp3' :
                'v1/ytmp4'
             const data = await nexray('downloader/' + path, {
                url: result.url
@@ -46,9 +46,7 @@ export default {
             if (!text)
                return m.reply(`👉🏻 *Example*: ${isPrefix + command} abnormal heat`)
             m.react('🕒')
-            const data = await ytsearch(text)
-            if (!data.all?.length)
-               return m.reply('❌ Failed to get data.')
+            const data = await yts(text)
             const flattedResult = data.all.flatMap((result, index, array) => {
                const lines = [
                   `${index + 1}. ${result.title}`,

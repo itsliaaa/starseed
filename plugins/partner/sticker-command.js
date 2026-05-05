@@ -13,14 +13,14 @@ export default {
       const quoted = m.quoted
       if (quoted?.type !== 'stickerMessage')
          return m.reply('💭 Reply sticker message.')
-      const base64Hash = quoted.fileSha256.toString('base64')
+      const base64Hash = quoted.msg?.fileSha256.toString('base64')
       if (command === '+cmdstic') {
          const {
             prefix: stickerPrefix,
             command: stickerCommand,
             text: stickerText,
             args: stickerArgs
-         } = parseCommand(body)
+         } = parseCommand(body, setting)
          if (!stickerPrefix || !stickerCommand)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} ${isPrefix}menu`)
          setting.stickerCommand[base64Hash] = {

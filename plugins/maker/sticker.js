@@ -10,8 +10,8 @@ export default {
       text
    }) {
       try {
-         const q = m.quoted?.url ? m.quoted : m
-         const mimetype = (q.msg || q).mimetype
+         const q = m.quoted ? m.quoted : m
+         const mimetype = q.msg?.mimetype
          if (!isMimeImage(mimetype) && !isMimeVideo(mimetype))
             return m.reply('💭 Reply media to make it as sticker.')
          m.react('🕒')

@@ -333,8 +333,8 @@ export default {
             '\n\n> ' + selected)
       }
       else if (command === 'setmenumusic') {
-         const q = m.quoted?.url ? m.quoted : m
-         const mimetype = (q.msg || q).mimetype
+         const q = m.quoted ? m.quoted : m
+         const mimetype = q.msg?.mimetype
          if (!isMimeAudio(mimetype))
             return m.reply(`❌ Invalid media type, audio only.`)
          m.react('🕒')
@@ -396,8 +396,8 @@ export default {
          m.reply('✅ Successfully change the profile bio.')
       }
       else if (command === 'setpp') {
-         const q = m.quoted?.url ? m.quoted : m
-         const mimetype = (q.msg || q).mimetype
+         const q = m.quoted ? m.quoted : m
+         const mimetype = q.msg?.mimetype
          if (!isMimeImage(mimetype))
             return m.reply('💭 Provide an image to change profile picture.')
          m.react('🕒')
@@ -405,8 +405,8 @@ export default {
          m.reply('✅ Successfully changed.')
       }
       else if (command === 'setcover') {
-         const q = m.quoted?.url ? m.quoted : m
-         const mimetype = (q.msg || q).mimetype
+         const q = m.quoted ? m.quoted : m
+         const mimetype = q.msg?.mimetype
          if (!isMimeImage(mimetype))
             return m.reply(`❌ Invalid media type, image only.`)
          m.react('🕒')

@@ -26,12 +26,10 @@ export default {
                `*Created At*: ${data.result.created}`
             ], '🗒️')
             m.reply(printInfo, {
-               externalAdReply: {
-                  title: data.result.display_name,
-                  body: data.result.global_name,
-                  thumbnail: await fetchAsBuffer(data.result.avatar || botThumbnail),
-                  largeThumbnail: true
-               }
+               title: data.result.display_name,
+               description: data.result.global_name,
+               thumbnail: await fetchAsBuffer(data.result.avatar || botThumbnail),
+               largeThumbnail: true
             })
          }
          else if (command === 'ffstalk') {
@@ -88,12 +86,10 @@ export default {
             m.reply(printInfo + '\n\n' +
                printStatistic + '\n\n' +
                printBio, {
-               externalAdReply: {
-                  title: data.result.name,
-                  body: '@' + data.result.username,
-                  thumbnail: await fetchAsBuffer(data.result.profile_pic || botThumbnail),
-                  largeThumbnail: true
-               }
+               title: data.result.name,
+               description: '@' + data.result.username,
+               thumbnail: await fetchAsBuffer(data.result.profile_pic || botThumbnail),
+               largeThumbnail: true
             })
          }
          else if (command === 'robloxstalk') {
@@ -147,12 +143,10 @@ export default {
             m.reply(printInfo + '\n\n' +
                printStatistic + '\n\n' +
                printBio, {
-               externalAdReply: {
-                  title: data.result.nickname,
-                  body: '@' + data.result.username,
-                  thumbnail: await fetchAsBuffer(data.result.avatar || botThumbnail),
-                  largeThumbnail: true
-               }
+               title: data.result.nickname,
+               description: '@' + data.result.username,
+               thumbnail: await fetchAsBuffer(data.result.avatar || botThumbnail),
+               largeThumbnail: true
             })
          }
       }

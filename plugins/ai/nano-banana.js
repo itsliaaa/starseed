@@ -12,8 +12,8 @@ export default {
       text
    }) {
       try {
-         const q = m.quoted?.url ? m.quoted : m
-         const mimetype = (q.msg || q).mimetype
+         const q = m.quoted ? m.quoted : m
+         const mimetype = q.msg?.mimetype
          if (!isMimeImage(mimetype))
             return m.reply('💭 Provide an image to edit it.')
          if (!text)

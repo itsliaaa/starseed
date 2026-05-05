@@ -11,7 +11,7 @@ export default {
    }) {
       const q = m.quoted ? m.quoted : m
       const body = text || q.body
-      const mimetype = (q.msg || q).mimetype
+      const mimetype = q.msg?.mimetype
       const media = mimetype ? await q.download() : null
       const options = {
          mentionAll: true

@@ -21,7 +21,7 @@ export default {
          m.react('🕒')
          const shouldAsAudio = command === 'ytmp3' || command === 'yta'
          const path = shouldAsAudio ?
-            'ytmp3' :
+            'v1/ytmp3' :
             'v1/ytmp4'
          const data = await nexray('downloader/' + path, {
             url: args[0]

@@ -12,8 +12,8 @@ export default {
       text
    }) {
       try {
-         const q = m.quoted?.url ? m.quoted : m
-         const mimetype = (q.msg || q).mimetype
+         const q = m.quoted ? m.quoted : m
+         const mimetype = q.msg?.mimetype
          const [name = m.pushName, members = `${randomInteger(1, 1024)}`, desc = 'Starseed Community', author = m.pushName, date = '27/05/26 11:11'] = text.split('|')
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} Starseed | 1024 | Starseed Community | @itsliaaa | 27/05/26 11:11`)

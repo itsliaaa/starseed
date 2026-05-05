@@ -67,31 +67,31 @@ Object.assign(globalThis, {
    databaseFilename: 'database.json',
 
    // Interval to clean temporary files (ms)
-   temporaryFileInterval: 1_000 * 60 * 30,
+   temporaryFileInterval: 30 * 60 * 1_000,
 
    // Persist database to file interval (ms)
-   dataInterval: 1_000 * 60 * 10,
+   dataInterval: 10 * 60 * 1_000,
 
    // Call the garbage collector if exposed (ms)
-   gcInterval: 1_000 * 60 * 60,
+   gcInterval: 1 * 60 * 60 * 1_000,
 
    // API request timeout (ms)
-   requestTimeout: 1_000 * 60 * 1.5,
+   requestTimeout: 1.5 * 60 * 1_000,
 
    // FFmpeg process timeout (ms)
-   ffmpegTimeout: 1_000 * 60,
+   ffmpegTimeout: 1 * 60 * 1_000,
 
    // Min delay response (ms)
    minDelay: 100,
 
    // Max delay response (ms)
-   maxDelay: 1_000 * 3,
+   maxDelay: 3 * 1_000,
 
    // Ignore user old message (sec)
    ignoreOldMessageTS: 30,
 
    // RSS limit (mb)
-   rssLimit: 1_024 * 1_024 * 384,
+   rssLimit: 384 * 1_024 * 1_024,
 
    // FFmpeg stream max concurrent processes (min: 1)
    ffmpegConcurrency: Math.max(4, Math.floor(CPU_COUNT * 1.3)),
@@ -104,8 +104,8 @@ Object.assign(globalThis, {
 
    // Global explore session cache
    ExploreSession: new LRUCache({
-      max: 512,
-      ttl: 1_000 * 60 * 1.5,
+      max: 256,
+      ttl: 1.5 * 60 * 1_000,
       updateAgeOnGet: false,
       updateAgeOnHas: false,
       ttlAutopurge: true

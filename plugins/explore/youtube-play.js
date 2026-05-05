@@ -1,7 +1,6 @@
 import { isJidNewsletter } from '@itsliaaa/baileys'
-import ytsearch from 'yt-search'
 
-import { nexray } from '../../lib/Request.js'
+import { ytdl, yts } from '../../lib/Scraper.js'
 import { fetchAsBuffer, frame, formatNumber } from '../../lib/Utilities.js'
 
 export default {
@@ -17,15 +16,9 @@ export default {
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} you say run`)
          m.react('🕒')
-         const data = await ytsearch(text)
-         if (!data.all?.length)
-            return m.reply('❌ Failed to get data.')
+         const data = await yts(text)
          const firstVideo = data.all[0]
-         const audioData = await nexray('downloader/ytmp3', {
-            url: firstVideo.url
-         })
-         if (!audioData.status)
-            return m.reply('❌ Failed to get data.')
+         const audioUrl = await ytdl(firstVideo.url)
          const printCaption = frame('YOUTUBE PLAY', [
             `*Title*: ${firstVideo.title}`,
             `*Views*: ${formatNumber(firstVideo.views || 0)}`,
@@ -33,17 +26,14 @@ export default {
             `*Uploaded*: ${firstVideo.ago || 'Long time ago'}`
          ], '🎵')
          m.reply(printCaption, {
-            externalAdReply: {
-               title: firstVideo.title,
-               body: firstVideo.description,
-               thumbnail: await fetchAsBuffer(firstVideo.image || botThumbnail),
-               url: firstVideo.url,
-               sourceUrl: firstVideo.url,
-               largeThumbnail: true,
-               mediaType: 2
-            }
+            title: firstVideo.title,
+            description: firstVideo.description,
+            thumbnail: await fetchAsBuffer(firstVideo.image || botThumbnail),
+            thumbnailUrl: firstVideo.url,
+            largeThumbnail: true,
+            previewType: 1
          })
-         sock.sendMedia(m.chat, audioData.result.url, '', m, {
+         sock.sendMedia(m.chat, audioUrl, '', m, {
             audio: true,
             ptt: isJidNewsletter(m.chat)
          })

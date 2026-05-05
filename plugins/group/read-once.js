@@ -10,7 +10,7 @@ export default {
          const q = m.quoted ? m.quoted : m
          if (!q?.viewOnce)
             return m.reply('💭 Reply view once message.')
-         if (!q.url && !q.download)
+         if (!q.msg?.url && !q.download)
             return m.reply('❌ Media URL not found.')
          sock.sendMedia(m.chat, await q.download(), q.caption || '', m, {
             sticker: isMimeWebP(q.mimetype),

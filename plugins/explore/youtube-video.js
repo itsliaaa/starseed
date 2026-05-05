@@ -1,6 +1,4 @@
-import ytsearch from 'yt-search'
-
-import { nexray } from '../../lib/Request.js'
+import { ytdl, yts } from '../../lib/Scraper.js'
 
 export default {
    command: ['playvideo', 'ptv'],
@@ -15,18 +13,16 @@ export default {
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} mayonaka`)
          m.react('🕒')
-         const data = await ytsearch(text)
-         if (!data.all?.length)
-            return m.reply('❌ Failed to get data.')
+         const data = await yts(text)
          const firstVideo = data.all[0]
          if (firstVideo.seconds > 1440)
             return m.reply('❌ Video is too long. Maximum duration is 24 minutes.')
-         const videoData = await nexray('downloader/v1/ytmp4', {
-            url: firstVideo.url
+         const videoUrl = await ytdl(firstVideo.url, {
+            type: 'video',
+            format: 'mp4',
+            quality: '720p'
          })
-         if (!videoData.status)
-            return m.reply('❌ Failed to get data.')
-         sock.sendMedia(m.chat, videoData.result.url, firstVideo.title, m, {
+         sock.sendMedia(m.chat, videoUrl, firstVideo.title, m, {
             ptv: command === 'ptv'
          })
       }

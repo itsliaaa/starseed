@@ -12,8 +12,8 @@ export default {
       text
    }) {
       try {
-         const q = m.quoted?.url ? m.quoted : m
-         const mimetype = (q.msg || q).mimetype
+         const q = m.quoted ? m.quoted : m
+         const mimetype = q.msg?.mimetype
          const [name = m.pushName, username = m.pushName, following = `${randomInteger(1, 1000)}`, followers = `${randomInteger(1, 1000)}`, likes = `${randomInteger(1, 100000)}`] = text.split('|')
          if (!text)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} Lia Wynn | @itsliaaa | 10 | 100 | 1000 | 100000`)

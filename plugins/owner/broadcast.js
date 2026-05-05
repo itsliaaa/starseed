@@ -18,8 +18,8 @@ export default {
       text
    }) {
       try {
-         const q = m.quoted?.url ? m.quoted : m
-         const mimetype = (q.msg || q).mimetype
+         const q = m.quoted ? m.quoted : m
+         const mimetype = q.msg?.mimetype
          const body = text ?? q?.body
          if (!body)
             return m.reply(`👉🏻 *Example*: ${isPrefix + command} fresh updates!`)
@@ -76,12 +76,11 @@ export default {
                      isForwarded: true,
                      forwardingScore: 999
                   },
-                  externalAdReply: {
-                     title: botName,
-                     body: greeting(),
-                     thumbnail: await fetchAsBuffer('./media/Image/broadcast.jpg'),
-                     largeThumbnail: true
-                  }
+                  title: botName,
+                  description: greeting(),
+                  thumbnail: await fetchAsBuffer('./media/Image/broadcast.jpg'),
+                  height: 340,
+                  largeThumbnail: true
                }, {
                   backgroundColor: randomHex()
                })

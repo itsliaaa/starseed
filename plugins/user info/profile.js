@@ -39,12 +39,10 @@ export default {
       ], '📊')
       m.reply(printUserInfo + '\n\n' +
          printUserStats, {
-         externalAdReply: {
-            title: botName,
-            body: greeting(),
-            thumbnail: await fetchAsBuffer(profilePicture),
-            largeThumbnail: true
-         }
+         title: botName,
+         description: greeting(),
+         thumbnail: await fetchAsBuffer(profilePicture),
+         largeThumbnail: true
       })
    }
 }

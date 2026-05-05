@@ -39,12 +39,10 @@ export default {
          printDonateUrl + '\n\n' +
          printAPIs + '\n\n' +
          printSourceCode, {
-         externalAdReply: {
-            title: botName,
-            body: greeting(),
-            thumbnail: await fetchThumbnail(),
-            largeThumbnail: true
-         }
+         title: botName,
+         description: greeting(),
+         thumbnail: await fetchThumbnail(),
+         largeThumbnail: true
       })
    }
 }

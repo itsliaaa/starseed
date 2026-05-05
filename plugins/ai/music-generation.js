@@ -31,19 +31,20 @@ export default {
          })
          if (!data.status)
             return m.reply('❌ Failed to get data.')
-         for (const result of data.result)
+         for (const result of data.result) {
+            m.reply('> 📥 Getting the music, please wait a little longer...', {
+               title,
+               description: '🎵 A song created by ' + m.pushName,
+               thumbnail: await fetchAsBuffer(result.image_url || botThumbnail),
+               largeThumbnail: true
+            })
             await sock.sendMedia(m.chat, result.audio_url, '', m, {
                audio: true,
                ptt: isJidNewsletter(m.chat),
                mimetype: 'audio/mpeg',
-               fileName: title + '.mp3',
-               externalAdReply: {
-                  title,
-                  body: '🎵 A song created by ' + m.pushName,
-                  thumbnail: await fetchAsBuffer(result.image_url || botThumbnail),
-                  largeThumbnail: true
-               }
+               fileName: title + '.mp3'
             })
+         }
       }
       catch (error) {
          console.error(error)

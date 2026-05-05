@@ -28,12 +28,12 @@ export default {
             `*Verified*: ${newsletterMetadata.thread_metadata.verification}`
          ], '📢')
          m.reply(print, {
-            externalAdReply: {
-               title: botName,
-               body: greeting(),
-               thumbnail: await fetchAsBuffer(newsletterPicture),
-               largeThumbnail: true
-            }
+            title: botName,
+            description: greeting(),
+            thumbnail: await fetchAsBuffer(newsletterPicture),
+            width: 512,
+            height: 512,
+            largeThumbnail: true
          })
       }
       catch (error) {

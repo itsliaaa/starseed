@@ -3,7 +3,8 @@ import { uguu } from '../../lib/Scraper.js'
 import { isMimeImage } from '../../lib/Utilities.js'
 
 export default {
-   command: 'ocr',
+   command: 'hd',
+   hidden: 'enhance',
    category: 'tools',
    async run(m, {
       sock,
@@ -14,17 +15,17 @@ export default {
          const q = m.quoted ? m.quoted : m
          const mimetype = q.msg?.mimetype
          if (!isMimeImage(mimetype))
-            return m.reply('💭 Provide an image to recognize the characters.')
+            return m.reply('💭 Provide an image to enhance it.')
          m.react('🕒')
          const upload = await uguu(
             await q.download()
          )
-         const data = await nexray('tools/ocr', {
+         const data = await nexray('tools/remini', {
             url: upload
          })
-         if (!data.status)
+         if (!Buffer.isBuffer(data))
             return m.reply('❌ Failed to get data.')
-         m.reply(data.result.text)
+         sock.sendMedia(m.chat, data, '', m)
       }
       catch (error) {
          console.error(error)

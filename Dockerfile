@@ -19,4 +19,4 @@ RUN yarn install --production --frozen-lockfile
 
 COPY . .
 
-CMD ["node", "--max-old-space-size=300", "--expose-gc", "index.js"]
+CMD ["node", "--max-old-space-size=256", "--expose-gc", "index.js"]

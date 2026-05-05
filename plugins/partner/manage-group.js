@@ -35,11 +35,11 @@ export default {
             printGroups)
       }
       const q = m.quoted
-      if (!q || !q.text.includes(`You can choose group to manage the group's settings`))
+      if (!q?.body.includes(`You can choose group to manage the group's settings`))
          return m.reply(`💭 Reply group lists message response from \`${isPrefix}groups\`.`)
       ID_EXTRACT_REGEX.lastIndex = 0
       const [number, option, ...text] = args
-      const groupId = q.text.match(ID_EXTRACT_REGEX)[Number(number) - 1]
+      const groupId = q.body.match(ID_EXTRACT_REGEX)[Number(number) - 1]
       const group = db.getGroup(groupId)
       if (!group)
          return m.reply('❌ Group not found.')
@@ -103,7 +103,7 @@ export default {
       else if (option?.endsWith('d')) {
          const days = parseInt(option)
          const isAlreadyRent = group.rentExpiry > 0
-         const expiry = DAY * days
+         const expiry = days * DAY
          group.rentExpiry = isAlreadyRent ?
             group.rentExpiry + expiry :
             Date.now() + expiry
@@ -120,7 +120,7 @@ export default {
 
 const printHowTo = (isPrefix, command) =>
    frame('HOW TO MANAGE', [
-      '1. Set bot duration in the group',
+      '1. Add bot duration in the group',
       `*Example*: ${isPrefix + command} <list number> 30d`, '',
       '2. Close the group',
       `*Example*: ${isPrefix + command} <list number> close`, '',

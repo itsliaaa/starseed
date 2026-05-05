@@ -27,8 +27,10 @@ export default {
       let isPorn
       if (isMimeImage(m.msg.mimetype))
          isPorn = await SightEngine.detectImage(filePath)
+            .catch(() => false)
       else if (isMimeVideo(m.msg.mimetype) && m.msg.seconds < 60)
          isPorn = await SightEngine.detectVideo(filePath)
+            .catch(() => false)
       if (isPorn) {
          const participant = group.participants[m.sender]
          handleWarning(m, {

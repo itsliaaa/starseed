@@ -48,9 +48,9 @@ export default {
          if (!days)
             return m.reply('💭 Please specify the duration in days.')
          const isPremium = userData.premiumExpiry > 0
-         const expiry = DAY * days
-         userData.limit += EXTRA_LIMIT * days
-         userData.energy += EXTRA_ENERGY * days
+         const expiry = days * DAY
+         userData.limit += days * EXTRA_LIMIT
+         userData.energy += days * EXTRA_ENERGY
          userData.premiumExpiry = isPremium ?
             userData.premiumExpiry + expiry :
             Date.now() + expiry

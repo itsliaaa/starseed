@@ -81,24 +81,17 @@ const Socket = async () => {
 
    sock.ev.on('connection.update', async (update) => {
       if (update.connection === 'connecting' && pairingCode === true && !sock.authState.creds.registered) {
-         const { default: PhoneNumber } = await import('awesome-phonenumber')
-
-         const phoneNumber = PhoneNumber(
-            '+' + (botNumber?.toString() || '')
-               .replace(/\D/g, '')
-         )
-
-         if (!phoneNumber.isValid()) {
-            console.error('❌ Invalid phone number for pairing. Please re-check the number in config.js')
+         if (
+            typeof botNumber !== 'string' ||
+            !/^\d{7,15}$/.test(botNumber)
+         ) {
+            console.error('❌ Invalid phone number for pairing. Please re-check the number in config.js and use digits only (7–15 numbers).')
             process.exit(0)
          }
 
          await delay(1500)
 
-         const code = await sock.requestPairingCode(
-            phoneNumber.getNumber('e164')
-               .replace(/\D/g, '')
-         )
+         const code = await sock.requestPairingCode(botNumber)
 
          const prettyCode = code.substring(0, 4) + '-' + code.substring(4)
          console.log('🔗 Pairing code', ':', prettyCode, '\n')
@@ -203,16 +196,7 @@ const Socket = async () => {
 
    sock.ev.on('groups.update', (groups) => {
       for (const group of groups)
-         if (store.hasGroup(group.id))
-            store.setGroup(
-               group.id,
-               Object.assign(
-                  store.getGroup(group.id) || {},
-                  group
-               )
-            )
-         else
-            store.setGroup(group.id, group)
+         listener.group(group.id)
    })
 
    sock.ev.on('call', async (calls) => {
